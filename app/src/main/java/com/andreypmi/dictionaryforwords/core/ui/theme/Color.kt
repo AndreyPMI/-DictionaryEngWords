@@ -1,4 +1,4 @@
-package com.andreypmi.dictionaryforwords.ui.theme
+package com.andreypmi.dictionaryforwords.core.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
