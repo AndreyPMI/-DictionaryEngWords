@@ -5,6 +5,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.andreypmi.dictionaryforwords.presentation.features.words.WordsDestination
+import com.andreypmi.dictionaryforwords.presentation.features.words.words
 
 @Composable
 internal fun DictionaryNavHost(
@@ -14,7 +15,7 @@ internal fun DictionaryNavHost(
         navController = navController,
         startDestination = WordsDestination.route
     ){
-
+        words()
     }
 }
 

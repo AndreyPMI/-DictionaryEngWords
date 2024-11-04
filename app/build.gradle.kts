@@ -83,4 +83,10 @@ dependencies {
     // Testing Navigation
     androidTestImplementation("androidx.navigation:navigation-testing:$nav_version")
 
+    //koin
+    val koin_version = "4.0.0"
+    implementation("io.insert-koin:koin-compose:$koin_version")
+    implementation("io.insert-koin:koin-compose-viewmodel:$koin_version")
+    implementation("io.insert-koin:koin-compose-viewmodel-navigation:$koin_version")
+
 }
