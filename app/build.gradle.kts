@@ -48,17 +48,18 @@ android {
         }
     }
 }
-
 dependencies {
+
+    implementation(project(":domain"))
+    implementation(project(":presentation"))
+    implementation(project(":data"))
+    implementation(project(":ui"))
+    implementation(project(":di"))
 
     implementation("androidx.core:core-ktx:1.13.1")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.6")
-    implementation("androidx.activity:activity-compose:1.9.3")
     implementation(platform("androidx.compose:compose-bom:2023.09.01"))
-    implementation("androidx.compose.ui:ui")
-    implementation("androidx.compose.ui:ui-graphics")
-    implementation("androidx.compose.ui:ui-tooling-preview")
-    implementation("androidx.compose.material3:material3")
+
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -72,7 +73,11 @@ dependencies {
 
     // Jetpack Compose integration
     implementation("androidx.navigation:navigation-compose:$nav_version")
-
+    implementation("androidx.compose.material3:material3")
+    implementation("androidx.activity:activity-compose:1.9.3")
+    implementation("androidx.compose.ui:ui")
+    implementation("androidx.compose.ui:ui-graphics")
+    implementation("androidx.compose.ui:ui-tooling-preview")
     // Views/Fragments integration
     implementation("androidx.navigation:navigation-fragment:$nav_version")
     implementation("androidx.navigation:navigation-ui:$nav_version")
@@ -85,8 +90,15 @@ dependencies {
 
     //koin
     val koin_version = "4.0.0"
+    implementation("io.insert-koin:koin-android:$koin_version")
+    implementation("io.insert-koin:koin-core:$koin_version")
     implementation("io.insert-koin:koin-compose:$koin_version")
     implementation("io.insert-koin:koin-compose-viewmodel:$koin_version")
     implementation("io.insert-koin:koin-compose-viewmodel-navigation:$koin_version")
 
+    // Koin for Tests
+    testImplementation("io.insert-koin:koin-test-junit4:$koin_version")
+
+    testImplementation("io.mockk:mockk:1.13.13")
+    androidTestImplementation("io.mockk:mockk-android:1.13.13")
 }

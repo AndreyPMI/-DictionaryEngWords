@@ -15,4 +15,8 @@ dependencyResolutionManagement {
 
 rootProject.name = "Dictionary for words"
 include(":app")
- 
+include(":data")
+include(":domain")
+include(":ui")
+include(":presentation")
+include(":di")
