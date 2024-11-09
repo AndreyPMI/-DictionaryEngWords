@@ -2,7 +2,7 @@ package com.andreypmi.dictionaryforwords.domain.repository
 
 import com.andreypmi.dictionaryforwords.domain.models.Word
 
-interface WordRepository {
+ interface WordRepository {
     suspend fun getAllWords(): List<Word>
     suspend fun getWordById(id: Long): Word?
     suspend fun getWordByName(name: String): Word?

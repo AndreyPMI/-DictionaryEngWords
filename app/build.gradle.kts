@@ -54,7 +54,6 @@ dependencies {
     implementation(project(":presentation"))
     implementation(project(":data"))
     implementation(project(":ui"))
-    implementation(project(":di"))
 
     implementation("androidx.core:core-ktx:1.13.1")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.6")

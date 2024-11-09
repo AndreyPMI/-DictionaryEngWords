@@ -1,4 +1,4 @@
-package com.andreypmi.dictionaryforwords.di
+package com.andreypmi.dictionaryforwords.app.di
 
 import org.koin.dsl.module
 
