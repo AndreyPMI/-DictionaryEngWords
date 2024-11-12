@@ -1,17 +1,17 @@
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
+    alias(libs.plugins.com.android.library)
+    alias(libs.plugins.org.jetbrains.kotlin.android)
 }
 
 android {
-    namespace = "com.andreypmi.dictionaryforwords"
-    compileSdk = 34
+    namespace = "com.andreypmi.dictionaryforwords.presentation"
+    compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
+        minSdk = libs.versions.minSdk.get().toInt()
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables {
-            useSupportLibrary = true
-        }
+        consumerProguardFiles("consumer-rules.pro")
     }
 
     buildTypes {
@@ -24,47 +24,50 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = JavaVersion.VERSION_17.toString()
     }
     buildFeatures {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
-    }
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
+        kotlinCompilerExtensionVersion = libs.versions.composecompiler.get()
     }
 }
-    dependencies {
-        implementation(project(":ui"))
-        implementation(project(":domain"))
-        // Navigation Component
-        val nav_version = "2.8.1"
 
-        // Jetpack Compose integration
-        implementation("androidx.navigation:navigation-compose:$nav_version")
-        implementation("androidx.core:core-ktx:1.15.0")
-        implementation("androidx.appcompat:appcompat:1.6.1")
-        implementation("com.google.android.material:material:1.11.0")
-        testImplementation("junit:junit:4.13.2")
-        androidTestImplementation("androidx.test.ext:junit:1.2.1")
-        androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
-        androidTestImplementation("androidx.compose.ui:ui-test-junit4")
-        debugImplementation("androidx.compose.ui:ui-tooling")
-        debugImplementation("androidx.compose.ui:ui-test-manifest")
+dependencies {
+    implementation(project(":domain"))
+    implementation(project(":core:ui"))
 
-        // Navigation Component
-        implementation("androidx.compose.material3:material3")
-        implementation("androidx.activity:activity-compose:1.9.3")
+    implementation(libs.core.ktx)
+    implementation(libs.lifecycle.runtime.ktx)
 
-        // Jetpack Compose integration
-        implementation("androidx.compose.material3:material3")
-        implementation("androidx.activity:activity-compose:1.9.3")
-    }
+    // ui compose
+    implementation(libs.activity.compose)
+    implementation(platform(libs.compose.bom))
+    implementation(libs.ui)
+    implementation(libs.ui.graphics)
+    implementation(libs.ui.tooling.preview)
+    implementation(libs.material3)
+    implementation(libs.navigation)
+    implementation(libs.androidx.navigation.runtime.ktx)
+    implementation(libs.lifecycle.runtime.compose)
+    implementation(libs.kotlinx.collections.immutable)
+    implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.lifecycle.viewmodel.ktx)
+    implementation(libs.coil.compose)
+    //navigation
+    implementation(libs.navigation.ui)
+    implementation(libs.navigation.compose)
+    implementation(libs.navigation.fragment)
+
+
+    // tests
+    testImplementation(libs.junit)
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test)
+    androidTestImplementation(libs.androidx.test.ext.junit)
+}

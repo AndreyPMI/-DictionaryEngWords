@@ -1,28 +1,34 @@
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
+    alias(libs.plugins.com.android.application)
+    alias(libs.plugins.org.jetbrains.kotlin.android)
+    id("kotlin-parcelize")
 }
 
+
 android {
-    namespace = "com.andreypmi.dictionaryforwords"
-    compileSdk = 34
+    namespace = "com.andreypmi.dictionaryforwords.app"
+    compileSdk = libs.versions.compileSdk.get().toInt()
+
 
     defaultConfig {
-        applicationId = "com.andreypmi.dictionaryforwords"
-        minSdk = 28
-        targetSdk = 34
+        applicationId = "com.andreypmi.dictionaryforwords.data"
+        minSdk = libs.versions.minSdk.get().toInt()
+        targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
-
+        android.buildFeatures.buildConfig = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables {
-            useSupportLibrary = true
-        }
     }
 
+    buildFeatures.buildConfig = true
+
     buildTypes {
+        debug {
+            isMinifyEnabled = false
+        }
         release {
             isMinifyEnabled = false
+
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -30,74 +36,64 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = JavaVersion.VERSION_17.toString()
     }
     buildFeatures {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
-    }
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
+        kotlinCompilerExtensionVersion = libs.versions.composecompiler.get()
     }
 }
+
 dependencies {
 
+    implementation(project(":data"))
     implementation(project(":domain"))
     implementation(project(":presentation"))
-    implementation(project(":data"))
-    implementation(project(":ui"))
+    implementation(project(":core:ui"))
+    implementation(project(":core:di"))
 
-    implementation("androidx.core:core-ktx:1.13.1")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.6")
-    implementation(platform("androidx.compose:compose-bom:2023.09.01"))
+    implementation(libs.core.ktx)
 
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.2.1")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation(platform("androidx.compose:compose-bom:2023.08.00"))
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
-    debugImplementation("androidx.compose.ui:ui-tooling")
-    debugImplementation("androidx.compose.ui:ui-test-manifest")
+    implementation(libs.lifecycle.runtime.ktx)
 
-    // Navigation Component
-    val nav_version = "2.8.1"
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter.json)
+    implementation(libs.okhttp3.interceptor)
+    implementation(libs.androidx.datastore.core)
+    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.androidx.work.runtime.ktx)
 
-    // Jetpack Compose integration
-    implementation("androidx.navigation:navigation-compose:$nav_version")
-    implementation("androidx.compose.material3:material3")
-    implementation("androidx.activity:activity-compose:1.9.3")
-    implementation("androidx.compose.ui:ui")
-    implementation("androidx.compose.ui:ui-graphics")
-    implementation("androidx.compose.ui:ui-tooling-preview")
-    // Views/Fragments integration
-    implementation("androidx.navigation:navigation-fragment:$nav_version")
-    implementation("androidx.navigation:navigation-ui:$nav_version")
+    // ui compose
+    implementation(libs.activity.compose)
+    implementation(platform(libs.compose.bom))
+    implementation(libs.ui)
+    implementation(libs.ui.graphics)
+    implementation(libs.ui.tooling.preview)
+    implementation(libs.material3)
+    androidTestImplementation(platform(libs.compose.bom))
+    androidTestImplementation(libs.ui.test.junit4)
+    debugImplementation(libs.ui.tooling)
+    debugImplementation(libs.ui.test.manifest)
 
-    // Feature module support for Fragments
-    implementation("androidx.navigation:navigation-dynamic-features-fragment:$nav_version")
-
-    // Testing Navigation
-    androidTestImplementation("androidx.navigation:navigation-testing:$nav_version")
+    implementation(libs.androidx.room.runtime)
 
     //koin
-    val koin_version = "4.0.0"
-    implementation("io.insert-koin:koin-android:$koin_version")
-    implementation("io.insert-koin:koin-core:$koin_version")
-    implementation("io.insert-koin:koin-compose:$koin_version")
-    implementation("io.insert-koin:koin-compose-viewmodel:$koin_version")
-    implementation("io.insert-koin:koin-compose-viewmodel-navigation:$koin_version")
+    implementation(libs.koin.android)
 
-    // Koin for Tests
-    testImplementation("io.insert-koin:koin-test-junit4:$koin_version")
+    // tests
+    testImplementation(libs.junit)
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test)
+    androidTestImplementation(libs.androidx.test.ext.junit)
 
-    testImplementation("io.mockk:mockk:1.13.13")
-    androidTestImplementation("io.mockk:mockk-android:1.13.13")
+    //navigation
+    implementation(libs.navigation.ui)
+    implementation(libs.navigation.compose)
+    implementation(libs.navigation.fragment)
 }

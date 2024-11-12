@@ -24,7 +24,7 @@ internal fun MainScreen(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally) {
 
-        LazyColumn() {
+        LazyColumn {
             items(items = uiState.words) {
                 CardField(it)
             }
@@ -32,7 +32,7 @@ internal fun MainScreen(
     }
 }
 // Фиктивная реализация WordsViewModel
-class FakeWordsViewModel(words:List<com.andreypmi.dictionaryforwords.domain.models.Word>) : IWordsViewModel {
+class FakeWordsViewModel(words:List<Word>) : IWordsViewModel {
     override val uiState = MutableStateFlow(WordsUiState(words))
 }
 
@@ -40,23 +40,25 @@ class FakeWordsViewModel(words:List<com.andreypmi.dictionaryforwords.domain.mode
 @Preview(showSystemUi = true)
 @Composable
 private fun Preview() {
-    // Создание мока для WordsViewModel
 
     // Генерация списка слов
     val mockedWords = listOf(
-        com.andreypmi.dictionaryforwords.domain.models.Word(
-            engWord = "apple",
-            ruWord = "яблоко",
+        Word(
+            id = 1,
+            word = "apple",
+            translate = "яблоко",
             description = "Фрукт"
         ),
-        com.andreypmi.dictionaryforwords.domain.models.Word(
-            engWord = "banana",
-            ruWord = "банан",
+        Word(
+            id = 2,
+            word = "banana",
+            translate = "банан",
             description = "Тропический фрукт"
         ),
-        com.andreypmi.dictionaryforwords.domain.models.Word(
-            engWord = "orange",
-            ruWord = "апельсин",
+        Word(
+            id = 3,
+            word = "orange",
+            translate = "апельсин",
             description = "Цитрусовый фрукт"
         )
     )

@@ -9,7 +9,7 @@ import com.andreypmi.dictionaryforwords.presentation.features.words.words
 
 @Composable
 fun DictionaryNavHost(
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController(),
 ){
     NavHost(
         navController = navController,

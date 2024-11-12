@@ -23,7 +23,6 @@ import androidx.compose.ui.draw.blur
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.andreypmi.dictionaryforwords.domain.models.Word
 
 @Composable
 internal fun CardField(
@@ -47,7 +46,7 @@ internal fun CardField(
             verticalArrangement = Arrangement.SpaceEvenly
         ) {
             Text(
-                text = word.engWord,
+                text = word.word,
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.labelLarge
             )
@@ -66,5 +65,5 @@ internal fun CardField(
 @Composable
 @Preview(showBackground = true, showSystemUi = false)
 private fun Preview(){
-    CardField(com.andreypmi.dictionaryforwords.domain.models.Word("engWord", "ruWord", "Descr"))
+    CardField(com.andreypmi.dictionaryforwords.domain.models.Word(1, "ruWord", "Descr","des"))
 }

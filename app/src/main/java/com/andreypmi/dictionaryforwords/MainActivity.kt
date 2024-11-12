@@ -5,8 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.pointer.PointerIcon.Companion.Text
 import androidx.compose.ui.tooling.preview.Preview
 import com.andreypmi.dictionaryforwords.core.ui.theme.DictionaryForWordsTheme
 import com.andreypmi.dictionaryforwords.presentation.DictionaryNavHost
@@ -18,18 +16,23 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            DictionaryForWordsTheme {
-                // A surface container using the 'background' color from the theme
-                DictionaryNavHost()
-            }
+            DictionaryNavApp()
         }
     }
 }
 
+@Composable
+fun DictionaryNavApp() {
+    DictionaryForWordsTheme {
+        DictionaryNavHost()
+    }
+}
+
+
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
-    DictionaryForWordsTheme{
+    DictionaryForWordsTheme {
 
     }
 }

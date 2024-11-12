@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 data class WordsUiState(
-    var words: List<com.andreypmi.dictionaryforwords.domain.models.Word>
+    var words: List<Word>
 )
 
 class WordsViewModel(private val wordUseCases: WordUseCasesFacade) : ViewModel(), IWordsViewModel {

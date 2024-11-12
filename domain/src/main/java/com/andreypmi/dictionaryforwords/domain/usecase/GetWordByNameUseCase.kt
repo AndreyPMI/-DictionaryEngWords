@@ -5,7 +5,7 @@ import com.andreypmi.dictionaryforwords.domain.repository.WordRepository
 
 class GetWordByNameUseCase(private val repository: WordRepository) :
     UseCaseWithParam<Word?, String> {
-    override suspend fun execute(Name: String): Word? {
-        return repository.getWordByName(Name)
+    override suspend fun execute(Params: String): Word? {
+        return repository.getWordByName(Params)
     }
 }
