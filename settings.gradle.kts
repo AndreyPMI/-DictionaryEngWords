@@ -13,6 +13,11 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Dictionary for words"
+rootProject.name = "DictionaryForWords"
 include(":app")
- 
+include(":data")
+include(":domain")
+include(":presentation")
+include(":core:ui")
+include(":core:di")
+
