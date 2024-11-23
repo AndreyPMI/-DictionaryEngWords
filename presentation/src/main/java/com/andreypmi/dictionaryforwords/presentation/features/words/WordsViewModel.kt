@@ -22,30 +22,13 @@ class WordsViewModel(
     private val wordUseCase: WordUseCasesFacade
 ) : ViewModel(), IWordsViewModel {
 
-    val mockedWords = listOf(
-        Word(
-            id = 1,
-            word = "apple",
-            translate = "яблоко",
-            description = "Фрукт"
-        ),
-        Word(
-            id = 2,
-            word = "banana",
-            translate = "банан",
-            description = "Тропический фрукт"
-        ),
-        Word(
-            id = 3,
-            word = "orange",
-            translate = "апельсин",
-            description = "Цитрусовый фрукт"
-        )
-    )
-
-    private val _uiState = MutableStateFlow(WordsUiState(mockedWords))
+    private val _uiState = MutableStateFlow(WordsUiState(emptyList()))
 
     override val uiState = _uiState.asStateFlow()
+
+    override fun onClickAdd() {
+        Log.d("clickAdd","1")
+    }
 
     init {
         try {

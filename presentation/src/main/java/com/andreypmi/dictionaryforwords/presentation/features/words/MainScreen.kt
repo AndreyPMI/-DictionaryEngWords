@@ -2,8 +2,14 @@ package com.andreypmi.dictionaryforwords.presentation.features.words
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -18,20 +24,34 @@ internal fun MainScreen(
   wordsViewModel: IWordsViewModel
 ) {
     val uiState:WordsUiState by wordsViewModel.uiState.collectAsStateWithLifecycle()
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally) {
-
-        LazyColumn {
-            items(items = uiState.words) {
-                CardField(it)
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(onClick =  wordsViewModel::onClickAdd ) {
+                Icon(imageVector = Icons.Default.Add, contentDescription = null)
+            }
+        },
+        content = { padding ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                LazyColumn {
+                    items(uiState.words) {
+                        CardField(it)
+                    }
+                }
             }
         }
-    }
+    )
 }
 // Фиктивная реализация WordsViewModel
 class FakeWordsViewModel(words:List<Word>) : IWordsViewModel {
     override val uiState = MutableStateFlow(WordsUiState(words))
+    override fun onClickAdd(){
+        TODO("Not yet implemented")
+    }
 }
 
 // Предпросмотр

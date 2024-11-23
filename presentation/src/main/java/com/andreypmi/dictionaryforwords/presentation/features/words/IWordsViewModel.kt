@@ -4,4 +4,5 @@ import kotlinx.coroutines.flow.StateFlow
 
 interface IWordsViewModel {
     val uiState : StateFlow<WordsUiState>
+    fun onClickAdd()
 }
