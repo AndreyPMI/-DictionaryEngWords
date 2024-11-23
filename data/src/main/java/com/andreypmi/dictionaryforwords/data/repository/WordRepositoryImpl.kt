@@ -3,6 +3,7 @@ package com.andreypmi.dictionaryforwords.data.repository
 import android.util.Log
 import com.andreypmi.dictionaryforwords.data.mapper.EntityMapper
 import com.andreypmi.dictionaryforwords.data.storage.dao.WordDao
+import com.andreypmi.dictionaryforwords.data.storage.entites.WordsEntity
 import com.andreypmi.dictionaryforwords.domain.models.Word
 import com.andreypmi.dictionaryforwords.domain.repository.WordRepository
 import kotlinx.coroutines.flow.first
@@ -17,8 +18,6 @@ class WordRepositoryImpl(
         return list
     }
 
-
-
     override suspend fun getWordById(id: Long): Word? {
         TODO("Not yet implemented")
     }
@@ -28,7 +27,20 @@ class WordRepositoryImpl(
     }
 
     override suspend fun insert(word: Word): Boolean {
-        TODO("Not yet implemented")
+        val newWordsEntity = WordsEntity(
+            id_word = dao.getIndex().first() + 1,
+            id_category = word.idCategory,
+            word = word.word,
+            description = word.description,
+            translate = word.translate
+        )
+        try {
+            dao.insert(word = newWordsEntity)
+            return true
+        } catch (e: Throwable) {
+            Log.e("Ошибка при вставке записи в базу данных.", "$e")
+            return false
+        }
     }
 
     override suspend fun update(word: Word): Boolean {

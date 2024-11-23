@@ -9,6 +9,7 @@ import com.andreypmi.dictionaryforwords.domain.repository.WordRepository
 import com.andreypmi.dictionaryforwords.domain.usecase.DeleteWordUseCase
 import com.andreypmi.dictionaryforwords.domain.usecase.WordUseCasesFacade
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -23,25 +24,36 @@ class WordsViewModel(
 ) : ViewModel(), IWordsViewModel {
 
     private val _uiState = MutableStateFlow(WordsUiState(emptyList()))
+    private val _dialogState = MutableStateFlow(false)
+    override val dialogState: StateFlow<Boolean>
+        get() = _dialogState.asStateFlow()
 
     override val uiState = _uiState.asStateFlow()
+    override fun openAddWordDialog() {
+        _dialogState.value = true
+    }
 
-    override fun onClickAdd() {
-        Log.d("clickAdd","1")
+    override fun closeAddWordDialog() {
+        _dialogState.value = false
+    }
+
+    override fun addNewWord(word: Word) {
+        viewModelScope.launch {
+            wordUseCase.insertWord(word)
+        }
     }
 
     init {
         try {
-
-        viewModelScope.launch {
-            val words = wordUseCase.getAllWords()
-            _uiState.update { currentState ->
-                currentState.copy(words = words)
+            viewModelScope.launch {
+                val words = wordUseCase.getAllWords()
+                _uiState.update { currentState ->
+                    currentState.copy(words = words)
+                }
             }
-        }
 
-        }catch (e: Exception){
-            Log.d("corrutine","$e")
+        } catch (e: Exception) {
+            Log.d("corrutine", "$e")
         }
     }
 }

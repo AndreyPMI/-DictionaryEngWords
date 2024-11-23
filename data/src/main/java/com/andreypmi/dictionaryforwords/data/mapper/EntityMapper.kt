@@ -8,7 +8,6 @@ import com.andreypmi.dictionaryforwords.domain.models.Word
 object EntityMapper {
     fun toDomainModelForWord(entity: WordsEntity): Word {
         return Word(
-            id = entity.id_word,
             word = entity.word,
             translate = entity.translate,
             description = entity.description?:""

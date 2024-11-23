@@ -25,4 +25,6 @@ interface WordDao {
     @Query("SELECT * FROM ${WordsEntity.TABLE_NAME} ORDER BY ${WordsEntity.ID_WORD} ASC")
     fun getAllWords(): Flow<List<WordsEntity>>
 
+    @Query("SELECT MAX(${WordsEntity.ID_WORD}) FROM ${WordsEntity.TABLE_NAME}")
+    fun getIndex(): Flow<Int>
 }

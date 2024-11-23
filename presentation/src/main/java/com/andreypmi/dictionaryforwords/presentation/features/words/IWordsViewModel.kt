@@ -1,8 +1,12 @@
 package com.andreypmi.dictionaryforwords.presentation.features.words
 
+import com.andreypmi.dictionaryforwords.domain.models.Word
 import kotlinx.coroutines.flow.StateFlow
 
 interface IWordsViewModel {
     val uiState : StateFlow<WordsUiState>
-    fun onClickAdd()
+    val dialogState : StateFlow<Boolean>
+    fun openAddWordDialog()
+    fun closeAddWordDialog()
+    fun addNewWord(word: Word)
 }
