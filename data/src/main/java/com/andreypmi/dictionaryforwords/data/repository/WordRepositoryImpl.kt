@@ -7,13 +7,12 @@ import com.andreypmi.dictionaryforwords.data.storage.entites.WordsEntity
 import com.andreypmi.dictionaryforwords.domain.models.Word
 import com.andreypmi.dictionaryforwords.domain.repository.WordRepository
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.toList
 
 class WordRepositoryImpl(
     private val dao: WordDao
 ) : WordRepository {
     override suspend fun getAllWords(): List<Word> {
-        val list = dao.getAllWords().first().map { EntityMapper.toDomainModelForWord(it) }
+        val list = dao.getAllWords().first().map { EntityMapper.toDomainModel(it) }
         Log.d("corrutine", "${list}")
         return list
     }
@@ -34,12 +33,14 @@ class WordRepositoryImpl(
             description = word.description,
             translate = word.translate
         )
-        try {
+        Log.d("insert_repos" , "${newWordsEntity.toString()}")
+        return try {
             dao.insert(word = newWordsEntity)
-            return true
+            Log.d("insert_repos" , "${true}")
+            true
         } catch (e: Throwable) {
             Log.e("Ошибка при вставке записи в базу данных.", "$e")
-            return false
+            false
         }
     }
 

@@ -6,14 +6,16 @@ import com.andreypmi.dictionaryforwords.domain.models.Category
 import com.andreypmi.dictionaryforwords.domain.models.Word
 
 object EntityMapper {
-    fun toDomainModelForWord(entity: WordsEntity): Word {
+    fun toDomainModel(entity: WordsEntity): Word {
         return Word(
+            id = entity.id_word,
+            idCategory = entity.id_category,
             word = entity.word,
             translate = entity.translate,
             description = entity.description?:""
         )
     }
-    fun toDomainModelForCategory(entity: CategoriesEntity): Category {
+    fun toDomainModel(entity: CategoriesEntity): Category {
         return Category(
             id = entity.id_category,
             category = entity.category_name

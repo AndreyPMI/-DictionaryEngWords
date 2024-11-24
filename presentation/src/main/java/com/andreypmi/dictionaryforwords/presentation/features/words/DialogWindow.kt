@@ -27,11 +27,16 @@ import com.andreypmi.dictionaryforwords.domain.models.Word
 
 @Composable
 internal fun DialogWindow(
+    idCategory: Int,
     onClose: () -> Unit,
     onSubmit: (Word) -> Unit
 ) {
     val (wordState, setWordState) = remember {
-        mutableStateOf(Word("", "", ""))
+        mutableStateOf(Word(id = null,
+            idCategory = idCategory,
+            word = "",
+            translate = "",
+            description = ""))
     }
     Dialog(onDismissRequest = onClose) {
         Surface(
@@ -42,21 +47,21 @@ internal fun DialogWindow(
                 Text(text = stringResource(id = R.string.dialog_add))
                 OutlinedTextField(
                     value = wordState.word,
-                    onValueChange = {newWord->
+                    onValueChange = { newWord ->
                         setWordState(wordState.copy(word = newWord))
                     },
                     label = { Text(stringResource(id = R.string.dialog_word)) }
                 )
                 OutlinedTextField(
                     value = wordState.translate,
-                    onValueChange ={newTranslate->
-                        setWordState(wordState.copy( translate = newTranslate))
+                    onValueChange = { newTranslate ->
+                        setWordState(wordState.copy(translate = newTranslate))
                     },
                     label = { Text(stringResource(id = R.string.dialog_translation)) }
                 )
                 OutlinedTextField(
                     value = wordState.description,
-                    onValueChange ={newDescription->
+                    onValueChange = { newDescription ->
                         setWordState(wordState.copy(description = newDescription))
                     },
                     label = { Text(stringResource(id = R.string.dialog_description)) }

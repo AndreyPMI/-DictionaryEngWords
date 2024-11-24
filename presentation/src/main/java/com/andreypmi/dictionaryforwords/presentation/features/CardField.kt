@@ -65,5 +65,5 @@ internal fun CardField(
 @Composable
 @Preview(showBackground = true, showSystemUi = false)
 private fun Preview(){
-    CardField(com.andreypmi.dictionaryforwords.domain.models.Word( "ruWord", "Descr","des"))
+    CardField(com.andreypmi.dictionaryforwords.domain.models.Word( 1,1,"ruWord", "Descr","des"))
 }

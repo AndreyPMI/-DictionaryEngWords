@@ -21,15 +21,16 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.andreypmi.dictionaryforwords.domain.models.Word
 import com.andreypmi.dictionaryforwords.presentation.features.CardField
 import kotlinx.coroutines.flow.MutableStateFlow
+
 @Composable
 internal fun MainScreen(
-  wordsViewModel: IWordsViewModel
+    wordsViewModel: IWordsViewModel
 ) {
-    val uiState:WordsUiState by wordsViewModel.uiState.collectAsStateWithLifecycle()
+    val uiState: WordsUiState by wordsViewModel.uiState.collectAsStateWithLifecycle()
     val dialogState by wordsViewModel.dialogState.collectAsState()
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(onClick =  wordsViewModel::openAddWordDialog ) {
+            FloatingActionButton(onClick = wordsViewModel::openAddWordDialog) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = null)
             }
         },
@@ -50,8 +51,13 @@ internal fun MainScreen(
     )
     if (dialogState) {
         DialogWindow(
+            idCategory = uiState.category.id,
             onClose = { wordsViewModel.closeAddWordDialog() },
-            onSubmit = { newWord -> wordsViewModel.addNewWord(newWord)}
+            onSubmit = { newWord -> run{
+                wordsViewModel.addNewWord(newWord)
+                wordsViewModel.closeAddWordDialog()
+            }
+            }
         )
     }
 }
