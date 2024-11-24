@@ -32,42 +32,13 @@ class WordsViewModel(
         )
     )
     private val _dialogState = MutableStateFlow(false)
-    override val dialogState: StateFlow<Boolean>
-        get() = _dialogState.asStateFlow()
 
-    override val uiState = _uiState.asStateFlow()
-    override fun openAddWordDialog() {
-        _dialogState.value = true
-    }
-    override fun closeAddWordDialog() {
-        _dialogState.value = false
-    }
-
-    override fun addNewWord(word: Word) {
-        viewModelScope.launch {
-            wordUseCase.insertWord(word)
-            val words = wordUseCase.getAllWords()
-            _uiState.update { currentState ->
-                currentState.copy(words = words)
-            }
-        }
-    }
-
-    override fun deleteWord(word: Word) {
-        viewModelScope.launch {
-            wordUseCase.deleteWord(word = word)
-            val words = wordUseCase.getAllWords()
-            _uiState.update { currentState ->
-                currentState.copy(words = words)
-            }
-        }
-    }
     init {
         try {
             viewModelScope.launch {
-                val words = wordUseCase.getAllWords()
+                wordsList = wordUseCase.getAllWords()
                 _uiState.update { currentState ->
-                    currentState.copy(words = words)
+                    currentState.copy(words = wordsList)
                 }
             }
 
@@ -75,6 +46,35 @@ class WordsViewModel(
             Log.d("corrutine", "$e")
         }
     }
+
+    override val dialogState = _dialogState.asStateFlow()
+    override val uiState = _uiState.asStateFlow()
+
+    override fun openAddWordDialog() {
+        _dialogState.value = true
+    }
+
+    override fun closeAddWordDialog() {
+        _dialogState.value = false
+    }
+
+    override fun addNewWord(word: Word) {
+        viewModelScope.launch {
+            if (wordUseCase.insertWord(word)) {
+                wordsList += word
+                updateWordsList()
+            }
+        }
+    }
+
+    override fun deleteWord(word: Word) {
+        viewModelScope.launch {
+            if (wordUseCase.insertWord(word)) {
+                wordsList -= word
+                updateWordsList()
+            }
+    }}
+
     private fun updateWordsList() {
         _uiState.update { currentState ->
             currentState.copy(words = wordsList)
