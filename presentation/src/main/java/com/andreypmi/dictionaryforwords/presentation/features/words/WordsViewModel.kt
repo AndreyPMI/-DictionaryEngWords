@@ -1,6 +1,7 @@
 package com.andreypmi.dictionaryforwords.presentation.features.words
 
 import android.util.Log
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -20,26 +21,30 @@ data class WordsUiState(
     var category: Category,
     var words: List<Word>
 )
+enum class DialogState{
+    NONE, ADD, EDIT
+}
 
 class WordsViewModel(
     private val wordUseCase: WordUseCasesFacade
 ) : ViewModel(), IWordsViewModel {
-    private lateinit var wordsList: List<Word>
+    private  var wordsList: MutableList<Word> = mutableListOf()
     private val _uiState = MutableStateFlow(
         WordsUiState(
             category = Category(1, category = ""),//TODO id=0
             words = emptyList()
         )
     )
-    private val _dialogState = MutableStateFlow(false)
-
+    private val _dialogState = MutableStateFlow(DialogState.NONE)
+    private var _editWord : Word? = null
     init {
         try {
             viewModelScope.launch {
-                wordsList = wordUseCase.getAllWords()
-                _uiState.update { currentState ->
-                    currentState.copy(words = wordsList)
-                }
+                wordsList = wordUseCase.getAllWords().toMutableList()
+                updateWordsList()
+//                _uiState.update { currentState ->
+//                    currentState.copy(words = wordsList)
+//                }
             }
 
         } catch (e: Exception) {
@@ -51,33 +56,60 @@ class WordsViewModel(
     override val uiState = _uiState.asStateFlow()
 
     override fun openAddWordDialog() {
-        _dialogState.value = true
+        _dialogState.value = DialogState.ADD
     }
-
-    override fun closeAddWordDialog() {
-        _dialogState.value = false
+    override fun openEditWordDialog(word: Word){
+        _editWord = word
+        _dialogState.value = DialogState.EDIT
+    }
+    override fun closeWordDialog() {
+        _dialogState.value = DialogState.NONE
     }
 
     override fun addNewWord(word: Word) {
         viewModelScope.launch {
             if (wordUseCase.insertWord(word)) {
                 wordsList += word
+                Log.d("addWord","${
+                    wordsList.toString()
+                }")
                 updateWordsList()
             }
         }
     }
 
     override fun deleteWord(word: Word) {
+        Log.d("deleteWord","$word")
         viewModelScope.launch {
-            if (wordUseCase.insertWord(word)) {
+            if (wordUseCase.deleteWord(word)) {
                 wordsList -= word
                 updateWordsList()
             }
     }}
 
+    override fun editWord(word: Word) {
+        Log.d("openEditWordDialog","${word.id}, ${word.word}")
+//        viewModelScope.launch {
+//            if(wordUseCase.updateWord(word)){
+//                Log.d("openEditWordDialog","${word.id}")
+//                val index = wordsList.indexOfFirst { it.id == word.id }
+//                    if (index != -1) {
+//                    wordsList[index] = Word(
+//                        id = word.id,
+//                        idCategory = word.idCategory,
+//                        word = word.word,
+//                        translate = word.translate,
+//                        description = word.description
+//                    )
+//                }
+//                updateWordsList()
+//            }
+//        }
+    }
+
     private fun updateWordsList() {
         _uiState.update { currentState ->
-            currentState.copy(words = wordsList)
+            currentState.copy(words = wordsList.toList())
         }
     }
 }

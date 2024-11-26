@@ -1,6 +1,5 @@
 package com.andreypmi.dictionaryforwords.presentation.features.words
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -16,11 +15,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.andreypmi.dictionaryforwords.domain.models.Word
+import com.andreypmi.dictionaryforwords.core.ui.R
 import com.andreypmi.dictionaryforwords.presentation.features.CardField
-import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
 internal fun MainScreen(
@@ -43,21 +41,43 @@ internal fun MainScreen(
             ) {
                 LazyColumn {
                     items(uiState.words) {
-                        CardField(it)
+                        CardField(it,
+                            onEditClicked =  wordsViewModel::openEditWordDialog,
+                            onDeleteClicked = wordsViewModel::deleteWord
+                            )
                     }
                 }
             }
         }
     )
-    if (dialogState) {
-        DialogWindow(
-            idCategory = uiState.category.id,
-            onClose = { wordsViewModel.closeAddWordDialog() },
-            onSubmit = { newWord -> run{
-                wordsViewModel.addNewWord(newWord)
-                wordsViewModel.closeAddWordDialog()
-            }
-            }
-        )
+    when (dialogState) {
+        DialogState.ADD -> {
+            DialogWindow(
+                title = stringResource(id = R.string.dialog_add),
+                idCategory = uiState.category.id,
+                onClose = { wordsViewModel.closeWordDialog() },
+                onSubmit = { newWord ->
+                    run {
+                        wordsViewModel.addNewWord(newWord)
+                        wordsViewModel.closeWordDialog()
+                    }
+                }
+            )
+        }
+        DialogState.EDIT -> {
+            DialogWindow(
+                title = stringResource(id = R.string.dialog_edit),
+                idCategory = uiState.category.id,
+                onClose = { wordsViewModel.closeWordDialog() },
+                onSubmit = { newWord ->
+                    run {
+                        wordsViewModel.editWord(newWord)
+                        wordsViewModel.closeWordDialog()
+                    }
+                }
+            )
+        }
+
+        else -> {}
     }
 }

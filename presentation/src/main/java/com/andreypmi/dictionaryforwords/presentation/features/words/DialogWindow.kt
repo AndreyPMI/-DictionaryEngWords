@@ -27,6 +27,7 @@ import com.andreypmi.dictionaryforwords.domain.models.Word
 
 @Composable
 internal fun DialogWindow(
+    title:String,
     idCategory: Int,
     onClose: () -> Unit,
     onSubmit: (Word) -> Unit
@@ -44,7 +45,7 @@ internal fun DialogWindow(
             color = MaterialTheme.colorScheme.surface
         ) {
             Column(Modifier.padding(dialogPadding)) {
-                Text(text = stringResource(id = R.string.dialog_add))
+                Text(text = title)
                 OutlinedTextField(
                     value = wordState.word,
                     onValueChange = { newWord ->

@@ -6,9 +6,11 @@ import kotlinx.coroutines.flow.StateFlow
 
 interface IWordsViewModel {
     val uiState : StateFlow<WordsUiState>
-    val dialogState : StateFlow<Boolean>
+    val dialogState : StateFlow<DialogState>
     fun openAddWordDialog()
-    fun closeAddWordDialog()
+    fun openEditWordDialog(word: Word)
+    fun closeWordDialog()
     fun addNewWord(word: Word)
     fun deleteWord(word: Word)
+    fun editWord(word: Word)
 }

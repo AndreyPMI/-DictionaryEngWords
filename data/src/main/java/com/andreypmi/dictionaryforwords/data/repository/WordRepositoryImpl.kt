@@ -36,7 +36,6 @@ class WordRepositoryImpl(
         Log.d("insert_repos" , "${newWordsEntity.toString()}")
         return try {
             dao.insert(word = newWordsEntity)
-            Log.d("insert_repos" , "${true}")
             true
         } catch (e: Throwable) {
             Log.e("Ошибка при вставке записи в базу данных.", "$e")
@@ -49,6 +48,20 @@ class WordRepositoryImpl(
     }
 
     override suspend fun delete(word: Word): Boolean {
-        TODO("Not yet implemented")
+        if (word.id == null){return false}
+        val WordsEntity = WordsEntity(
+            id_word = word.id!!,
+            id_category = word.idCategory,
+            word = word.word,
+            description = word.description,
+            translate = word.translate
+        )
+        return try {
+            dao.delete(word = WordsEntity)
+            true
+        } catch (e: Throwable) {
+            Log.e("Ошибка при вставке записи в базу данных.", "$e")
+            false
+        }
     }
 }
