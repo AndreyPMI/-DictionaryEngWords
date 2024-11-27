@@ -68,6 +68,10 @@ internal fun MainScreen(
             DialogWindow(
                 title = stringResource(id = R.string.dialog_edit),
                 idCategory = uiState.category.id,
+                id = wordsViewModel.editWord?.id,
+                word = wordsViewModel.editWord?.word,
+                translate = wordsViewModel.editWord?.translate,
+                description = wordsViewModel.editWord?.description,
                 onClose = { wordsViewModel.closeWordDialog() },
                 onSubmit = { newWord ->
                     run {

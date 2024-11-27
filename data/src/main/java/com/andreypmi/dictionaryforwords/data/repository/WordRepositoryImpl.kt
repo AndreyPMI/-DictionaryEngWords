@@ -13,7 +13,6 @@ class WordRepositoryImpl(
 ) : WordRepository {
     override suspend fun getAllWords(): List<Word> {
         val list = dao.getAllWords().first().map { EntityMapper.toDomainModel(it) }
-        Log.d("corrutine", "${list}")
         return list
     }
 
@@ -25,43 +24,39 @@ class WordRepositoryImpl(
         TODO("Not yet implemented")
     }
 
-    override suspend fun insert(word: Word): Boolean {
-        val newWordsEntity = WordsEntity(
-            id_word = dao.getIndex().first() + 1,
-            id_category = word.idCategory,
-            word = word.word,
-            description = word.description,
-            translate = word.translate
-        )
-        Log.d("insert_repos" , "${newWordsEntity.toString()}")
+    override suspend fun insert(word: Word): Word? {
+        val newWordsEntity = EntityMapper.fromDomainModel(word, dao.getIndex().first() + 1)
+        Log.d("insert_repos", "${newWordsEntity.toString()}")
         return try {
             dao.insert(word = newWordsEntity)
-            true
+            EntityMapper.toDomainModel(newWordsEntity)
         } catch (e: Throwable) {
             Log.e("Ошибка при вставке записи в базу данных.", "$e")
-            false
+            null
         }
     }
 
     override suspend fun update(word: Word): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun delete(word: Word): Boolean {
-        if (word.id == null){return false}
-        val WordsEntity = WordsEntity(
-            id_word = word.id!!,
-            id_category = word.idCategory,
-            word = word.word,
-            description = word.description,
-            translate = word.translate
-        )
+        val newWordsEntity = EntityMapper.fromDomainModel(word, id = word.id!!)
         return try {
-            dao.delete(word = WordsEntity)
+            dao.insert(newWordsEntity)
             true
         } catch (e: Throwable) {
-            Log.e("Ошибка при вставке записи в базу данных.", "$e")
             false
         }
     }
+
+override suspend fun delete(word: Word): Boolean {
+    if (word.id == null) {
+        return false
+    }
+    val WordsEntity = EntityMapper.fromDomainModel(word, word.id!!)
+    return try {
+        dao.delete(word = WordsEntity)
+        true
+    } catch (e: Throwable) {
+        Log.e("Ошибка при вставке записи в базу данных.", "$e")
+        false
+    }
+}
 }

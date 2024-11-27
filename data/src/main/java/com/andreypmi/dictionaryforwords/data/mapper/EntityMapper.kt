@@ -4,6 +4,7 @@ import com.andreypmi.dictionaryforwords.data.storage.entites.CategoriesEntity
 import com.andreypmi.dictionaryforwords.data.storage.entites.WordsEntity
 import com.andreypmi.dictionaryforwords.domain.models.Category
 import com.andreypmi.dictionaryforwords.domain.models.Word
+import kotlinx.coroutines.flow.first
 
 object EntityMapper {
     fun toDomainModel(entity: WordsEntity): Word {
@@ -19,6 +20,21 @@ object EntityMapper {
         return Category(
             id = entity.id_category,
             category = entity.category_name
+        )
+    }
+    fun fromDomainModel(model: Word, id:Int):WordsEntity{
+        return WordsEntity(
+            id_word = model.id?:id,
+            id_category = model.idCategory,
+            word = model.word,
+            translate = model.translate,
+            description = model.description
+        )
+    }
+    fun fromDomainModel(model: Category):CategoriesEntity{
+        return CategoriesEntity(
+            id_category = model.id,
+            category_name = model.category
         )
     }
 }

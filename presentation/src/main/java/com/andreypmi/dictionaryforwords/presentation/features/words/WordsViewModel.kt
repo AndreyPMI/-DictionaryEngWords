@@ -37,14 +37,13 @@ class WordsViewModel(
     )
     private val _dialogState = MutableStateFlow(DialogState.NONE)
     private var _editWord : Word? = null
+    override val editWord: Word?
+        get() = _editWord
     init {
         try {
             viewModelScope.launch {
                 wordsList = wordUseCase.getAllWords().toMutableList()
                 updateWordsList()
-//                _uiState.update { currentState ->
-//                    currentState.copy(words = wordsList)
-//                }
             }
 
         } catch (e: Exception) {
@@ -68,11 +67,9 @@ class WordsViewModel(
 
     override fun addNewWord(word: Word) {
         viewModelScope.launch {
-            if (wordUseCase.insertWord(word)) {
-                wordsList += word
-                Log.d("addWord","${
-                    wordsList.toString()
-                }")
+            wordUseCase.insertWord(word)?.let {
+                wordsList += it
+                Log.d("addWord", wordsList.toString())
                 updateWordsList()
             }
         }
@@ -89,23 +86,19 @@ class WordsViewModel(
 
     override fun editWord(word: Word) {
         Log.d("openEditWordDialog","${word.id}, ${word.word}")
-//        viewModelScope.launch {
-//            if(wordUseCase.updateWord(word)){
-//                Log.d("openEditWordDialog","${word.id}")
-//                val index = wordsList.indexOfFirst { it.id == word.id }
-//                    if (index != -1) {
-//                    wordsList[index] = Word(
-//                        id = word.id,
-//                        idCategory = word.idCategory,
-//                        word = word.word,
-//                        translate = word.translate,
-//                        description = word.description
-//                    )
-//                }
-//                updateWordsList()
-//            }
-//        }
+        if (_editWord == null){return}
+        viewModelScope.launch {
+            if(wordUseCase.updateWord(word)){
+                Log.d("openEditWordDialog","${word.id}")
+                val index = wordsList.indexOfFirst { it.id == word.id }
+                    if (index != -1) {
+                    wordsList[index] = word
+                }
+                updateWordsList()
+            }
+        }
     }
+
 
     private fun updateWordsList() {
         _uiState.update { currentState ->

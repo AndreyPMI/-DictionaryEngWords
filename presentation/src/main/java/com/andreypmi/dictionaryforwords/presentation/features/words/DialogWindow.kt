@@ -24,20 +24,24 @@ import com.andreypmi.dictionaryforwords.core.ui.theme.dialogWidth
 import com.andreypmi.dictionaryforwords.core.ui.R
 import com.andreypmi.dictionaryforwords.domain.models.Word
 
-
+const val EMPTY_STRING = ""
 @Composable
 internal fun DialogWindow(
     title:String,
     idCategory: Int,
+    id: Int? = null,
+    word:String? = EMPTY_STRING,
+    translate:String? = EMPTY_STRING,
+    description:String? = EMPTY_STRING,
     onClose: () -> Unit,
     onSubmit: (Word) -> Unit
 ) {
     val (wordState, setWordState) = remember {
-        mutableStateOf(Word(id = null,
+        mutableStateOf(Word(id = id,
             idCategory = idCategory,
-            word = "",
-            translate = "",
-            description = ""))
+            word = word?: EMPTY_STRING,
+            translate = translate?: EMPTY_STRING,
+            description = description?: EMPTY_STRING))
     }
     Dialog(onDismissRequest = onClose) {
         Surface(
