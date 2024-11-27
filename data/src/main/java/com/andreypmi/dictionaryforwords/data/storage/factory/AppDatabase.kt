@@ -1,6 +1,7 @@
 package com.andreypmi.dictionaryforwords.data.storage.factory
 
 import android.content.Context
+import android.util.Log
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -22,9 +23,16 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun wordDao():WordDao
     companion object {
         fun create(context: Context): AppDatabase {
-            return Room.databaseBuilder(
-                context = context, klass = AppDatabase::class.java, name = DATABASE_NAME
-            ).createFromAsset(DATABASE_NAME).fallbackToDestructiveMigration().build()
+            Log.d("AppDatabase","$context")
+             var db = Room.databaseBuilder(
+                context = context,
+                klass = AppDatabase::class.java,
+                name = DATABASE_NAME
+            )
+                 .createFromAsset(DATABASE_NAME)
+                 //   .fallbackToDestructiveMigration()
+                .build()
+            return db
         }
     }
 }

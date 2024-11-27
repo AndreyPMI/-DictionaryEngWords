@@ -3,7 +3,9 @@ package com.andreypmi.dictionaryforwords.domain.usecase
 import com.andreypmi.dictionaryforwords.domain.models.Word
 import com.andreypmi.dictionaryforwords.domain.repository.WordRepository
 
-class WordUseCasesFacade(private val repository: WordRepository)  {
+class WordUseCasesFacade(
+  private val repository: WordRepository
+)  {
     private val getAllWordsUseCase = GetAllWordsUseCase(repository)
     private val getWordByIdUseCase = GetWordByIdUseCase(repository)
     private val getWordByNameUseCase = GetWordByNameUseCase(repository)

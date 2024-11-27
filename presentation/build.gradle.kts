@@ -64,7 +64,8 @@ dependencies {
     implementation(libs.navigation.compose)
     implementation(libs.navigation.fragment)
 
-
+    implementation(libs.koin.android)
+    implementation(libs.koin.core)
     // tests
     testImplementation(libs.junit)
     testImplementation(libs.mockk)

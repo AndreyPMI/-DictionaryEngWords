@@ -39,9 +39,14 @@ dependencies {
     implementation(project(":data"))
 
     implementation(libs.core.ktx)
+    implementation(libs.androidx.datastore.core)
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.koin.android)
+    implementation(libs.koin.core)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)

@@ -1,17 +1,30 @@
 package com.andreypmi.dictionaryforwords.data.storage.entites
 
+import androidx.annotation.NonNull
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
-@Entity(tableName = WordsEntity.TABLE_NAME)
+@Entity(tableName = WordsEntity.TABLE_NAME,
+    foreignKeys = [
+        ForeignKey(
+            entity = CategoriesEntity::class,
+            parentColumns = arrayOf(CategoriesEntity.ID),
+            childColumns = arrayOf(WordsEntity.ID_CATEGORY),
+            onDelete = ForeignKey.CASCADE
+        )
+    ])
 data class WordsEntity(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     val id_word : Int,
-
+    @NonNull
     val id_category : Int,
+    @NonNull
     val word : String,
+    @NonNull
     val translate : String,
-    val description : String
+
+    val description : String?
 ) {
     companion object{
         const val TABLE_NAME = "words"

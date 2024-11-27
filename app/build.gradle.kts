@@ -67,7 +67,7 @@ dependencies {
     implementation(libs.okhttp3.interceptor)
     implementation(libs.androidx.datastore.core)
     implementation(libs.androidx.datastore.preferences)
-    implementation(libs.androidx.work.runtime.ktx)
+    //implementation(libs.androidx.work.runtime.ktx)
 
     // ui compose
     implementation(libs.activity.compose)
