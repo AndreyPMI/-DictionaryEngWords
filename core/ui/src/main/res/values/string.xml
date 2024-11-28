@@ -10,4 +10,10 @@
     <string name="dialog_word">Word</string>
     <string name="dialog_translation">Translation</string>
     <string name="dialog_description">Description</string>
+
+
+    <string name="words">Words</string>
+    <string name="learning">Learning</string>
+    <string name="profile">Profile</string>
+
 </resources>
