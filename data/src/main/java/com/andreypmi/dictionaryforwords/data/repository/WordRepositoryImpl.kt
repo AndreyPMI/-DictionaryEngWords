@@ -6,14 +6,17 @@ import com.andreypmi.dictionaryforwords.data.storage.dao.WordDao
 import com.andreypmi.dictionaryforwords.data.storage.entites.WordsEntity
 import com.andreypmi.dictionaryforwords.domain.models.Word
 import com.andreypmi.dictionaryforwords.domain.repository.WordRepository
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 
 class WordRepositoryImpl(
     private val dao: WordDao
 ) : WordRepository {
-    override suspend fun getAllWords(): List<Word> {
-        val list = dao.getAllWords().first().map { EntityMapper.toDomainModel(it) }
-        return list
+    override suspend fun getAllWords(): Flow<List<Word>> {
+        return dao.getAllWords().map { entities ->
+            entities.map { entity -> EntityMapper.toDomainModel(entity) }
+        }
     }
 
     override suspend fun getWordById(id: Long): Word? {
@@ -38,8 +41,10 @@ class WordRepositoryImpl(
 
     override suspend fun update(word: Word): Boolean {
         val newWordsEntity = EntityMapper.fromDomainModel(word, id = word.id!!)
+        Log.d("openupdate", newWordsEntity.toString())
         return try {
             dao.insert(newWordsEntity)
+            Log.d("openupdate", true.toString())
             true
         } catch (e: Throwable) {
             false

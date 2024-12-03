@@ -13,7 +13,7 @@ interface IWordsViewModel {
     fun closeWordDialog()
     fun addNewWord(word: Word)
     fun deleteWord(word: Word)
-    fun editWord(word: Word)
+    fun updateWord(word: Word)
 
 
 }

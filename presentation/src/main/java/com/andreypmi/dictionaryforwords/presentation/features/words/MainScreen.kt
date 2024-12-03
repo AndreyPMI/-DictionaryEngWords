@@ -75,7 +75,7 @@ internal fun MainScreen(
                 onClose = { wordsViewModel.closeWordDialog() },
                 onSubmit = { newWord ->
                     run {
-                        wordsViewModel.editWord(newWord)
+                        wordsViewModel.updateWord(newWord)
                         wordsViewModel.closeWordDialog()
                     }
                 }
