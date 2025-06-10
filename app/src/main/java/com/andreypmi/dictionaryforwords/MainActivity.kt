@@ -3,40 +3,15 @@ package com.andreypmi.dictionaryforwords
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
-import com.andreypmi.dictionaryforwords.core.ui.theme.DictionaryForWordsTheme
-import com.andreypmi.dictionaryforwords.presentation.DictionaryNavHost
-import com.andreypmi.dictionaryforwords.presentation.features.words.IWordsViewModel
-import com.andreypmi.dictionaryforwords.presentation.features.words.WordsViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import com.andreypmi.navigation.DictionaryNavApp
 
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val viewModel by viewModel<WordsViewModel>()
-
         setContent {
-            DictionaryNavApp(viewModel)
+            DictionaryNavApp()
         }
     }
 }
 
-@Composable
-fun DictionaryNavApp(
-    wordsViewModel : IWordsViewModel
-) {
-    DictionaryForWordsTheme {
-        DictionaryNavHost(wordsViewModel = wordsViewModel)
-    }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    DictionaryForWordsTheme {
-
-    }
-}

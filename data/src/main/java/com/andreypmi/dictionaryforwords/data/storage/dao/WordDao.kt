@@ -6,14 +6,12 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.andreypmi.dictionaryforwords.data.storage.entites.CategoriesEntity
 import com.andreypmi.dictionaryforwords.data.storage.entites.WordsEntity
-import com.andreypmi.dictionaryforwords.domain.models.Word
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface WordDao {
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(word: WordsEntity)
     @Update
     suspend fun update(word: WordsEntity)

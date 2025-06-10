@@ -2,8 +2,9 @@ plugins {
     alias(libs.plugins.com.android.application)
     alias(libs.plugins.org.jetbrains.kotlin.android)
     id("kotlin-parcelize")
+    alias(libs.plugins.devtools.ksp)
+    alias(libs.plugins.compose.compiler)
 }
-
 
 android {
     namespace = "com.andreypmi.dictionaryforwords.app"
@@ -53,21 +54,15 @@ android {
 dependencies {
 
     implementation(project(":data"))
-    implementation(project(":domain"))
-    implementation(project(":presentation"))
     implementation(project(":core:ui"))
-    implementation(project(":core:di"))
 
     implementation(libs.core.ktx)
-
     implementation(libs.lifecycle.runtime.ktx)
-
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.json)
     implementation(libs.okhttp3.interceptor)
     implementation(libs.androidx.datastore.core)
     implementation(libs.androidx.datastore.preferences)
-    //implementation(libs.androidx.work.runtime.ktx)
 
     // ui compose
     implementation(libs.activity.compose)
@@ -76,15 +71,19 @@ dependencies {
     implementation(libs.ui.graphics)
     implementation(libs.ui.tooling.preview)
     implementation(libs.material3)
+    implementation(project(":core:navigation"))
+    implementation(project(":feature:word_list"))
+    implementation(project(":core_domain"))
     androidTestImplementation(platform(libs.compose.bom))
     androidTestImplementation(libs.ui.test.junit4)
     debugImplementation(libs.ui.tooling)
     debugImplementation(libs.ui.test.manifest)
-
+    // room?
     implementation(libs.androidx.room.runtime)
 
-    //koin
-    implementation(libs.koin.android)
+    //dagger
+    implementation(libs.dagger)
+    ksp(libs.dagger.compiler)
 
     // tests
     testImplementation(libs.junit)
