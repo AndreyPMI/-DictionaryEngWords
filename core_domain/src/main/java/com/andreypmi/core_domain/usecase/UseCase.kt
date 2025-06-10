@@ -1,0 +1,8 @@
+package com.andreypmi.core_domain.usecase
+
+interface UseCaseWithParam<R,P> {
+    suspend fun execute(params: P):R
+}
+interface UseCaseWithoutParam<R>{
+    suspend fun execute():R
+}

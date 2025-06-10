@@ -2,9 +2,10 @@ package com.andreypmi.dictionaryforwords.data.repository
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.andreypmi.dictionaryforwords.domain.repository.PreferencesRepository
+import com.andreypmi.core_domain.repository.PreferencesRepository
 
-class PreferencesRepositoryImpl(context: Context) : PreferencesRepository {
+class PreferencesRepositoryImpl(context: Context) :
+    PreferencesRepository {
     private val sharedPrefs: SharedPreferences =
         context.getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
 

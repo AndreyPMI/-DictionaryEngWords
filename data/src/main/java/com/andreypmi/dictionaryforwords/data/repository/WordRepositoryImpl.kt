@@ -1,16 +1,16 @@
 package com.andreypmi.dictionaryforwords.data.repository
 
 import android.util.Log
+import com.andreypmi.core_domain.models.Word
+import com.andreypmi.core_domain.repository.WordRepository
 import com.andreypmi.dictionaryforwords.data.mapper.EntityMapper
 import com.andreypmi.dictionaryforwords.data.storage.dao.WordDao
-import com.andreypmi.dictionaryforwords.data.storage.entites.WordsEntity
-import com.andreypmi.dictionaryforwords.domain.models.Word
-import com.andreypmi.dictionaryforwords.domain.repository.WordRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-class WordRepositoryImpl(
+class WordRepositoryImpl @Inject constructor(
     private val dao: WordDao
 ) : WordRepository {
     override suspend fun getAllWords(): Flow<List<Word>> {
