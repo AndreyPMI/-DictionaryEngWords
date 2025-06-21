@@ -4,6 +4,7 @@ import android.util.Log
 import com.andreypmi.core_domain.models.Word
 import com.andreypmi.core_domain.repository.WordRepository
 import com.andreypmi.dictionaryforwords.data.mapper.EntityMapper
+import com.andreypmi.dictionaryforwords.data.storage.dao.CategoriesDao
 import com.andreypmi.dictionaryforwords.data.storage.dao.WordDao
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -11,10 +12,11 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class WordRepositoryImpl @Inject constructor(
-    private val dao: WordDao
+    private val wordDao: WordDao,
+    private val categoriesDao: CategoriesDao,
 ) : WordRepository {
     override suspend fun getAllWords(): Flow<List<Word>> {
-        return dao.getAllWords().map { entities ->
+        return wordDao.getAllWords().map { entities ->
             entities.map { entity -> EntityMapper.toDomainModel(entity) }
         }
     }
@@ -28,23 +30,19 @@ class WordRepositoryImpl @Inject constructor(
     }
 
     override suspend fun insert(word: Word): Word? {
-        val newWordsEntity = EntityMapper.fromDomainModel(word, dao.getIndex().first() + 1)
-        Log.d("insert_repos", "${newWordsEntity.toString()}")
+        val newWordsEntity = EntityMapper.fromDomainModel(word, wordDao.getIndex().first() + 1)
         return try {
-            dao.insert(word = newWordsEntity)
+            wordDao.insert(word = newWordsEntity)
             EntityMapper.toDomainModel(newWordsEntity)
         } catch (e: Throwable) {
-            Log.e("Ошибка при вставке записи в базу данных.", "$e")
             null
         }
     }
 
     override suspend fun update(word: Word): Boolean {
         val newWordsEntity = EntityMapper.fromDomainModel(word, id = word.id!!)
-        Log.d("openupdate", newWordsEntity.toString())
         return try {
-            dao.insert(newWordsEntity)
-            Log.d("openupdate", true.toString())
+            wordDao.insert(newWordsEntity)
             true
         } catch (e: Throwable) {
             false
@@ -57,7 +55,7 @@ override suspend fun delete(word: Word): Boolean {
     }
     val WordsEntity = EntityMapper.fromDomainModel(word, word.id!!)
     return try {
-        dao.delete(word = WordsEntity)
+        wordDao.delete(word = WordsEntity)
         true
     } catch (e: Throwable) {
         Log.e("Ошибка при вставке записи в базу данных.", "$e")
