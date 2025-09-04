@@ -29,12 +29,12 @@ class WordRepositoryImpl @Inject constructor(
 
     override suspend fun insert(word: Word): Word? {
         val newWordsEntity = EntityMapper.fromDomainModel(word, dao.getIndex().first() + 1)
-        Log.d("insert_repos", "${newWordsEntity.toString()}")
+        Log.d("AAAinsert_repos", "${newWordsEntity.toString()}")
         return try {
             dao.insert(word = newWordsEntity)
             EntityMapper.toDomainModel(newWordsEntity)
         } catch (e: Throwable) {
-            Log.e("Ошибка при вставке записи в базу данных.", "$e")
+            Log.e("AAAОшибка при вставке записи в базу данных.", "$e")
             null
         }
     }

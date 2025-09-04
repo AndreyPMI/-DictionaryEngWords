@@ -62,6 +62,7 @@ dependencies {
     implementation(libs.androidx.datastore.core)
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.work.runtime.ktx)
     ksp(libs.androidx.room.compiler)
     //dagger
     implementation(libs.dagger)
