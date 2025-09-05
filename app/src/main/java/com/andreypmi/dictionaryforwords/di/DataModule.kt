@@ -46,7 +46,7 @@ interface DataModule {
         }
         @Provides
         fun provideCategoryDao(appDatabase: AppDatabase): CategoriesDao {
-            return appDatabase.categoryDao()
+            return appDatabase.categoriesDao()
         }
     }
 }
