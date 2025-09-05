@@ -1,6 +1,5 @@
 package com.andreypmi.dictionaryforwords.word_list.presentation.words
 
-import android.util.Log
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -14,7 +13,6 @@ import com.andreypmi.navigation_api.DictionaryNavDestination
 fun NavGraphBuilder.words(
 ) {
     composable(route = WordsDestination.route) {
-        Log.d("AAA", WordListDepsProvider.toString())
         val wordsComponent =
             DaggerWordListComponent.builder().addDeps(WordListDepsProvider.deps).build()
         val viewModel = viewModel<WordsViewModel>(factory = wordsComponent.vmFactory)

@@ -12,7 +12,7 @@ android {
 
 
     defaultConfig {
-        applicationId = "com.andreypmi.dictionaryforwords.data"
+        applicationId = "com.andreypmi.dictionaryforwords"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = 1
@@ -55,6 +55,9 @@ dependencies {
 
     implementation(project(":data"))
     implementation(project(":core:ui"))
+    implementation(project(":core:navigation"))
+    implementation(project(":feature:word_list"))
+    implementation(project(":core_domain"))
 
     implementation(libs.core.ktx)
     implementation(libs.lifecycle.runtime.ktx)
@@ -71,16 +74,9 @@ dependencies {
     implementation(libs.ui.graphics)
     implementation(libs.ui.tooling.preview)
     implementation(libs.material3)
-    implementation(project(":core:navigation"))
-    implementation(project(":feature:word_list"))
-    implementation(project(":core_domain"))
-    androidTestImplementation(platform(libs.compose.bom))
-    androidTestImplementation(libs.ui.test.junit4)
-    debugImplementation(libs.ui.tooling)
-    debugImplementation(libs.ui.test.manifest)
+
     // room?
     implementation(libs.androidx.room.runtime)
-
     //dagger
     implementation(libs.dagger)
     ksp(libs.dagger.compiler)
@@ -90,6 +86,10 @@ dependencies {
     testImplementation(libs.mockk)
     testImplementation(libs.kotlinx.coroutines.test)
     androidTestImplementation(libs.androidx.test.ext.junit)
+    androidTestImplementation(platform(libs.compose.bom))
+    androidTestImplementation(libs.ui.test.junit4)
+    debugImplementation(libs.ui.tooling)
+    debugImplementation(libs.ui.test.manifest)
 
     //navigation
     implementation(libs.navigation.ui)
