@@ -5,7 +5,7 @@ import com.andreypmi.core_domain.repository.WordRepository
 import javax.inject.Inject
 
 class WordUseCasesFacade @Inject constructor(
-  private val repository: WordRepository
+  repository: WordRepository
 )  {
     private val getAllWordsUseCase = GetAllWordsUseCase(repository)
     private val getWordByIdUseCase = GetWordByIdUseCase(repository)

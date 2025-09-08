@@ -67,6 +67,7 @@ dependencies {
     implementation(libs.navigation.fragment)
     //dagger
     implementation(libs.dagger)
+    implementation(libs.androidx.compose.material.core)
     ksp(libs.dagger.compiler)
     // tests
     testImplementation(libs.junit)

@@ -4,6 +4,7 @@ import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
@@ -41,7 +42,6 @@ private val LightColorScheme = lightColorScheme(
 @Composable
 fun DictionaryForWordsTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
@@ -68,7 +68,22 @@ fun DictionaryForWordsTheme(
         typography = Typography,
     ) {
         CompositionLocalProvider(
-            LocalNewsAggregatorDimension provides Dimensions(),
+            LocalDictionaryDimension provides Dimensions(),
+            content = content
+        )
+    }
+
+}
+@Composable
+fun DictionaryTheme(
+    content: @Composable () -> Unit
+) {
+    MaterialTheme(
+        colorScheme = colorScheme,
+        typography = Typography
+    ) {
+        CompositionLocalProvider(
+            LocalDictionaryDimension provides Dimensions(),
             content = content
         )
     }
