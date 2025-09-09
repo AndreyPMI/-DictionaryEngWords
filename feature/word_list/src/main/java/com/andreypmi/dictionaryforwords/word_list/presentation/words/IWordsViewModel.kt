@@ -1,14 +1,15 @@
 package com.andreypmi.dictionaryforwords.word_list.presentation.words
 
 import com.andreypmi.core_domain.models.Word
+import com.andreypmi.dictionaryforwords.word_list.presentation.models.CategoryState
 import com.andreypmi.dictionaryforwords.word_list.presentation.models.DialogState
 import com.andreypmi.dictionaryforwords.word_list.presentation.models.WordsUiState
 import kotlinx.coroutines.flow.StateFlow
 
 interface IWordsViewModel {
-    val uiState: StateFlow<WordsUiState>
+    val wordsState: StateFlow<WordsUiState?>
     val dialogState: StateFlow<DialogState>
-
+    val categoryState: StateFlow<CategoryState>
     fun handleIntent(intent: WordsIntent)
 
     sealed class WordsIntent {

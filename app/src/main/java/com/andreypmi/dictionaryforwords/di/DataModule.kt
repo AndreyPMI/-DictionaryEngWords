@@ -3,7 +3,9 @@ package com.andreypmi.dictionaryforwords.di
 
 import android.content.Context
 import androidx.room.Room
+import com.andreypmi.core_domain.repository.PreferencesDataSource
 import com.andreypmi.core_domain.repository.WordRepository
+import com.andreypmi.dictionaryforwords.data.repository.PreferencesDataSourceImpl
 import com.andreypmi.dictionaryforwords.data.repository.WordRepositoryImpl
 import com.andreypmi.dictionaryforwords.data.storage.dao.CategoriesDao
 import com.andreypmi.dictionaryforwords.data.storage.dao.WordDao
@@ -21,6 +23,10 @@ interface DataModule {
     @Binds
     @Singleton
     fun bindWordRepository(wordRepositoryImpl: WordRepositoryImpl): WordRepository
+
+    @Binds
+    @Singleton
+    fun bindPreferencesDataSource(PreferencesDataSourceImpl: PreferencesDataSourceImpl): PreferencesDataSource
 
     companion object {
 

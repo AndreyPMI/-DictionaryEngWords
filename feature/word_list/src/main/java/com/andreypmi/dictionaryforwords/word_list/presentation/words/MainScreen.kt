@@ -16,18 +16,26 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.andreypmi.core_domain.models.Category
+import com.andreypmi.core_domain.models.Word
 import com.andreypmi.dictionaryforwords.core.ui.R
+import com.andreypmi.dictionaryforwords.core.ui.theme.DictionaryTheme
 import com.andreypmi.dictionaryforwords.word_list.presentation.CardField
+import com.andreypmi.dictionaryforwords.word_list.presentation.models.DialogState
 import com.andreypmi.dictionaryforwords.word_list.presentation.models.DialogType
 import com.andreypmi.dictionaryforwords.word_list.presentation.models.WordsUiState
 import com.andreypmi.dictionaryforwords.word_list.presentation.words.IWordsViewModel.WordsIntent
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 @Composable
 internal fun MainScreen(
     wordsViewModel: IWordsViewModel
 ) {
-    val uiState: WordsUiState by wordsViewModel.uiState.collectAsStateWithLifecycle()
+    val uiState: WordsUiState by wordsViewModel.wordsState.collectAsStateWithLifecycle()
     val dialogState by wordsViewModel.dialogState.collectAsState()
 
     Scaffold(
@@ -66,6 +74,9 @@ internal fun MainScreen(
                                         word
                                     )
                                 )
+                            },
+                            onClickCard = {
+
                             }
                         )
                     }
@@ -107,5 +118,30 @@ internal fun MainScreen(
         else -> {
             // No dialog is active
         }
+    }
+}
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+private fun Preview(){
+    DictionaryTheme {
+        MainScreen( object : IWordsViewModel {
+
+            override fun handleIntent(intent: IWordsViewModel.WordsIntent) {
+                return
+            }
+
+            override val wordsState: StateFlow<WordsUiState> = MutableStateFlow(
+                WordsUiState(
+                    Category(1, "def"),
+                    listOf(Word(1, 1, "d", "d", "des"))
+                )
+            ).asStateFlow()
+            override val dialogState: StateFlow<DialogState> = MutableStateFlow(
+                DialogState(
+                    editWord = null,
+                    dialogType = DialogType.NONE
+                )
+            )
+        })
     }
 }

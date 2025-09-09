@@ -107,7 +107,7 @@ private fun Preview() {
                     return
                 }
 
-                override val uiState: StateFlow<WordsUiState> = MutableStateFlow(
+                override val wordsState: StateFlow<WordsUiState> = MutableStateFlow(
                     WordsUiState(
                         Category(1, "def"),
                         listOf(Word(1, 1, "d", "d", "des"))

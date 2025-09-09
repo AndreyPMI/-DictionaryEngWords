@@ -2,15 +2,19 @@ package com.andreypmi.dictionaryforwords.data.repository
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.andreypmi.core_domain.repository.PreferencesRepository
+import com.andreypmi.core_domain.repository.PreferencesDataSource
+import javax.inject.Inject
+import androidx.core.content.edit
 
-class PreferencesRepositoryImpl(context: Context) :
-    PreferencesRepository {
+const val APP_PREFERENCES = "app_preferences"
+
+class PreferencesDataSourceImpl @Inject constructor(context: Context) :
+    PreferencesDataSource {
     private val sharedPrefs: SharedPreferences =
         context.getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
 
     override suspend fun <T> setValue(key: String, value: T) {
-        with(sharedPrefs.edit()) {
+        sharedPrefs.edit {
             when (value) {
                 is Boolean -> putBoolean(key, value)
                 is Float -> putFloat(key, value)
@@ -19,7 +23,6 @@ class PreferencesRepositoryImpl(context: Context) :
                 is String -> putString(key, value)
                 else -> throw IllegalArgumentException("Unsupported type setValue")
             }
-            apply()
         }
     }
 

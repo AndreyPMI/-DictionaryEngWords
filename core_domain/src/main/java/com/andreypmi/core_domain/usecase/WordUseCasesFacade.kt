@@ -2,6 +2,12 @@ package com.andreypmi.core_domain.usecase
 
 import com.andreypmi.core_domain.models.Word
 import com.andreypmi.core_domain.repository.WordRepository
+import com.andreypmi.core_domain.usecase.wordsUseCases.DeleteWordUseCase
+import com.andreypmi.core_domain.usecase.wordsUseCases.GetAllWordsUseCase
+import com.andreypmi.core_domain.usecase.wordsUseCases.GetWordByIdUseCase
+import com.andreypmi.core_domain.usecase.wordsUseCases.GetWordByNameUseCase
+import com.andreypmi.core_domain.usecase.wordsUseCases.InsertWordUseCase
+import com.andreypmi.core_domain.usecase.wordsUseCases.UpdateWordUseCase
 import javax.inject.Inject
 
 class WordUseCasesFacade @Inject constructor(
