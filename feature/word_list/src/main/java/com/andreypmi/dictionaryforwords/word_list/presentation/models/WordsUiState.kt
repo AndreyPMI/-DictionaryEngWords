@@ -1,11 +1,12 @@
 package com.andreypmi.dictionaryforwords.word_list.presentation.models
 
-import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
 import com.andreypmi.core_domain.models.Category
 import com.andreypmi.core_domain.models.Word
 
-@Immutable
+@Stable
 data class WordsUiState(
-    var category: Category,
-    var words: List<Word>
+    val category: Category?,
+    val words: List<Word>,
+    val error: String? = null
 )

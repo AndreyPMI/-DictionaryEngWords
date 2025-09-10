@@ -12,11 +12,12 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
-
+val LocalIsPreview = staticCompositionLocalOf { false }
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
     secondary = PurpleGrey80,
@@ -43,6 +44,7 @@ private val LightColorScheme = lightColorScheme(
 fun DictionaryForWordsTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     dynamicColor: Boolean = true,
+    isPreview: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
@@ -76,7 +78,8 @@ fun DictionaryForWordsTheme(
 }
 @Composable
 fun DictionaryTheme(
-    content: @Composable () -> Unit
+    isPreview: Boolean = false,
+    content: @Composable () -> Unit,
 ) {
     MaterialTheme(
         colorScheme = colorScheme,
@@ -84,6 +87,7 @@ fun DictionaryTheme(
     ) {
         CompositionLocalProvider(
             LocalDictionaryDimension provides Dimensions(),
+            LocalIsPreview provides isPreview,
             content = content
         )
     }

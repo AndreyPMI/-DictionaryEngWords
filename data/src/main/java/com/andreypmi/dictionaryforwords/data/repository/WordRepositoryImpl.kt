@@ -66,45 +66,49 @@ class WordRepositoryImpl @Inject constructor(
             }
         }
 
-override suspend fun insertCategory(category: Category): Category? {
-    try {
-        val id = categoriesDao.insertCategory(EntityMapper.fromDomainModel(category))
-        return category.copy(id = id.toInt())
-    }catch (e:Exception){
-        return null
+    override suspend fun insertCategory(category: Category): Category? {
+        try {
+            val id = categoriesDao.insertCategory(EntityMapper.fromDomainModel(category))
+            return category.copy(id = id.toInt())
+        } catch (e: Exception) {
+            return null
+        }
     }
-}
 
-override suspend fun updateCategory(category: Category): Boolean {
-    try {
-        categoriesDao.updateCategory(EntityMapper.fromDomainModel(category))
-        return true
-    }catch (e: Exception){
-        return false
+    override suspend fun updateCategory(category: Category): Boolean {
+        try {
+            categoriesDao.updateCategory(EntityMapper.fromDomainModel(category))
+            return true
+        } catch (e: Exception) {
+            return false
+        }
     }
-}
 
-override suspend fun deleteCategory(category: Category): Boolean {
-    try {
-        categoriesDao.deleteCategoryCascade(EntityMapper.fromDomainModel(category))
-        return true
-    }catch (e: Exception){
-        return false
+    override suspend fun deleteCategory(category: Category): Boolean {
+        try {
+            categoriesDao.deleteCategoryCascade(EntityMapper.fromDomainModel(category))
+            return true
+        } catch (e: Exception) {
+            return false
+        }
     }
-}
 
-override suspend fun saveLastSelectedCategory(key: String, category: Category) {
-    preferencesDataSource.setValue(
-        key = APP_PREFERENCES,
-        value = category.id
-    )
-}
+    override suspend fun getWordById(id: Long): Word? {
+        TODO("Not yet implemented")
+    }
 
-override suspend fun loadLastSelectedCategory(key: String): String? =
-    preferencesDataSource.getValue<String?>(
-        key = APP_PREFERENCES,
-        defaultValue = null
-    )
+    override suspend fun saveLastSelectedCategory(key: String, category: Category) {
+        preferencesDataSource.setValue(
+            key = APP_PREFERENCES,
+            value = category.id
+        )
+    }
+
+    override suspend fun loadLastSelectedCategory(key: String): String? =
+        preferencesDataSource.getValue<String?>(
+            key = APP_PREFERENCES,
+            defaultValue = null
+        )
 
 
 }

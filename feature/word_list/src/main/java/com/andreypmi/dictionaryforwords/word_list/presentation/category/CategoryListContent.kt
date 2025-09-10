@@ -15,7 +15,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Create
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -57,15 +59,35 @@ fun CategoryListContent(
 private fun CategoryList(
     categories: List<Category>,
     onCategoryClick: (Category) -> Unit,
-    onAddCategory: () -> Unit
+    onAddCategory: () -> Unit = {},
+    onDeleteClick: (Category) -> Unit = {},
+    onChangeClick: (Category) -> Unit = {}
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(MaterialTheme.dimension.size16)
     ) {
-        items(categories, key = { it.id}) { category ->
-            CategoryItem(category, onCategoryClick)
+        items(categories, key = { it.id }) { category ->
+            CategoryItem(
+                category = category,
+                onCategoryClick = onCategoryClick,
+                onChangeClick = onChangeClick,
+                onDeleteClick = onDeleteClick
+            )
             Spacer(Modifier.height(MaterialTheme.dimension.size8))
+        }
+    }
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.BottomCenter
+    ) {
+        Button(
+            onClick = onAddCategory,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(MaterialTheme.dimension.size16)
+        ) {
+            Text("Добавить категорию")
         }
     }
 }
@@ -73,7 +95,9 @@ private fun CategoryList(
 @Composable
 fun CategoryItem(
     category: Category,
-    onCategoryClick: (Category) -> Unit
+    onCategoryClick: (Category) -> Unit,
+    onDeleteClick: (Category) -> Unit = {},
+    onChangeClick: (Category) -> Unit = {}
 ) {
     Card(
         modifier = Modifier
@@ -97,8 +121,16 @@ fun CategoryItem(
                 modifier = Modifier.weight(1f)
             )
             Icon(
-                imageVector = Icons.AutoMirrored.Default.ArrowBack,
-                contentDescription = "Перейти",
+                modifier = Modifier.clickable { onChangeClick(category) },
+                imageVector = Icons.Default.Create,
+                contentDescription = "Изменить",
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Spacer(Modifier.width(MaterialTheme.dimension.size16))
+            Icon(
+                modifier = Modifier.clickable { onDeleteClick(category) },
+                imageVector = Icons.Default.Delete,
+                contentDescription = "Удалить",
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }

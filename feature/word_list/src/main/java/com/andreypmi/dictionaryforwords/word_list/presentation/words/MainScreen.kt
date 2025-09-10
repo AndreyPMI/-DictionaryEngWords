@@ -23,6 +23,7 @@ import com.andreypmi.core_domain.models.Word
 import com.andreypmi.dictionaryforwords.core.ui.R
 import com.andreypmi.dictionaryforwords.core.ui.theme.DictionaryTheme
 import com.andreypmi.dictionaryforwords.word_list.presentation.CardField
+import com.andreypmi.dictionaryforwords.word_list.presentation.models.CategoryState
 import com.andreypmi.dictionaryforwords.word_list.presentation.models.DialogState
 import com.andreypmi.dictionaryforwords.word_list.presentation.models.DialogType
 import com.andreypmi.dictionaryforwords.word_list.presentation.models.WordsUiState
@@ -35,7 +36,12 @@ import kotlinx.coroutines.flow.asStateFlow
 internal fun MainScreen(
     wordsViewModel: IWordsViewModel
 ) {
-    val uiState: WordsUiState by wordsViewModel.wordsState.collectAsStateWithLifecycle()
+    val uiState = wordsViewModel.wordsState.collectAsStateWithLifecycle(
+        initialValue = WordsUiState(
+            category = Category(0, ""),
+            words = emptyList()
+        )
+    )
     val dialogState by wordsViewModel.dialogState.collectAsState()
 
     Scaffold(
@@ -58,27 +64,29 @@ internal fun MainScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 LazyColumn {
-                    items(uiState.words) { word ->
-                        CardField(
-                            word = word,
-                            onEditClicked = {
-                                wordsViewModel.handleIntent(
-                                    WordsIntent.OpenEditWordDialog(
-                                        word
+                    uiState.value?.let {
+                        items(it.words) { word ->
+                            CardField(
+                                word = word,
+                                onEditClicked = {
+                                    wordsViewModel.handleIntent(
+                                        WordsIntent.OpenEditWordDialog(
+                                            word
+                                        )
                                     )
-                                )
-                            },
-                            onDeleteClicked = {
-                                wordsViewModel.handleIntent(
-                                    WordsIntent.DeleteWord(
-                                        word
+                                },
+                                onDeleteClicked = {
+                                    wordsViewModel.handleIntent(
+                                        WordsIntent.DeleteWord(
+                                            word
+                                        )
                                     )
-                                )
-                            },
-                            onClickCard = {
+                                },
+                                onClickCard = {
 
-                            }
-                        )
+                                }
+                            )
+                        }
                     }
                 }
             }
@@ -86,33 +94,37 @@ internal fun MainScreen(
     )
     when (dialogState.dialogType) {
         DialogType.ADD -> {
-            DialogWindow(
-                title = stringResource(id = R.string.dialog_add),
-                idCategory = uiState.category.id,
-                onClose = { wordsViewModel.handleIntent(WordsIntent.CloseWordDialog) },
-                onSubmit = { newWord ->
-                    wordsViewModel.handleIntent(WordsIntent.AddNewWord(newWord))
-                    wordsViewModel.handleIntent(WordsIntent.CloseWordDialog)
-                }
-            )
+            uiState.value?.category?.id?.let {
+                DialogWindow(
+                    title = stringResource(id = R.string.dialog_add),
+                    idCategory = it,
+                    onClose = { wordsViewModel.handleIntent(WordsIntent.CloseWordDialog) },
+                    onSubmit = { newWord ->
+                        wordsViewModel.handleIntent(WordsIntent.AddNewWord(newWord))
+                        wordsViewModel.handleIntent(WordsIntent.CloseWordDialog)
+                    }
+                )
+            }
         }
 
         DialogType.EDIT -> {
-            DialogWindow(
-                title = stringResource(id = R.string.dialog_edit),
-                idCategory = uiState.category.id,
-                id = dialogState.editWord?.id,
-                word = dialogState.editWord?.word,
-                translate = dialogState.editWord?.translate,
-                description = dialogState.editWord?.description,
-                onClose = { wordsViewModel.handleIntent(WordsIntent.CloseWordDialog) },
-                onSubmit = { newWord ->
-                    run {
-                        wordsViewModel.handleIntent(WordsIntent.UpdateWord(newWord))
-                        wordsViewModel.handleIntent(WordsIntent.CloseWordDialog)
+            uiState.value?.category?.let {
+                DialogWindow(
+                    title = stringResource(id = R.string.dialog_edit),
+                    idCategory = it.id,
+                    id = dialogState.editWord?.id,
+                    word = dialogState.editWord?.word,
+                    translate = dialogState.editWord?.translate,
+                    description = dialogState.editWord?.description,
+                    onClose = { wordsViewModel.handleIntent(WordsIntent.CloseWordDialog) },
+                    onSubmit = { newWord ->
+                        run {
+                            wordsViewModel.handleIntent(WordsIntent.UpdateWord(newWord))
+                            wordsViewModel.handleIntent(WordsIntent.CloseWordDialog)
+                        }
                     }
-                }
-            )
+                )
+            }
         }
 
         else -> {
@@ -142,6 +154,12 @@ private fun Preview(){
                     dialogType = DialogType.NONE
                 )
             )
+            override val categoryState: StateFlow<CategoryState> =
+                MutableStateFlow(
+                    CategoryState.Success(
+                        emptyList()
+                    )
+                )
         })
     }
 }

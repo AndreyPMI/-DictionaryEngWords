@@ -19,6 +19,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,31 +27,36 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.andreypmi.core_domain.models.Category
 import com.andreypmi.core_domain.models.Word
 import com.andreypmi.dictionaryforwords.core.ui.theme.DictionaryTheme
+import com.andreypmi.dictionaryforwords.core.ui.theme.LocalIsPreview
 import com.andreypmi.dictionaryforwords.core.ui.theme.dimension
 import com.andreypmi.dictionaryforwords.word_list.presentation.models.CategoryState
 import com.andreypmi.dictionaryforwords.word_list.presentation.models.DialogState
 import com.andreypmi.dictionaryforwords.word_list.presentation.models.DialogType
 import com.andreypmi.dictionaryforwords.word_list.presentation.models.WordsUiState
 import com.andreypmi.dictionaryforwords.word_list.presentation.words.IWordsViewModel
+import com.andreypmi.dictionaryforwords.word_list.presentation.words.IWordsViewModel.WordsIntent
 import com.andreypmi.dictionaryforwords.word_list.presentation.words.MainScreen
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 
+
 @SuppressLint("ConfigurationScreenWidthHeight")
 @Composable
 fun CategoryPanel(wordsViewModel: IWordsViewModel) {
-    var isExpanded by remember { mutableStateOf(true) }
+    val isPreview = LocalIsPreview.current
+    var isExpanded by remember { mutableStateOf(!isPreview) }
     val size32 = MaterialTheme.dimension.size32
     val panelWidth = MaterialTheme.dimension.size112
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp.dp
     val screenHeight = configuration.screenHeightDp.dp
-
+    val categoryState by wordsViewModel.categoryState.collectAsStateWithLifecycle()
     val panelOffsetX by animateDpAsState(
         targetValue = if (isExpanded) screenWidth - size32 else 0.dp,
         label = "panelSlide"
@@ -87,8 +93,14 @@ fun CategoryPanel(wordsViewModel: IWordsViewModel) {
                 tonalElevation = MaterialTheme.dimension.size8
             ) {
                 CategoryListContent(
-                    state = CategoryState.Empty,
-                    onCategoryClick = { },
+                    state = categoryState,
+                    onCategoryClick = { category ->
+                        wordsViewModel.handleIntent(
+                            WordsIntent.SelectCategory(
+                                category
+                            )
+                        )
+                    },
                     onAddCategory = {}
                 )
             }
@@ -99,14 +111,13 @@ fun CategoryPanel(wordsViewModel: IWordsViewModel) {
 @Preview
 @Composable
 private fun Preview() {
-    DictionaryTheme {
+    DictionaryTheme(isPreview = true) {
         CategoryPanel(
             object : IWordsViewModel {
 
                 override fun handleIntent(intent: IWordsViewModel.WordsIntent) {
                     return
                 }
-
                 override val wordsState: StateFlow<WordsUiState> = MutableStateFlow(
                     WordsUiState(
                         Category(1, "def"),
@@ -117,6 +128,13 @@ private fun Preview() {
                     DialogState(
                         editWord = null,
                         dialogType = DialogType.NONE
+                    )
+                )
+                override val categoryState: StateFlow<CategoryState> = MutableStateFlow(
+                    CategoryState.Success(
+                        listOf(Category(1,"First category"),
+                            Category(2,"Second category")
+                            )
                     )
                 )
             })

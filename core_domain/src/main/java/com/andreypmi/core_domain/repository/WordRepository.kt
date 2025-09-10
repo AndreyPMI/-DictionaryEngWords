@@ -5,17 +5,18 @@ import com.andreypmi.core_domain.models.Word
 import kotlinx.coroutines.flow.Flow
 
 interface WordRepository {
-     fun getWordsByCategoryId(category: Category): Flow<List<Word>>
-    suspend fun insertWord(word: Word) : Word?
+    fun getWordsByCategoryId(category: Category): Flow<List<Word>>
+    suspend fun insertWord(word: Word): Word?
     suspend fun updateWord(word: Word): Boolean
     suspend fun deleteWord(word: Word): Boolean
+    suspend fun getWordById(id: Long): Word?
 
-     fun getAllCategory(): Flow<List<Category>>
-    suspend fun insertCategory(category: Category):Category?
-    suspend fun updateCategory(category: Category):Boolean
-    suspend fun deleteCategory(category: Category):Boolean
+    fun getAllCategory(): Flow<List<Category>>
+    suspend fun insertCategory(category: Category): Category?
+    suspend fun updateCategory(category: Category): Boolean
+    suspend fun deleteCategory(category: Category): Boolean
 
-    suspend fun saveLastSelectedCategory(key: String,category: Category)
-    suspend fun loadLastSelectedCategory(key: String,):String?
+    suspend fun saveLastSelectedCategory(key: String, category: Category)
+    suspend fun loadLastSelectedCategory(key: String): String?
 
 }

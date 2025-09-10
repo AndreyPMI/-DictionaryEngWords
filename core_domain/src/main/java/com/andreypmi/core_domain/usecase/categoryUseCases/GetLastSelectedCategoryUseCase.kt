@@ -8,10 +8,10 @@ import com.andreypmi.core_domain.usecase.UseCaseWithoutParam
 const val CATEGORY_KEY = "category"
 
 class GetLastSelectedCategoryUseCase(private val repository: WordRepository) :
-    UseCaseWithoutParam<String?> {
-    override suspend fun execute(): String? {
+    UseCaseWithoutParam<Int?> {
+    override suspend fun execute(): Int? {
         kotlin.runCatching {
-            return repository.loadLastSelectedCategory(key = CATEGORY_KEY)
+            return repository.loadLastSelectedCategory(key = CATEGORY_KEY)?.toInt()
         }.getOrElse {
             return null
         }
