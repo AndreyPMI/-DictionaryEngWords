@@ -45,6 +45,7 @@ dependencies {
     implementation(project(":core:ui"))
     implementation(project(":core:navigation_api"))
     implementation(project(":core_domain"))
+    implementation(project(":core:logger"))
 
     implementation(libs.core.ktx)
     implementation(libs.lifecycle.runtime.ktx)
@@ -67,6 +68,7 @@ dependencies {
     implementation(libs.navigation.fragment)
     //dagger
     implementation(libs.dagger)
+    implementation(libs.androidx.compose.material.core)
     ksp(libs.dagger.compiler)
     // tests
     testImplementation(libs.junit)

@@ -17,3 +17,4 @@ import androidx.room.PrimaryKey
             const val CATEGORY_NAME = "category_name"
         }
     }
+

@@ -5,26 +5,30 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.andreypmi.core_domain.models.Category
 import com.andreypmi.core_domain.models.Word
+import com.andreypmi.core_domain.usecase.CategoryUseCasesFacade
 import com.andreypmi.core_domain.usecase.WordUseCasesFacade
-import com.andreypmi.dictionaryforwords.word_list.presentation.models.DialogState
-import com.andreypmi.dictionaryforwords.word_list.presentation.models.DialogType
+import com.andreypmi.core_domain.usecase.sharedManager.CategorySelectionManager
+import com.andreypmi.dictionaryforwords.word_list.presentation.models.Mapper
+import com.andreypmi.dictionaryforwords.word_list.presentation.models.WordDialogState
+import com.andreypmi.dictionaryforwords.word_list.presentation.models.WordState
 import com.andreypmi.dictionaryforwords.word_list.presentation.models.WordsUiState
-import com.andreypmi.dictionaryforwords.word_list.presentation.words.IWordsViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 class WordsViewModel(
-    private val wordUseCase: WordUseCasesFacade
+    private val wordUseCase: WordUseCasesFacade,
+    private val categoryUseCases: CategoryUseCasesFacade,
+    private val categorySelectionManager: CategorySelectionManager
 ) : ViewModel(), IWordsViewModel {
-    private val _uiState = MutableStateFlow(
-        WordsUiState(
-            category = Category(1, category = ""),//TODO id=0
-            words = emptyList()
-        )
-    )
-    private val _dialogState = MutableStateFlow(DialogState(null, DialogType.NONE))
+
+    private val _wordsState = MutableStateFlow<WordsUiState?>(null)
+    override val wordsState: StateFlow<WordsUiState?> = _wordsState.asStateFlow()
+
+    private val _wordDialogState = MutableStateFlow<WordDialogState>(WordDialogState.Hidden)
+    override val wordDialogState: StateFlow<WordDialogState> = _wordDialogState.asStateFlow()
 
     override fun handleIntent(intent: IWordsViewModel.WordsIntent) {
         when (intent) {
@@ -38,54 +42,98 @@ class WordsViewModel(
     }
 
     init {
-        try {
-            viewModelScope.launch {
-                wordUseCase.getAllWords().collect { words ->
-                    _uiState.value = _uiState.value.copy(words = words)
+        viewModelScope.launch {
+            categorySelectionManager.categorySelectedFlow.collect { category ->
+                Log.d("AAA","aas${category.id}")
+                loadWords(category.id)
+            }
+        }
+        loadInitialWords()
+    }
+    private fun loadInitialWords() {
+        viewModelScope.launch {
+            val lastCategoryId = categoryUseCases.getLastSelectedCategory()
+            if (lastCategoryId != -1) {
+                if (lastCategoryId != null) {
+                    loadWords(lastCategoryId)
+                }else{
+                    loadWords(1)
                 }
             }
-
-        } catch (e: Exception) {
-            Log.d("corrutine", "$e")
         }
     }
-
-    override val dialogState = _dialogState.asStateFlow()
-    override val uiState = _uiState.asStateFlow()
-
-    fun openAddWordDialog() {
-        _dialogState.update { it.copy(dialogType = DialogType.ADD) }
-    }
-
-    fun openEditWordDialog(word: Word) {
-        _dialogState.update { it.copy(dialogType = DialogType.EDIT, editWord = word) }
-    }
-
-    fun closeWordDialog() {
-        _dialogState.update { it.copy(dialogType = DialogType.NONE, editWord = null) }
-    }
-
-    fun addNewWord(word: Word) {
+    private fun loadWords(categoryId: Int) {
         viewModelScope.launch {
-            wordUseCase.insertWord(word)
+            try {
+                val selectedCategory =
+                    categoryUseCases.getCategoryById(categoryId)?: return@launch
+
+                wordUseCase.getAllWords(selectedCategory)
+                    .catch { e ->
+                        _wordsState.value = WordsUiState(
+                            error = "Ошибка загрузки слов: ${e.message}",
+                            category = selectedCategory,
+                            words = emptyList()
+                        )
+                    }
+                    .collect { words ->
+                        _wordsState.value = WordsUiState(
+                            words = words.map { Mapper.fromDomainModel(it) },
+                            category = selectedCategory,
+                            error = null
+                        )
+                    }
+            } catch (e: Exception) {
+                _wordsState.value = WordsUiState(
+                    error = "Ошибка: ${e.message}",
+                    category = null,
+                    words = emptyList()
+                )
+            }
         }
     }
 
-    fun deleteWord(word: Word) {
+    private suspend fun getDefaultCategory(): Category {
+        val categoryId = categoryUseCases.getLastSelectedCategory()
+        if (categoryId != null) {
+            return categoryUseCases.getCategoryById(categoryId)?: Category(1, "Default")
+        }
+        return Category(1, "Default")
+    }
+
+    private fun openAddWordDialog() {
+       _wordDialogState.value = WordDialogState.Add
+    }
+
+    private fun openEditWordDialog(word: WordState) {
+        _wordDialogState.value = WordDialogState.Edit(word)
+    }
+
+    private fun closeWordDialog() {
+        _wordDialogState.value = WordDialogState.Hidden
+    }
+
+    private fun addNewWord(word: WordState) {
+        viewModelScope.launch {
+            wordUseCase.insertWord(Mapper.toDomainModel(word))
+            closeWordDialog()
+            loadWords(word.idCategory)
+        }
+    }
+
+    private fun deleteWord(word: WordState) {
         Log.d("deleteWord", "$word")
         viewModelScope.launch {
-            wordUseCase.deleteWord(word)
+            wordUseCase.deleteWord(Mapper.toDomainModel(word))
+            _wordsState.value?.category?.id?.let { loadWords(it) }
         }
     }
 
-    fun updateWord(word: Word) {
-        Log.d("openEditWordDialog", "${word.id}, ${word.word}")
-        if (_dialogState.value.editWord == null) {
-            return
-        }
+    private fun updateWord(word: WordState) {
         viewModelScope.launch {
-            if (wordUseCase.updateWord(word)) {
-                Log.d("openEditWordDialog", "+")
+            if (wordUseCase.updateWord(Mapper.toDomainModel(word))) {
+                closeWordDialog()
+                _wordsState.value?.category?.id?.let { loadWords(it) }
             }
         }
     }

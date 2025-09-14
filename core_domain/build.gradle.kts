@@ -13,6 +13,8 @@ kotlin {
     }
 }
 dependencies{
+    implementation(project(":core:logger"))
+    
     implementation(libs.kotlinx.coroutines.core)
     //dagger
     implementation(libs.dagger)

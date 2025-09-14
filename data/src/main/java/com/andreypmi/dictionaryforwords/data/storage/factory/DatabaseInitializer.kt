@@ -21,7 +21,7 @@ class DatabaseInitializer @Inject constructor() {
             database?.let { appDatabase ->
                 CoroutineScope(Dispatchers.IO).launch {
                     try {
-                        appDatabase.categoryDao().insertCategory(
+                        appDatabase.categoriesDao().insertCategory(
                             CategoriesEntity(
                                 id_category = 1,
                                 category_name = "default"

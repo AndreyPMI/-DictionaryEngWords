@@ -1,6 +1,8 @@
 package com.andreypmi.dictionaryforwords.app
 
 import android.app.Application
+import com.andreypmi.core_domain.di.DaggerDomainComponent
+import com.andreypmi.core_domain.di.DomainDepsProvider
 import com.andreypmi.dictionaryforwords.di.DaggerAppComponent
 import com.andreypmi.dictionaryforwords.word_list.di.WordListDepsProvider
 
@@ -11,6 +13,8 @@ class App : Application() {
         val appComponent = DaggerAppComponent.factory().create(
             this,
         )
+        val domainComponent = DaggerDomainComponent.factory().create(appComponent)
         WordListDepsProvider.initialize(appComponent)
+        DomainDepsProvider.initialize(appComponent)
     }
 }

@@ -55,6 +55,7 @@ dependencies {
 
     implementation(project(":data"))
     implementation(project(":core:ui"))
+    implementation(project(":core:logger"))
     implementation(project(":core:navigation"))
     implementation(project(":feature:word_list"))
     implementation(project(":core_domain"))
