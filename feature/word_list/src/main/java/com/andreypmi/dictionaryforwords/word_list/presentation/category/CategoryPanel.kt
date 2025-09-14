@@ -15,11 +15,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,26 +29,24 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.andreypmi.core_domain.models.Category
-import com.andreypmi.core_domain.models.Word
 import com.andreypmi.dictionaryforwords.core.ui.theme.DictionaryTheme
 import com.andreypmi.dictionaryforwords.core.ui.theme.LocalIsPreview
 import com.andreypmi.dictionaryforwords.core.ui.theme.dimension
-import com.andreypmi.dictionaryforwords.word_list.presentation.models.CategoryState
-import com.andreypmi.dictionaryforwords.word_list.presentation.models.DialogState
-import com.andreypmi.dictionaryforwords.word_list.presentation.models.DialogType
+import com.andreypmi.dictionaryforwords.word_list.presentation.category.viewModels.ICategoryViewModel
+import com.andreypmi.dictionaryforwords.word_list.presentation.models.WordDialogState
+import com.andreypmi.dictionaryforwords.word_list.presentation.models.WordState
 import com.andreypmi.dictionaryforwords.word_list.presentation.models.WordsUiState
-import com.andreypmi.dictionaryforwords.word_list.presentation.words.IWordsViewModel
-import com.andreypmi.dictionaryforwords.word_list.presentation.words.IWordsViewModel.WordsIntent
 import com.andreypmi.dictionaryforwords.word_list.presentation.words.MainScreen
+import com.andreypmi.dictionaryforwords.word_list.presentation.words.viewModels.IWordsViewModel
+import com.andreypmi.dictionaryforwords.word_list.presentation.words.viewModels.IWordsViewModel.WordsIntent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 
-
 @SuppressLint("ConfigurationScreenWidthHeight")
 @Composable
-fun CategoryPanel(wordsViewModel: IWordsViewModel) {
+fun CategoryPanel(wordsViewModel: IWordsViewModel, categoryViewModel: ICategoryViewModel) {
     val isPreview = LocalIsPreview.current
     var isExpanded by remember { mutableStateOf(!isPreview) }
     val size32 = MaterialTheme.dimension.size32
@@ -56,11 +54,12 @@ fun CategoryPanel(wordsViewModel: IWordsViewModel) {
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp.dp
     val screenHeight = configuration.screenHeightDp.dp
-    val categoryState by wordsViewModel.categoryState.collectAsStateWithLifecycle()
+    val categoryState by categoryViewModel.categoryState.collectAsStateWithLifecycle()
     val panelOffsetX by animateDpAsState(
         targetValue = if (isExpanded) screenWidth - size32 else 0.dp,
         label = "panelSlide"
     )
+    val dialogState by categoryViewModel.categoryDialogState.collectAsState()
 
     Box(Modifier.fillMaxSize()) {
         MainScreen(wordsViewModel)
@@ -95,13 +94,40 @@ fun CategoryPanel(wordsViewModel: IWordsViewModel) {
                 CategoryListContent(
                     state = categoryState,
                     onCategoryClick = { category ->
-                        wordsViewModel.handleIntent(
-                            WordsIntent.SelectCategory(
+                        categoryViewModel.handleIntent(
+                            ICategoryViewModel.CategoryIntent.SelectCategory(
                                 category
                             )
                         )
                     },
-                    onAddCategory = {}
+                    onAddCategory = {
+                        categoryViewModel.handleIntent(ICategoryViewModel.CategoryIntent.ShowAddCategoryDialog)
+                    },
+                    dialogState = dialogState,
+                    onEditCategory = {
+                        categoryViewModel.handleIntent(
+                            ICategoryViewModel.CategoryIntent.ShowEditCategoryDialog(
+                                it
+                            )
+                        )
+                    },
+                    onDeleteCategory = {
+                        categoryViewModel.handleIntent(
+                            ICategoryViewModel.CategoryIntent.ShowDeleteCategoryDialog(
+                                it
+                            )
+                        )
+                    },
+                    onDismissDialog = { categoryViewModel.handleIntent(ICategoryViewModel.CategoryIntent.HideCategoryDialog) },
+                    onConfirmAddCategory = {
+                        categoryViewModel.handleIntent(
+                            ICategoryViewModel.CategoryIntent.AddCategory(
+                                it
+                            )
+                        )
+                    },
+                    onConfirmEditCategory = {categoryViewModel.handleIntent(ICategoryViewModel.CategoryIntent.UpdateCategory(it))},
+                    onConfirmDeleteCategory = {categoryViewModel.handleIntent(ICategoryViewModel.CategoryIntent.DeleteCategory(it))},
                 )
             }
         }
@@ -115,28 +141,22 @@ private fun Preview() {
         CategoryPanel(
             object : IWordsViewModel {
 
-                override fun handleIntent(intent: IWordsViewModel.WordsIntent) {
+                override fun handleIntent(intent: WordsIntent) {
                     return
                 }
+
                 override val wordsState: StateFlow<WordsUiState> = MutableStateFlow(
                     WordsUiState(
                         Category(1, "def"),
-                        listOf(Word(1, 1, "d", "d", "des"))
+                        listOf(WordState(1, 1, "d", "d", "des"))
                     )
                 ).asStateFlow()
-                override val dialogState: StateFlow<DialogState> = MutableStateFlow(
-                    DialogState(
-                        editWord = null,
-                        dialogType = DialogType.NONE
-                    )
-                )
-                override val categoryState: StateFlow<CategoryState> = MutableStateFlow(
-                    CategoryState.Success(
-                        listOf(Category(1,"First category"),
-                            Category(2,"Second category")
-                            )
-                    )
-                )
-            })
+                override val wordDialogState: StateFlow<WordDialogState>
+                    get() = mutableStateOf(
+                        WordDialogState.Add
+                    ) as StateFlow<WordDialogState>
+            },
+            categoryViewModel = TODO()
+        )
     }
 }

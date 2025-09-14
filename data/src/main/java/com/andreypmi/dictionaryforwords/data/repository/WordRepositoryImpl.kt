@@ -93,22 +93,29 @@ class WordRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getCategoryById(id: Int): Category? {
+        return categoriesDao.getCategoryById(id)?.let { EntityMapper.toDomainModel(it) }
+    }
+
     override suspend fun getWordById(id: Long): Word? {
         TODO("Not yet implemented")
     }
 
     override suspend fun saveLastSelectedCategory(key: String, category: Category) {
         preferencesDataSource.setValue(
-            key = APP_PREFERENCES,
+            key = key,
             value = category.id
         )
     }
 
-    override suspend fun loadLastSelectedCategory(key: String): String? =
-        preferencesDataSource.getValue<String?>(
-            key = APP_PREFERENCES,
-            defaultValue = null
+    override suspend fun loadLastSelectedCategory(key: String): Int? {
+        Log.d("AAA1", "$key")
+        val str = preferencesDataSource.getValue<Int?>(
+            key = key,
+            defaultValue = 1
         )
-
+        Log.d("AAA1", "$str")
+        return str
+    }
 
 }

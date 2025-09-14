@@ -37,8 +37,15 @@ import com.andreypmi.dictionaryforwords.word_list.presentation.models.CategorySt
 @Composable
 fun CategoryListContent(
     state: CategoryState,
-    onCategoryClick: (Category) -> Unit,
-    onAddCategory: () -> Unit,
+    dialogState: CategoryDialogState,
+    onCategoryClick: (Category) -> Unit = {},
+    onAddCategory: () -> Unit = {},
+    onEditCategory: (Category) -> Unit = {},
+    onDeleteCategory: (Category) -> Unit = {},
+    onDismissDialog: () -> Unit = {},
+    onConfirmAddCategory: (String) -> Unit = {},
+    onConfirmEditCategory: (Category) -> Unit = {},
+    onConfirmDeleteCategory: (Category) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     Box(modifier = modifier.fillMaxSize()) {
@@ -47,10 +54,32 @@ fun CategoryListContent(
             is CategoryState.Error -> ErrorState(error = state.message)
             is CategoryState.Empty -> EmptyCategoriesState(onAddCategory)
             is CategoryState.Success -> CategoryList(
-                state.categories,
-                onCategoryClick,
-                onAddCategory
+                categories = state.categories,
+                onCategoryClick = onCategoryClick,
+                onAddCategory = onAddCategory,
+                onDeleteClick = onDeleteCategory,
+                onChangeClick = onEditCategory
             )
+        }
+        when (dialogState) {
+            is CategoryDialogState.Add -> AddCategoryDialog(
+                onDismiss = onDismissDialog,
+                onConfirm = onConfirmAddCategory
+            )
+
+            is CategoryDialogState.Edit -> EditCategoryDialog(
+                category = dialogState.category,
+                onDismiss = onDismissDialog,
+                onConfirm = onConfirmEditCategory
+            )
+
+            is CategoryDialogState.Delete -> DeleteCategoryDialog(
+                category = dialogState.category,
+                onDismiss = onDismissDialog,
+                onConfirm = onConfirmDeleteCategory
+            )
+
+            CategoryDialogState.Hidden -> {}
         }
     }
 }
@@ -147,6 +176,14 @@ private fun Preview() {
             ),
             onCategoryClick = { },
             onAddCategory = {},
+            dialogState = TODO(),
+            onEditCategory = TODO(),
+            onDeleteCategory = TODO(),
+            onDismissDialog = TODO(),
+            onConfirmAddCategory = TODO(),
+            onConfirmEditCategory = TODO(),
+            onConfirmDeleteCategory = TODO(),
+            modifier = TODO(),
         )
     }
 }
@@ -161,6 +198,14 @@ private fun PreviewError() {
             ),
             onCategoryClick = { },
             onAddCategory = {},
+            dialogState = TODO(),
+            onEditCategory = TODO(),
+            onDeleteCategory = TODO(),
+            onDismissDialog = TODO(),
+            onConfirmAddCategory = TODO(),
+            onConfirmEditCategory = TODO(),
+            onConfirmDeleteCategory = TODO(),
+            modifier = TODO(),
         )
     }
 }
@@ -173,6 +218,14 @@ private fun PreviewIsLoading() {
             state = CategoryState.Loading,
             onCategoryClick = { },
             onAddCategory = {},
+            dialogState = TODO(),
+            onEditCategory = TODO(),
+            onDeleteCategory = TODO(),
+            onDismissDialog = TODO(),
+            onConfirmAddCategory = TODO(),
+            onConfirmEditCategory = TODO(),
+            onConfirmDeleteCategory = TODO(),
+            modifier = TODO(),
         )
     }
 }

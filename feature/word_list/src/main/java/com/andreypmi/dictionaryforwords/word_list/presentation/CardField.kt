@@ -35,14 +35,15 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import com.andreypmi.core_domain.models.Word
 import com.andreypmi.dictionaryforwords.core.ui.R
+import com.andreypmi.dictionaryforwords.word_list.presentation.models.WordState
 
 @Composable
 internal fun CardField(
-    word: Word,
+    word: WordState,
     modifier: Modifier = Modifier,
     onClickCard: () -> Unit = {},
-    onDeleteClicked: (Word) -> Unit = {},
-    onEditClicked: (Word) -> Unit = {}
+    onDeleteClicked: (WordState) -> Unit = {},
+    onEditClicked: (WordState) -> Unit = {}
 ) {
     val isDescriptionVisible by remember { mutableStateOf<Boolean>(false) } //TODO add logic for change
     var expanded by remember { mutableStateOf(false) }
@@ -96,7 +97,7 @@ internal fun CardField(
             }}
             else{
                 Text(
-                    text = word.translate,
+                    text = word.translation,
                     fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.labelLarge
                 )
@@ -129,5 +130,5 @@ internal fun CardField(
 @Composable
 @Preview(showBackground = true, showSystemUi = false)
 private fun Preview() {
-    CardField(Word(1, 1, "ruWord", "Descr", "des"))
+    CardField(WordState(1, 1, "ruWord", "Descr", "des"))
 }

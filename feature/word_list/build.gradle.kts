@@ -45,6 +45,7 @@ dependencies {
     implementation(project(":core:ui"))
     implementation(project(":core:navigation_api"))
     implementation(project(":core_domain"))
+    implementation(project(":core:logger"))
 
     implementation(libs.core.ktx)
     implementation(libs.lifecycle.runtime.ktx)

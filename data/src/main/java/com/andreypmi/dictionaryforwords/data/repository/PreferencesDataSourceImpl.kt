@@ -2,11 +2,13 @@ package com.andreypmi.dictionaryforwords.data.repository
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import com.andreypmi.core_domain.repository.PreferencesDataSource
 import javax.inject.Inject
 import androidx.core.content.edit
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
-const val APP_PREFERENCES = "app_preferences"
 
 class PreferencesDataSourceImpl @Inject constructor(context: Context) :
     PreferencesDataSource {
@@ -14,29 +16,34 @@ class PreferencesDataSourceImpl @Inject constructor(context: Context) :
         context.getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
 
     override suspend fun <T> setValue(key: String, value: T) {
-        sharedPrefs.edit {
-            when (value) {
-                is Boolean -> putBoolean(key, value)
-                is Float -> putFloat(key, value)
-                is Int -> putInt(key, value)
-                is Long -> putLong(key, value)
-                is String -> putString(key, value)
-                else -> throw IllegalArgumentException("Unsupported type setValue")
+        withContext(Dispatchers.IO) {
+            sharedPrefs.edit().apply {
+                when (value) {
+                    is Boolean -> putBoolean(key, value)
+                    is Float -> putFloat(key, value)
+                    is Int -> putInt(key, value)
+                    is Long -> putLong(key, value)
+                    is String -> putString(key, value)
+                    else -> throw IllegalArgumentException("Unsupported type setValue")
+                }
+                apply()
             }
         }
     }
 
     @Suppress("UNCHECKED_CAST")
     override suspend fun <T> getValue(key: String, defaultValue: T): T {
-        return with(sharedPrefs) {
+        return withContext(Dispatchers.IO) {
+            Log.d("AAA","AA")
             val result = when (defaultValue) {
-                is Boolean -> getBoolean(key, defaultValue)
-                is Float -> getFloat(key, defaultValue as Float)
-                is Int -> getInt(key, defaultValue)
-                is Long -> getLong(key, defaultValue)
-                is String -> getString(key, defaultValue) ?: defaultValue
+                is Boolean -> sharedPrefs.getBoolean(key, defaultValue)
+                is Float -> sharedPrefs.getFloat(key, defaultValue as Float)
+                is Int -> sharedPrefs.getInt(key, defaultValue)
+                is Long -> sharedPrefs.getLong(key, defaultValue)
+                is String -> sharedPrefs.getString(key, defaultValue as String?) ?: defaultValue
                 else -> throw IllegalArgumentException("Unsupported type getValue")
             } as T
+            Log.d("AAA121","$result")
             result
         }
     }

@@ -14,7 +14,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import com.andreypmi.core_domain.models.Category
+import com.andreypmi.dictionaryforwords.presentation.R
 
 @Composable
 fun AddCategoryDialog(
@@ -25,12 +27,12 @@ fun AddCategoryDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Добавить категорию") },
+        title = { Text(stringResource(R.string.AddCategory)) },
         text = {
             OutlinedTextField(
                 value = categoryName,
                 onValueChange = { categoryName = it },
-                label = { Text("Название категории") },
+                label = { Text(stringResource(R.string.CategoryName)) },
                 modifier = Modifier.fillMaxWidth()
             )
         },
@@ -39,12 +41,12 @@ fun AddCategoryDialog(
                 onClick = { onConfirm(categoryName) },
                 enabled = categoryName.isNotBlank()
             ) {
-                Text("Добавить")
+                Text(stringResource(R.string.Add))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Отмена")
+                Text(stringResource(R.string.Cancel))
             }
         }
     )
@@ -54,32 +56,32 @@ fun AddCategoryDialog(
 fun EditCategoryDialog(
     category: Category,
     onDismiss: () -> Unit,
-    onConfirm: (String) -> Unit
+    onConfirm: (Category) -> Unit
 ) {
     var categoryName by remember { mutableStateOf(category.category) }
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Изменить категорию") },
+        title = { Text(stringResource(R.string.ChangeCategory)) },
         text = {
             OutlinedTextField(
                 value = categoryName,
                 onValueChange = { categoryName = it },
-                label = { Text("Название категории") },
+                label = { Text(stringResource(R.string.CategoryName)) },
                 modifier = Modifier.fillMaxWidth()
             )
         },
         confirmButton = {
             Button(
-                onClick = { onConfirm(categoryName) },
+                onClick = { onConfirm(category.copy(category = categoryName)) },
                 enabled = categoryName.isNotBlank() && categoryName != category.category
             ) {
-                Text("Сохранить")
+                Text(stringResource(R.string.Save))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Отмена")
+                Text(stringResource(R.string.Cancel))
             }
         }
     )
@@ -89,23 +91,23 @@ fun EditCategoryDialog(
 fun DeleteCategoryDialog(
     category: Category,
     onDismiss: () -> Unit,
-    onConfirm: () -> Unit
+    onConfirm: (Category) -> Unit
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Удалить категорию") },
-        text = { Text("Вы уверены, что хотите удалить категорию \"${category.category}\"?") },
+        title = { Text(stringResource(R.string.DeleteCategory)) },
+        text = { Text(stringResource(R.string.DeleteCategoryConfirmation, category.category)) },
         confirmButton = {
             Button(
-                onClick = onConfirm,
+                onClick = { onConfirm(category) },
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
             ) {
-                Text("Удалить")
+                Text(stringResource(R.string.Remove))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Отмена")
+                Text(stringResource(R.string.Cancel))
             }
         }
     )

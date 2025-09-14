@@ -7,6 +7,6 @@ import com.andreypmi.core_domain.models.Word
 @Stable
 data class WordsUiState(
     val category: Category?,
-    val words: List<Word>,
+    val words: List<WordState>,
     val error: String? = null
 )

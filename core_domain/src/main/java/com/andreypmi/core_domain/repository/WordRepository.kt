@@ -15,8 +15,9 @@ interface WordRepository {
     suspend fun insertCategory(category: Category): Category?
     suspend fun updateCategory(category: Category): Boolean
     suspend fun deleteCategory(category: Category): Boolean
+    suspend fun getCategoryById(id:Int): Category?
 
     suspend fun saveLastSelectedCategory(key: String, category: Category)
-    suspend fun loadLastSelectedCategory(key: String): String?
+    suspend fun loadLastSelectedCategory(key: String): Int?
 
 }

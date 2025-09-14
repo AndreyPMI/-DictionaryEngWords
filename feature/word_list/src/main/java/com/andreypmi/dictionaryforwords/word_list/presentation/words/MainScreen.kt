@@ -13,21 +13,21 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.andreypmi.core_domain.models.Category
-import com.andreypmi.core_domain.models.Word
 import com.andreypmi.dictionaryforwords.core.ui.R
 import com.andreypmi.dictionaryforwords.core.ui.theme.DictionaryTheme
 import com.andreypmi.dictionaryforwords.word_list.presentation.CardField
-import com.andreypmi.dictionaryforwords.word_list.presentation.models.CategoryState
-import com.andreypmi.dictionaryforwords.word_list.presentation.models.DialogState
-import com.andreypmi.dictionaryforwords.word_list.presentation.models.DialogType
+import com.andreypmi.dictionaryforwords.word_list.presentation.models.WordDialogState
+import com.andreypmi.dictionaryforwords.word_list.presentation.models.WordState
 import com.andreypmi.dictionaryforwords.word_list.presentation.models.WordsUiState
-import com.andreypmi.dictionaryforwords.word_list.presentation.words.IWordsViewModel.WordsIntent
+import com.andreypmi.dictionaryforwords.word_list.presentation.words.viewModels.IWordsViewModel
+import com.andreypmi.dictionaryforwords.word_list.presentation.words.viewModels.IWordsViewModel.WordsIntent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -42,7 +42,7 @@ internal fun MainScreen(
             words = emptyList()
         )
     )
-    val dialogState by wordsViewModel.dialogState.collectAsState()
+    val dialogState by wordsViewModel.wordDialogState.collectAsState()
 
     Scaffold(
         floatingActionButton = {
@@ -92,8 +92,8 @@ internal fun MainScreen(
             }
         }
     )
-    when (dialogState.dialogType) {
-        DialogType.ADD -> {
+    when (dialogState) {
+        is WordDialogState.Add -> {
             uiState.value?.category?.id?.let {
                 DialogWindow(
                     title = stringResource(id = R.string.dialog_add),
@@ -107,59 +107,66 @@ internal fun MainScreen(
             }
         }
 
-        DialogType.EDIT -> {
-            uiState.value?.category?.let {
+        is WordDialogState.Edit -> {
+            val editWord = (dialogState as WordDialogState.Edit).word
+            val currentCategory = uiState.value?.category
+
+            if ( currentCategory != null) {
                 DialogWindow(
                     title = stringResource(id = R.string.dialog_edit),
-                    idCategory = it.id,
-                    id = dialogState.editWord?.id,
-                    word = dialogState.editWord?.word,
-                    translate = dialogState.editWord?.translate,
-                    description = dialogState.editWord?.description,
+                    idCategory = currentCategory.id,
+                    id = editWord.id,
+                    word = editWord.word,
+                    translate = editWord.translation,
+                    description = editWord.description,
                     onClose = { wordsViewModel.handleIntent(WordsIntent.CloseWordDialog) },
-                    onSubmit = { newWord ->
-                        run {
-                            wordsViewModel.handleIntent(WordsIntent.UpdateWord(newWord))
-                            wordsViewModel.handleIntent(WordsIntent.CloseWordDialog)
-                        }
+                    onSubmit = { updatedWord ->
+                        val fullWord = WordState(
+                            id = updatedWord.id,
+                            word = updatedWord.word,
+                            translation = updatedWord.translation,
+                            description = updatedWord.description,
+                            idCategory = currentCategory.id,
+                        )
+                        wordsViewModel.handleIntent(WordsIntent.UpdateWord(fullWord))
+                        wordsViewModel.handleIntent(WordsIntent.CloseWordDialog)
                     }
                 )
+            } else {
+                wordsViewModel.handleIntent(WordsIntent.CloseWordDialog)
             }
         }
 
-        else -> {
-            // No dialog is active
+        is WordDialogState.Hidden -> {
+            wordsViewModel.handleIntent(WordsIntent.CloseWordDialog)
         }
     }
 }
+
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-private fun Preview(){
+private fun Preview() {
     DictionaryTheme {
-        MainScreen( object : IWordsViewModel {
+        MainScreen(object : IWordsViewModel {
 
-            override fun handleIntent(intent: IWordsViewModel.WordsIntent) {
+            override fun handleIntent(intent: WordsIntent) {
                 return
             }
 
             override val wordsState: StateFlow<WordsUiState> = MutableStateFlow(
                 WordsUiState(
                     Category(1, "def"),
-                    listOf(Word(1, 1, "d", "d", "des"))
+                    listOf(WordState(1, 1, "d", "d", "des"))
                 )
             ).asStateFlow()
-            override val dialogState: StateFlow<DialogState> = MutableStateFlow(
-                DialogState(
-                    editWord = null,
-                    dialogType = DialogType.NONE
-                )
-            )
-            override val categoryState: StateFlow<CategoryState> =
-                MutableStateFlow(
-                    CategoryState.Success(
-                        emptyList()
-                    )
-                )
+            override val wordDialogState: StateFlow<WordDialogState>
+                get() {
+                    return mutableStateOf(
+                        WordDialogState.Add
+                    ) as StateFlow<WordDialogState>
+                }
+
+
         })
     }
 }
