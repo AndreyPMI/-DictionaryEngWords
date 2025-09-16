@@ -8,7 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.andreypmi.dictionaryforwords.word_list.presentation.learning.learning
+import com.andreypmi.learning.learning
 import com.andreypmi.dictionaryforwords.word_list.presentation.profile.profile
 import com.andreypmi.dictionaryforwords.word_list.presentation.words.WordsDestination
 import com.andreypmi.dictionaryforwords.word_list.presentation.words.words

@@ -1,4 +1,4 @@
-package com.andreypmi.dictionaryforwords.word_list.presentation.learning
+package com.andreypmi.learning
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable

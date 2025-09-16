@@ -39,6 +39,7 @@ android {
 dependencies {
 
     implementation(project(":feature:word_list"))
+    implementation(project(":feature:cards"))
     implementation(project(":core:ui"))
     implementation(project(":core:navigation_api"))
 
