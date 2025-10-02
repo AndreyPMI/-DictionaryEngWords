@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="no_words_in_this_category">No words in this category</string>
+    <string name="failed_to_load_words">Failed to load words</string>
+</resources>

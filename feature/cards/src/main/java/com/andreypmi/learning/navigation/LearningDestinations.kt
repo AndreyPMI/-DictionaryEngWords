@@ -1,5 +1,7 @@
 package com.andreypmi.learning.navigation
 
+import com.andreypmi.core_domain.models.Word
+
 object CategoriesDestination {
     const val route = "categories"
 }
@@ -17,9 +19,9 @@ object SessionResultDestination {
     const val difficultWordIdsArg = "difficultWordIds"
     const val allWordIdsArg = "allWordIds"
     val routeWithArgs = "$route/{$categoryIdArg}?$difficultWordIdsArg={$difficultWordIdsArg}&$allWordIdsArg={$allWordIdsArg}"
-    fun createRoute(categoryId: Int, difficultWordIds: List<String>, allWordIds: List<String>): String {
-        val difficultIdsString = difficultWordIds.joinToString(",")
-        val allIdsString = allWordIds.joinToString(",")
+    fun createRoute(categoryId: Int, difficultWords: List<Word>, allWords: List<Word>): String {
+        val difficultIdsString = difficultWords.joinToString(",") { it.id.toString() }
+        val allIdsString = allWords.joinToString(",") { it.id.toString() }
         return "$route/$categoryId?$difficultWordIdsArg=$difficultIdsString&$allWordIdsArg=$allIdsString"
     }
 }

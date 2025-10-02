@@ -47,11 +47,14 @@ dependencies {
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.material3)
+    implementation(libs.lifecycle.viewmodel.ktx)
     //navigation
     implementation(libs.navigation.ui)
     implementation(libs.navigation.compose)
     //dagger
     implementation(libs.dagger)
+    implementation(libs.androidx.compose.material)
+    implementation(libs.androidx.ui.tooling.preview.android)
     ksp(libs.dagger.compiler)
 
     testImplementation(libs.junit)
