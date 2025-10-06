@@ -109,12 +109,10 @@ class WordRepositoryImpl @Inject constructor(
     }
 
     override suspend fun loadLastSelectedCategory(key: String): Int? {
-        Log.d("AAA1", "$key")
         val str = preferencesDataSource.getValue<Int?>(
             key = key,
             defaultValue = 1
         )
-        Log.d("AAA1", "$str")
         return str
     }
 

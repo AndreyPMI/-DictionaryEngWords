@@ -17,7 +17,6 @@ class DatabaseInitializer @Inject constructor() {
     private val callback = object : RoomDatabase.Callback() {
         override fun onCreate(db: SupportSQLiteDatabase) {
             super.onCreate(db)
-            Log.d("AAA","Callback was started")
             database?.let { appDatabase ->
                 CoroutineScope(Dispatchers.IO).launch {
                     try {
@@ -27,9 +26,9 @@ class DatabaseInitializer @Inject constructor() {
                                 category_name = "default"
                             )
                         )
-                        Log.d("AAA", "Default category inserted successfully")
+                        Log.d("DatabaseInitializer", "Default category inserted successfully")
                     } catch (e: Exception) {
-                        Log.e("AAA", "Failed to insert default category", e)
+                        Log.e("DatabaseInitializer", "Failed to insert default category", e)
                     }
                 }
             }

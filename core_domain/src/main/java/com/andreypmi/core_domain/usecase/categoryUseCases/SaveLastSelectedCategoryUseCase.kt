@@ -11,7 +11,6 @@ class SaveLastSelectedCategoryUseCase(
 ) :
     UseCaseWithParam<Unit, Category> {
     override suspend fun execute(params: Category) {
-        logger.debug("AAAusecase", "$params")
         repository.saveLastSelectedCategory(CATEGORY_KEY, params)
     }
 }

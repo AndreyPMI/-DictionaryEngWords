@@ -34,7 +34,6 @@ class PreferencesDataSourceImpl @Inject constructor(context: Context) :
     @Suppress("UNCHECKED_CAST")
     override suspend fun <T> getValue(key: String, defaultValue: T): T {
         return withContext(Dispatchers.IO) {
-            Log.d("AAA","AA")
             val result = when (defaultValue) {
                 is Boolean -> sharedPrefs.getBoolean(key, defaultValue)
                 is Float -> sharedPrefs.getFloat(key, defaultValue as Float)
@@ -43,7 +42,6 @@ class PreferencesDataSourceImpl @Inject constructor(context: Context) :
                 is String -> sharedPrefs.getString(key, defaultValue as String?) ?: defaultValue
                 else -> throw IllegalArgumentException("Unsupported type getValue")
             } as T
-            Log.d("AAA121","$result")
             result
         }
     }

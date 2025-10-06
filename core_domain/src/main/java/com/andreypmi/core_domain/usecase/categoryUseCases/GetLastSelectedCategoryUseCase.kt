@@ -10,12 +10,9 @@ class GetLastSelectedCategoryUseCase(private val repository: WordRepository,priv
     UseCaseWithoutParam<Int?> {
     override suspend fun execute(): Int? {
         kotlin.runCatching {
-            logger.debug("AAA","+_+")
             val result = repository.loadLastSelectedCategory(key = CATEGORY_KEY)
-            logger.debug("AAA","$result")
             return result
         }.getOrElse {
-            logger.debug("AAA","null")
             return null
         }
     }

@@ -1,5 +1,6 @@
 package com.andreypmi.learning.learningScreen.сardStackScreen
 
+import android.util.Log
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -37,13 +38,12 @@ fun CardItem(
         targetValue = if (isFlipped) 180f else 0f,
         animationSpec = tween(durationMillis = 500)
     )
-    LaunchedEffect(isFlipped) {
-        println("🔄 CARDITEM: word=${word.word}, id=${word.id}, isFlipped=$isFlipped")
-    }
     Box(
         modifier = modifier
             .pointerInput(Unit) {
-                detectTapGestures(onTap = { onFlip() })
+                detectTapGestures(onTap = {
+                    Log.d("AAA","${word.word}")
+                    onFlip() })
             }
     ) {
         Card(
