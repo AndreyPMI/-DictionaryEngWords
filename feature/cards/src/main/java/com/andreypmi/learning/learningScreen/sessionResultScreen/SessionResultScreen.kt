@@ -44,14 +44,12 @@ fun SessionResultScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            // Заголовок
             Text(
                 text = "Сессия завершена!",
                 style = MaterialTheme.typography.headlineMedium,
                 modifier = Modifier.padding(bottom = 24.dp)
             )
 
-            // Статистика
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -81,7 +79,6 @@ fun SessionResultScreen(
 
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    // Сложные слова
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
@@ -97,7 +94,6 @@ fun SessionResultScreen(
 
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    // Процент успеха
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
@@ -112,7 +108,6 @@ fun SessionResultScreen(
                 }
             }
 
-            // Список сложных слов (если есть)
             if (result.difficultWords.isNotEmpty()) {
                 Card(
                     modifier = Modifier
@@ -154,7 +149,6 @@ fun SessionResultScreen(
                     }
                 }
             } else {
-                // Сообщение об успехе
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
