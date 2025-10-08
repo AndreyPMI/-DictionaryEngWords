@@ -23,8 +23,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.andreypmi.cards.R
 import com.andreypmi.learning.learningScreen.sessionResultScreen.models.SessionResult
 import com.andreypmi.learning.learningScreen.viewModels.LearningSessionViewModel
 
@@ -45,7 +47,7 @@ fun SessionResultScreen(
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "Сессия завершена!",
+                text = stringResource(R.string.the_session_is_over),
                 style = MaterialTheme.typography.headlineMedium,
                 modifier = Modifier.padding(bottom = 24.dp)
             )
@@ -60,17 +62,15 @@ fun SessionResultScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "Статистика",
+                        text = stringResource(R.string.statistics),
                         style = MaterialTheme.typography.titleMedium,
                         modifier = Modifier.padding(bottom = 16.dp)
                     )
-
-                    // Всего слов
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text("Всего слов:")
+                        Text(stringResource(R.string.total_words))
                         Text(
                             text = result.allWords.size.toString(),
                             style = MaterialTheme.typography.bodyLarge
@@ -83,7 +83,7 @@ fun SessionResultScreen(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text("Сложные слова:")
+                        Text(stringResource(R.string.difficult_words))
                         Text(
                             text = result.difficultWords.size.toString(),
                             style = MaterialTheme.typography.bodyLarge,
@@ -98,7 +98,7 @@ fun SessionResultScreen(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text("Успех:")
+                        Text(stringResource(R.string.success))
                         Text(
                             text = "${((result.allWords.size - result.difficultWords.size) * 100 / result.allWords.size)}%",
                             style = MaterialTheme.typography.bodyLarge,
@@ -118,7 +118,7 @@ fun SessionResultScreen(
                         modifier = Modifier.padding(16.dp)
                     ) {
                         Text(
-                            text = "Сложные слова для повторения:",
+                            text = stringResource(R.string.difficult_words_to_repeat),
                             style = MaterialTheme.typography.titleMedium,
                             modifier = Modifier.padding(bottom = 12.dp)
                         )
@@ -159,7 +159,7 @@ fun SessionResultScreen(
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = "🎉 Отличный результат! Все слова изучены!",
+                            text = stringResource(R.string.great_result_all_words_are_learned),
                             style = MaterialTheme.typography.bodyLarge,
                             textAlign = TextAlign.Center
                         )
@@ -179,7 +179,7 @@ fun SessionResultScreen(
                         onClick = onRetry,
                         modifier = Modifier.fillMaxWidth(0.8f)
                     ) {
-                        Text("Повторить сложные слова")
+                        Text(stringResource(R.string.repeat_difficult_words))
                     }
                 }
 
@@ -191,7 +191,7 @@ fun SessionResultScreen(
                         contentColor = MaterialTheme.colorScheme.onSurface
                     )
                 ) {
-                    Text("Вернуться к категориям")
+                    Text(stringResource(R.string.go_back_to_categories))
                 }
             }
         }
@@ -204,12 +204,12 @@ fun SessionResultScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "Результаты не найдены",
+                    text = stringResource(R.string.no_results_found),
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
                 Button(onClick = onFinish) {
-                    Text("Вернуться к категориям")
+                    Text(stringResource(R.string.go_back_to_categories))
                 }
             }
         }

@@ -1,6 +1,5 @@
 package com.andreypmi.learning.learningScreen.сardStackScreen
 
-import android.util.Log
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -17,7 +16,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
@@ -32,18 +30,24 @@ fun CardItem(
     word: Word,
     isFlipped: Boolean,
     onFlip: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isFlipActive: Boolean = true
 ) {
     val rotation = animateFloatAsState(
         targetValue = if (isFlipped) 180f else 0f,
         animationSpec = tween(durationMillis = 500)
     )
+
     Box(
         modifier = modifier
             .pointerInput(Unit) {
-                detectTapGestures(onTap = {
-                    Log.d("AAA","${word.word}")
-                    onFlip() })
+                detectTapGestures(
+                    onTap = {
+                        if (isFlipActive) {
+                            onFlip()
+                        }
+                    }
+                )
             }
     ) {
         Card(
@@ -110,7 +114,7 @@ fun CardItem(
 
 @Composable
 @Preview(showBackground = true, showSystemUi = true)
-private fun preview(){
+private fun preview() {
     CardItem(
         word = Word(
             id = 1,

@@ -17,6 +17,7 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -54,57 +55,57 @@ fun CardStackContent(
             .background(backgroundColor)
             .padding(16.dp)
     ) {
-
         val visibleCards = activeState.words.drop(currentCardIndex).take(4)
-
         visibleCards.forEachIndexed { index, card ->
             val isTopCard = index == 0
             val layerIndex = visibleCards.size - 1 - index
-
-            CardItem(
-                word = card,
-                isFlipped = card.id in activeState.flippedCardIds,
-                onFlip = {
-                    card.id?.let { onCardFlip(it) }
-                },
-                modifier = Modifier
-                    .size(300.dp, 200.dp)
-                    .align(Alignment.Center)
-                    .offset(
-                        x = layerIndex * 4.dp * (if (layerIndex % 2 == 0) 1 else -1),
-                        y = -layerIndex * 6.dp
-                    )
-                    .graphicsLayer {
-                        scaleX = 1f - layerIndex * 0.03f
-                        scaleY = 1f - layerIndex * 0.03f
-                        rotationY = layerIndex * 0.5f * (if (layerIndex % 2 == 0) 1 else -1)
-                    }
-                    .zIndex(layerIndex.toFloat())
-                    .let { modifier ->
-                        if (isTopCard) {
-                            modifier.swipeableCard(
-                                currentCard = card,
-                                onSwipeLeft = onSwipeLeft,
-                                onSwipeRight = onSwipeRight,
-                                onSwipeStateChange = { offsetX ->
-                                    backgroundColor = when {
-                                        offsetX > 0 -> Green.copy(alpha = 0.2f)
-                                        offsetX < 0 -> Red.copy(alpha = 0.2f)
-                                        else -> Transparent
+            key(card.id) {
+                CardItem(
+                    word = card,
+                    isFlipped = card.id in activeState.flippedCardIds,
+                    isFlipActive = isTopCard,
+                    onFlip = {
+                        card.id?.let { onCardFlip(it) }
+                    },
+                    modifier = Modifier
+                        .size(300.dp, 200.dp)
+                        .align(Alignment.Center)
+                        .offset(
+                            x = layerIndex * 4.dp * (if (layerIndex % 2 == 0) 1 else -1),
+                            y = -layerIndex * 6.dp
+                        )
+                        .graphicsLayer {
+                            scaleX = 1f - layerIndex * 0.03f
+                            scaleY = 1f - layerIndex * 0.03f
+                            rotationY = layerIndex * 0.5f * (if (layerIndex % 2 == 0) 1 else -1)
+                        }
+                        .zIndex(layerIndex.toFloat())
+                        .let { modifier ->
+                            if (isTopCard) {
+                                modifier.swipeableCard(
+                                    currentCard = card,
+                                    onSwipeLeft = onSwipeLeft,
+                                    onSwipeRight = onSwipeRight,
+                                    onSwipeStateChange = { offsetX ->
+                                        backgroundColor = when {
+                                            offsetX > 0 -> Green.copy(alpha = 0.2f)
+                                            offsetX < 0 -> Red.copy(alpha = 0.2f)
+                                            else -> Transparent
+                                        }
                                     }
-                                }
-                            )
-                        } else {
-                            modifier.pointerInput(Unit) {
-                                awaitPointerEventScope {
-                                    while (true) {
-                                        awaitPointerEvent()
+                                )
+                            } else {
+                                modifier.pointerInput(Unit) {
+                                    awaitPointerEventScope {
+                                        while (true) {
+                                            awaitPointerEvent()
+                                        }
                                     }
                                 }
                             }
                         }
-                    }
-            )
+                )
+            }
         }
 
         val progress = if (activeState.words.isEmpty()) 0f
