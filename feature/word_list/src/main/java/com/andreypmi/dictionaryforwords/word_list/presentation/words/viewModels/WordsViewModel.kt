@@ -44,7 +44,6 @@ class WordsViewModel(
     init {
         viewModelScope.launch {
             categorySelectionManager.categorySelectedFlow.collect { category ->
-                Log.d("AAA","aas${category.id}")
                 loadWords(category.id)
             }
         }

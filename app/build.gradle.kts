@@ -58,6 +58,7 @@ dependencies {
     implementation(project(":core:logger"))
     implementation(project(":core:navigation"))
     implementation(project(":feature:word_list"))
+    implementation(project(":feature:cards"))
     implementation(project(":core_domain"))
 
     implementation(libs.core.ktx)

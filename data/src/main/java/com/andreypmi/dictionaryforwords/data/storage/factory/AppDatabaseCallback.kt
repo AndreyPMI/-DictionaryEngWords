@@ -16,7 +16,6 @@ class AppDatabaseCallback @Inject constructor(
 
     override fun onCreate(db: SupportSQLiteDatabase) {
         super.onCreate(db)
-        Log.d("AAA","AppDatabaseCallback onCreate")
         CoroutineScope(Dispatchers.IO).launch {
             val appDB = appDBLazy.get()
             appDB.categoriesDao().insertCategory(

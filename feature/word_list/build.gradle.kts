@@ -62,13 +62,13 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.lifecycle.viewmodel.ktx)
     implementation(libs.coil.compose)
+    implementation(libs.androidx.compose.material.core)
     //navigation
     implementation(libs.navigation.ui)
     implementation(libs.navigation.compose)
     implementation(libs.navigation.fragment)
     //dagger
     implementation(libs.dagger)
-    implementation(libs.androidx.compose.material.core)
     ksp(libs.dagger.compiler)
     // tests
     testImplementation(libs.junit)

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="no_words_in_this_category">No words in this category</string>
+    <string name="failed_to_load_words">Failed to load words</string>
+    <string name="great_result_all_words_are_learned">Great result! All words are learned!</string>
+    <string name="difficult_words_to_repeat">Difficult words to repeat:</string>
+    <string name="difficult_words">Difficult words:</string>
+    <string name="statistics">Statistics</string>
+    <string name="total_words">Total words:</string>
+    <string name="the_session_is_over">The session is over!</string>
+    <string name="repeat_difficult_words">Repeat difficult words</string>
+    <string name="go_back_to_categories">Go back to categories</string>
+    <string name="no_results_found">No results found</string>
+    <string name="success">Success:</string>
+    <string name="remember">Remember</string>
+    <string name="forgot">Forgot</string>
+</resources>
