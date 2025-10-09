@@ -22,7 +22,17 @@ class LearningSessionViewModel(
     private val _sessionResult = MutableStateFlow<SessionResult?>(null)
     val sessionResult: StateFlow<SessionResult?> = _sessionResult
 
-    fun startSession(categoryId: Int) {
+    fun processIntent(intent: LearningSessionIntent) {
+        when (intent) {
+            is LearningSessionIntent.ResetSession -> resetSession()
+            is LearningSessionIntent.StartSession -> startSession(intent.categoryId)
+            is LearningSessionIntent.WordSwiped -> onWordSwiped(intent.isKnown, intent.word)
+            is LearningSessionIntent.CardFlipped -> flipCard(intent.cardId)
+            is LearningSessionIntent.RetryWithDifficultWords -> retryWithDifficultWords()
+        }
+    }
+
+    private fun startSession(categoryId: Int) {
         _sessionState.value = SessionState.Loading
         viewModelScope.launch {
             try {
@@ -32,7 +42,7 @@ class LearningSessionViewModel(
                 val words = getAllWordsUseCase.execute(category).first()
 
                 if (words.isEmpty()) {
-                    _sessionState.value = SessionState.Error(R.string.no_words_in_this_category)
+                    _sessionState.value = SessionState.EmptyCategory
                     return@launch
                 }
 
@@ -48,16 +58,17 @@ class LearningSessionViewModel(
         }
     }
 
-    fun onWordSwiped(isKnown: Boolean, word: Word) {
+    private fun onWordSwiped(isKnown: Boolean, word: Word) {
         val currentState = _sessionState.value as? SessionState.Active ?: return
-
         val updatedDifficultWords = if (!isKnown) {
             currentState.difficultWords + word
         } else {
             currentState.difficultWords
         }
 
-        if (currentState.currentIndex + 1 >= currentState.words.size) {
+        val isLastCard = currentState.currentIndex + 1 == currentState.words.size
+
+        if (isLastCard) {
             val result = SessionResult(
                 categoryId = word.idCategory,
                 allWords = currentState.words,
@@ -74,7 +85,7 @@ class LearningSessionViewModel(
         }
     }
 
-    fun flipCard(cardId: Int) {
+    private fun flipCard(cardId: Int) {
         val currentState = _sessionState.value as? SessionState.Active ?: return
 
         val updatedFlipped: Set<Int> =
@@ -87,12 +98,12 @@ class LearningSessionViewModel(
         _sessionState.value = currentState.copy(flippedCardIds = updatedFlipped)
     }
 
-    fun resetSession() {
-        _sessionState.value = SessionState.Idle
+    private fun resetSession() {
+        _sessionState.value = SessionState.SessionFinished
         _sessionResult.value = null
     }
 
-    fun retryWithDifficultWords() {
+    private fun retryWithDifficultWords() {
         val currentResult = _sessionResult.value ?: return
 
         if (currentResult.difficultWords.isEmpty()) {
@@ -106,6 +117,5 @@ class LearningSessionViewModel(
             difficultWords = emptyList(),
             flippedCardIds = emptySet()
         )
-        _sessionResult.value = null
     }
 }

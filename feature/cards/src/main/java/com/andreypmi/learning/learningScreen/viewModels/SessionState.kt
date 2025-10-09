@@ -11,6 +11,9 @@ sealed class SessionState {
         val difficultWords: List<Word>,
         val flippedCardIds: Set<Int> = emptySet()
     ) : SessionState()
+
     data object Completed : SessionState()
     data class Error(val message: Int) : SessionState()
+    data object EmptyCategory : SessionState()
+    data object SessionFinished : SessionState()
 }

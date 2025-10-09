@@ -14,13 +14,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
-import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -28,15 +25,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.andreypmi.cards.R
 import com.andreypmi.learning.learningScreen.sessionResultScreen.models.SessionResult
-import com.andreypmi.learning.learningScreen.viewModels.LearningSessionViewModel
 
 @Composable
 fun SessionResultScreen(
-    viewModel: LearningSessionViewModel,
+    sessionResult: SessionResult?,
     onRetry: () -> Unit,
     onFinish: () -> Unit
 ) {
-    val sessionResult by viewModel.sessionResult.collectAsState()
 
     sessionResult?.let { result ->
         Column(
@@ -100,7 +95,11 @@ fun SessionResultScreen(
                     ) {
                         Text(stringResource(R.string.success))
                         Text(
-                            text = "${((result.allWords.size - result.difficultWords.size) * 100 / result.allWords.size)}%",
+                            text = if (result.allWords.isNotEmpty()) {
+                                "${((result.allWords.size - result.difficultWords.size) * 100 / result.allWords.size)}%"
+                            } else {
+                                "0%"
+                            },
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.primary
                         )

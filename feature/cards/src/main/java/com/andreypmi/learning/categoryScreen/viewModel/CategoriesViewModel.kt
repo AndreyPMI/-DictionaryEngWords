@@ -49,6 +49,5 @@ class CategoriesViewModel(
     }
 
     private fun onCategoryClicked(categoryId: Int) {
-        println("Category clicked: $categoryId")
     }
 }
