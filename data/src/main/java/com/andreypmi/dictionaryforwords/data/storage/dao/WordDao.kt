@@ -19,11 +19,6 @@ interface WordDao {
     @Delete
     suspend fun delete(word: WordsEntity)
 
-   // @Query("SELECT ${WordsEntity.ID_WORD},${CategoriesEntity.CATEGORY_NAME}, ${WordsEntity.WORD}, ${WordsEntity.TRANSLATE}, ${WordsEntity.DESCRIPTION} FROM ${WordsEntity.TABLE_NAME}\n" +
-     //       "join ${CategoriesEntity.TABLE_NAME} WHERE ${WordsEntity.TABLE_NAME}.${WordsEntity.ID_CATEGORY} = ${CategoriesEntity.TABLE_NAME}.${CategoriesEntity.ID} ORDER BY ${WordsEntity.ID_WORD} ASC ")
-   @Query("SELECT * FROM ${WordsEntity.TABLE_NAME} WHERE ${WordsEntity.ID_CATEGORY} = :categoryId ORDER BY ${WordsEntity.ID_WORD} ASC")
-   fun getWordsByCategoryId(categoryId: Int): Flow<List<WordsEntity>>
-
-        @Query("SELECT MAX(${WordsEntity.ID_WORD}) FROM ${WordsEntity.TABLE_NAME}")
-    fun getIndex(): Flow<Int>
+    @Query("SELECT * FROM ${WordsEntity.TABLE_NAME} WHERE ${WordsEntity.ID_CATEGORY} = :categoryId ORDER BY ${WordsEntity.WORD} ASC")
+    fun getWordsByCategoryId(categoryId: String): Flow<List<WordsEntity>>
 }

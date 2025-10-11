@@ -7,7 +7,6 @@ import com.andreypmi.logger.Logger
 
 class SaveLastSelectedCategoryUseCase(
     private val repository: WordRepository,
-    private val logger: Logger
 ) :
     UseCaseWithParam<Unit, Category> {
     override suspend fun execute(params: Category) {

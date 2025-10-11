@@ -9,7 +9,7 @@ sealed class SessionState {
         val words: List<Word>,
         val currentIndex: Int,
         val difficultWords: List<Word>,
-        val flippedCardIds: Set<Int> = emptySet()
+        val flippedCardIds: Set<String> = emptySet()
     ) : SessionState()
 
     data object Completed : SessionState()

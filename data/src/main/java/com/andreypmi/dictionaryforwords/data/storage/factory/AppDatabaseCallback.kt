@@ -20,8 +20,8 @@ class AppDatabaseCallback @Inject constructor(
             val appDB = appDBLazy.get()
             appDB.categoriesDao().insertCategory(
                 CategoriesEntity(
-                    id_category = 1,
-                    category_name = "Default"
+                    id = "Default",
+                    categoryName = "Default"
                 )
             )
         }

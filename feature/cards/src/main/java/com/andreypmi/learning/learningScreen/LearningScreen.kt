@@ -66,7 +66,7 @@ fun LearningScreen(
             route = CardStackDestination.routeWithArgs,
             arguments = listOf(
                 navArgument(CardStackDestination.categoryIdArg) {
-                    type = NavType.IntType
+                    type = NavType.StringType
                 }
             )
         ) { navBackStackEntry ->

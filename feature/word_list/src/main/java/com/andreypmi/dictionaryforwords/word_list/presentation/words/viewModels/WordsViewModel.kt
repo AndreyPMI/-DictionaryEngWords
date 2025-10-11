@@ -3,8 +3,6 @@ package com.andreypmi.dictionaryforwords.word_list.presentation.words.viewModels
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.andreypmi.core_domain.models.Category
-import com.andreypmi.core_domain.models.Word
 import com.andreypmi.core_domain.usecase.CategoryUseCasesFacade
 import com.andreypmi.core_domain.usecase.WordUseCasesFacade
 import com.andreypmi.core_domain.usecase.sharedManager.CategorySelectionManager
@@ -16,6 +14,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class WordsViewModel(
@@ -52,22 +52,32 @@ class WordsViewModel(
     private fun loadInitialWords() {
         viewModelScope.launch {
             val lastCategoryId = categoryUseCases.getLastSelectedCategory()
-            if (lastCategoryId != -1) {
-                if (lastCategoryId != null) {
+            when {
+                !lastCategoryId.isNullOrBlank() -> {
                     loadWords(lastCategoryId)
-                }else{
-                    loadWords(1)
+                }
+                else -> {
+                    loadFirstCategoryOrCategories()
                 }
             }
         }
     }
-    private fun loadWords(categoryId: Int) {
+
+    private suspend fun loadFirstCategoryOrCategories() {
+        val firstCategory = categoryUseCases.getAllCategories().first().firstOrNull()
+        if (firstCategory != null) {
+            loadWords(firstCategory.id)
+        } else {
+            _wordsState.update { it?.copy(words = emptyList() ) }
+        }
+    }
+    private fun loadWords(categoryId: String) {
         viewModelScope.launch {
             try {
                 val selectedCategory =
                     categoryUseCases.getCategoryById(categoryId)?: return@launch
 
-                wordUseCase.getAllWords(selectedCategory)
+                wordUseCase.getAllWords(selectedCategory.category)
                     .catch { e ->
                         _wordsState.value = WordsUiState(
                             error = "Ошибка загрузки слов: ${e.message}",
@@ -90,14 +100,6 @@ class WordsViewModel(
                 )
             }
         }
-    }
-
-    private suspend fun getDefaultCategory(): Category {
-        val categoryId = categoryUseCases.getLastSelectedCategory()
-        if (categoryId != null) {
-            return categoryUseCases.getCategoryById(categoryId)?: Category(1, "Default")
-        }
-        return Category(1, "Default")
     }
 
     private fun openAddWordDialog() {

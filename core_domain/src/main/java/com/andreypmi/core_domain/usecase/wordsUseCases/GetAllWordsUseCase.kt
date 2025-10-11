@@ -9,8 +9,8 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class GetAllWordsUseCase @Inject constructor(private val repository: WordRepository) :
-    UseCaseWithParam<Flow<List<Word>>,Category> {
-    override suspend fun execute(params: Category): Flow<List<Word>>{
+    UseCaseWithParam<Flow<List<Word>>,String> {
+    override suspend fun execute(params: String): Flow<List<Word>>{
         return repository.getWordsByCategoryId(params)
     }
 }

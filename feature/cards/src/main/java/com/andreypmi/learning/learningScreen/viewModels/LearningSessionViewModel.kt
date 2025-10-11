@@ -32,14 +32,14 @@ class LearningSessionViewModel(
         }
     }
 
-    private fun startSession(categoryId: Int) {
+    private fun startSession(categoryId: String) {
         _sessionState.value = SessionState.Loading
         viewModelScope.launch {
             try {
                 val category = getCategoryByIdUseCase.execute(categoryId)
                     ?: throw IllegalArgumentException("Category not found")
 
-                val words = getAllWordsUseCase.execute(category).first()
+                val words = getAllWordsUseCase.execute(category.id).first()
 
                 if (words.isEmpty()) {
                     _sessionState.value = SessionState.EmptyCategory
@@ -73,7 +73,7 @@ class LearningSessionViewModel(
                 categoryId = word.idCategory,
                 allWords = currentState.words,
                 difficultWords = updatedDifficultWords,
-                categoryName = word.idCategory.toString(),
+                categoryName = word.idCategory,
             )
             _sessionResult.value = result
             _sessionState.value = SessionState.Completed
@@ -85,10 +85,10 @@ class LearningSessionViewModel(
         }
     }
 
-    private fun flipCard(cardId: Int) {
+    private fun flipCard(cardId: String) {
         val currentState = _sessionState.value as? SessionState.Active ?: return
 
-        val updatedFlipped: Set<Int> =
+        val updatedFlipped: Set<String> =
             if (cardId in currentState.flippedCardIds) {
                 currentState.flippedCardIds - cardId
             } else {

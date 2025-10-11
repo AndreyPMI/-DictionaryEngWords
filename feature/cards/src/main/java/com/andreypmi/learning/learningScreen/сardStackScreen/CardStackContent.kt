@@ -52,7 +52,7 @@ fun CardStackContent(
     activeState: SessionState.Active,
     onSwipeLeft: (Word) -> Unit,
     onSwipeRight: (Word) -> Unit,
-    onCardFlip: (Int) -> Unit,
+    onCardFlip: (String) -> Unit,
     onBack: () -> Unit
 ) {
     val currentCardIndex = activeState.currentIndex

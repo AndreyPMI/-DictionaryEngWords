@@ -18,10 +18,10 @@ import androidx.room.PrimaryKey
     indices = [Index(WordsEntity.ID_CATEGORY)]
 )
 data class WordsEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id_word : Int,
+    @PrimaryKey
+    val id: String,
     @NonNull
-    val id_category : Int,
+    val idCategory : String,
     @NonNull
     val word : String,
     @NonNull
@@ -31,8 +31,8 @@ data class WordsEntity(
 ) {
     companion object{
         const val TABLE_NAME = "words"
-        const val ID_WORD = "id_word"
-        const val ID_CATEGORY = "id_category"
+        const val ID_WORD = "id"
+        const val ID_CATEGORY = "idCategory"
         const val WORD = "word"
         const val TRANSLATE = "translate"
         const val DESCRIPTION = "description"

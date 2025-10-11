@@ -7,7 +7,7 @@ import com.andreypmi.dictionaryforwords.data.storage.dao.WordDao
 import com.andreypmi.dictionaryforwords.data.storage.entites.CategoriesEntity
 import com.andreypmi.dictionaryforwords.data.storage.entites.WordsEntity
 
-private const val DATABASE_VERSION = 1
+private const val DATABASE_VERSION = 2
 
 @Database(
     entities = [

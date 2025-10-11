@@ -6,14 +6,17 @@ import com.andreypmi.logger.Logger
 
 const val CATEGORY_KEY = "category"
 
-class GetLastSelectedCategoryUseCase(private val repository: WordRepository,private val logger: Logger) :
-    UseCaseWithoutParam<Int?> {
-    override suspend fun execute(): Int? {
-        kotlin.runCatching {
-            val result = repository.loadLastSelectedCategory(key = CATEGORY_KEY)
-            return result
-        }.getOrElse {
-            return null
+class GetLastSelectedCategoryUseCase(
+    private val repository: WordRepository,
+    private val logger: Logger
+) :
+    UseCaseWithoutParam<String?> {
+    override suspend fun execute(): String? {
+        return try {
+            repository.loadLastSelectedCategory(key = CATEGORY_KEY)
+        } catch (e: Exception) {
+            logger.error("Failed to load last category", e.message.toString())
+            null
         }
     }
 }

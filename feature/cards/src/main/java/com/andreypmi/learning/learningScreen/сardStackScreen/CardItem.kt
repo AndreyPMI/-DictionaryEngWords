@@ -117,8 +117,8 @@ fun CardItem(
 private fun preview() {
     CardItem(
         word = Word(
-            id = 1,
-            idCategory = 2,
+            id = "1",
+            idCategory = "2",
             word = "Word",
             translate = "Translate",
             description = "Description"

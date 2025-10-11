@@ -8,6 +8,6 @@ import javax.inject.Inject
 
 class GetAllCategoryUseCase @Inject constructor(private val repository: WordRepository) : UseCaseWithoutParam<Flow<List<Category>>> {
     override suspend fun execute(): Flow<List<Category>> {
-       return repository.getAllCategory()
+       return repository.getAllCategories()
     }
 }

@@ -30,6 +30,8 @@ interface DataModule {
 
     companion object {
 
+        private const val DATABASE_NAME = "dictionary_word"
+
         @Provides
         @Singleton
         fun provideAppDatabase(
@@ -39,7 +41,7 @@ interface DataModule {
             val database = Room.databaseBuilder(
                 context.applicationContext,
                 AppDatabase::class.java,
-                "dictionary_word"
+                DATABASE_NAME
             )
                 .addCallback(initializer.getCallback())
                 .fallbackToDestructiveMigration(true)

@@ -172,7 +172,7 @@ private fun Preview() {
     DictionaryTheme {
         CategoryListContent(
             state = CategoryState.Success(
-                categories = listOf(Category(1, "def"))
+                categories = listOf(Category("1", "def"))
             ),
             onCategoryClick = { },
             onAddCategory = {},

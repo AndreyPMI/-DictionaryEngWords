@@ -130,5 +130,5 @@ internal fun CardField(
 @Composable
 @Preview(showBackground = true, showSystemUi = false)
 private fun Preview() {
-    CardField(WordState(1, 1, "ruWord", "Descr", "des"))
+    CardField(WordState("1", "1", "ruWord", "Descr", "des"))
 }

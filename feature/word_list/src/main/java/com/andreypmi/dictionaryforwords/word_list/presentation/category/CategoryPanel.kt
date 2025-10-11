@@ -147,8 +147,8 @@ private fun Preview() {
 
                 override val wordsState: StateFlow<WordsUiState> = MutableStateFlow(
                     WordsUiState(
-                        Category(1, "def"),
-                        listOf(WordState(1, 1, "d", "d", "des"))
+                        Category("1", "def"),
+                        listOf(WordState("1", "1", "d", "d", "des"))
                     )
                 ).asStateFlow()
                 override val wordDialogState: StateFlow<WordDialogState>

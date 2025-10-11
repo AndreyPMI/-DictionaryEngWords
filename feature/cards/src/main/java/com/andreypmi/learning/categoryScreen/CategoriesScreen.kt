@@ -22,7 +22,7 @@ import com.andreypmi.learning.categoryScreen.models.CategoriesState
 @Composable
 fun CategoriesScreen(
     categoriesState: CategoriesState,
-    onCategoryClick: (Int) -> Unit,
+    onCategoryClick: (String) -> Unit,
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
         when {
@@ -52,7 +52,7 @@ fun CategoriesScreen(
 @Composable
 fun CategoryGrid(
     categories: List<Category>,
-    onCategoryClick: (Int) -> Unit
+    onCategoryClick: (String) -> Unit
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),

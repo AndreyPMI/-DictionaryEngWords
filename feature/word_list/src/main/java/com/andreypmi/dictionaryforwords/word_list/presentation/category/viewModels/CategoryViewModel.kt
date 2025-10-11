@@ -8,9 +8,7 @@ import com.andreypmi.core_domain.usecase.CategoryUseCasesFacade
 import com.andreypmi.core_domain.usecase.sharedManager.CategorySelectionManager
 import com.andreypmi.dictionaryforwords.word_list.presentation.category.CategoryDialogState
 import com.andreypmi.dictionaryforwords.word_list.presentation.models.CategoryState
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -56,7 +54,7 @@ class CategoryViewModel(
         viewModelScope.launch {
             _categoryState.value = CategoryState.Loading
             try {
-                categoryUseCases.getAllCategory().collect { categories ->
+                categoryUseCases.getAllCategories().collect { categories ->
                     when {
                         categories.isEmpty() -> _categoryState.value = CategoryState.Empty
                         else -> _categoryState.value = CategoryState.Success(categories)
@@ -96,7 +94,7 @@ class CategoryViewModel(
 
     private fun addCategory(name: String) {
         viewModelScope.launch {
-            val category = Category(0, name)
+            val category = Category("", name)
             categoryUseCases.insertCategory(category)
             hideCategoryDialog()
         }

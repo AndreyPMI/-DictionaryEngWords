@@ -7,6 +7,7 @@ import com.andreypmi.dictionaryforwords.data.storage.entites.CategoriesEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -22,8 +23,8 @@ class DatabaseInitializer @Inject constructor() {
                     try {
                         appDatabase.categoriesDao().insertCategory(
                             CategoriesEntity(
-                                id_category = 1,
-                                category_name = "default"
+                                id = UUID.randomUUID().toString(),
+                                categoryName = "Default"
                             )
                         )
                         Log.d("DatabaseInitializer", "Default category inserted successfully")

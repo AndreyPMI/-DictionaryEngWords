@@ -40,6 +40,7 @@ dependencies {
 
     implementation(project(":feature:word_list"))
     implementation(project(":feature:cards"))
+    implementation(project(":feature:user_feature"))
     implementation(project(":core:ui"))
     implementation(project(":core:navigation_api"))
 

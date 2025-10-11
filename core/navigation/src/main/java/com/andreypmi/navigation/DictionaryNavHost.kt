@@ -9,11 +9,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.andreypmi.learning.navigation.learning
-import com.andreypmi.dictionaryforwords.word_list.presentation.profile.profile
 import com.andreypmi.dictionaryforwords.word_list.presentation.words.WordsDestination
 import com.andreypmi.dictionaryforwords.word_list.presentation.words.words
 import com.andreypmi.navigation_api.DictionaryNavBarDestination
 import com.andreypmi.navigation_api.navigateSingleTopTo
+import com.andreypmi.user_feature.navigation.user
 
 @Composable
 fun DictionaryNavHost(
@@ -42,7 +42,7 @@ fun DictionaryNavHost(
             ) {
                 words()
                 learning(bottomNavState)
-                profile()
+                user()
             }
         }
     }

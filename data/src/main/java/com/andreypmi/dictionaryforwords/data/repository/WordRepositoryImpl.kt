@@ -1,7 +1,7 @@
 package com.andreypmi.dictionaryforwords.data.repository
 
-import android.util.Log
 import com.andreypmi.core_domain.models.Category
+import com.andreypmi.core_domain.models.CategoryWithWordCount
 import com.andreypmi.core_domain.models.Word
 import com.andreypmi.core_domain.repository.PreferencesDataSource
 import com.andreypmi.core_domain.repository.WordRepository
@@ -9,8 +9,8 @@ import com.andreypmi.dictionaryforwords.data.mapper.EntityMapper
 import com.andreypmi.dictionaryforwords.data.storage.dao.CategoriesDao
 import com.andreypmi.dictionaryforwords.data.storage.dao.WordDao
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import java.util.UUID
 import javax.inject.Inject
 
 class WordRepositoryImpl @Inject constructor(
@@ -19,47 +19,51 @@ class WordRepositoryImpl @Inject constructor(
     private val preferencesDataSource: PreferencesDataSource
 ) : WordRepository {
 
-    override fun getWordsByCategoryId(category: Category): Flow<List<Word>> {
-        return wordDao.getWordsByCategoryId(category.id).map { entities ->
+    override fun getWordsByCategoryId(categoryId: String): Flow<List<Word>> {
+        return wordDao.getWordsByCategoryId(categoryId).map { entities ->
             entities.map { entity -> EntityMapper.toDomainModel(entity) }
         }
     }
 
     override suspend fun insertWord(word: Word): Word? {
-        val newWordsEntity = EntityMapper.fromDomainModel(word, wordDao.getIndex().first() + 1)
         return try {
-            wordDao.insert(word = newWordsEntity)
-            EntityMapper.toDomainModel(newWordsEntity)
-        } catch (e: Throwable) {
+            val wordWithId = if (word.id.isNullOrBlank()) {
+                word.copy(id = UUID.randomUUID().toString())
+            } else {
+                word
+            }
+            val entity = EntityMapper.fromDomainModel(wordWithId)
+            wordDao.insert(entity)
+            wordWithId
+        } catch (e: Exception) {
             null
         }
     }
 
     override suspend fun updateWord(word: Word): Boolean {
-        val newWordsEntity = EntityMapper.fromDomainModel(word, id = word.id!!)
         return try {
-            wordDao.insert(newWordsEntity)
+            if (word.id.isNullOrBlank()) return false
+            val entity = EntityMapper.fromDomainModel(word)
+            wordDao.update(entity)
             true
-        } catch (e: Throwable) {
+        } catch (e: Exception) {
             false
         }
     }
 
     override suspend fun deleteWord(word: Word): Boolean {
-        if (word.id == null) {
-            return false
-        }
-        val wordsEntity = EntityMapper.fromDomainModel(word, word.id!!)
         return try {
-            wordDao.delete(word = wordsEntity)
+            if (word.id.isNullOrBlank()) return false
+
+            val entity = EntityMapper.fromDomainModel(word)
+            wordDao.delete(entity)
             true
-        } catch (e: Throwable) {
-            Log.e("Ошибка при вставке записи в базу данных.", "$e")
+        } catch (e: Exception) {
             false
         }
     }
 
-    override fun getAllCategory(): Flow<List<Category>> =
+    override fun getAllCategories(): Flow<List<Category>> =
         categoriesDao.getAllCategories().map { categoriesEntitys ->
             categoriesEntitys.map {
                 EntityMapper.toDomainModel(it)
@@ -67,53 +71,82 @@ class WordRepositoryImpl @Inject constructor(
         }
 
     override suspend fun insertCategory(category: Category): Category? {
-        try {
-            val id = categoriesDao.insertCategory(EntityMapper.fromDomainModel(category))
-            return category.copy(id = id.toInt())
+        return try {
+            val categoryWithId = if (category.id.isBlank()) {
+                category.copy(id = UUID.randomUUID().toString())
+            } else {
+                category
+            }
+
+            val entity = EntityMapper.fromDomainModel(categoryWithId)
+            categoriesDao.insertCategory(entity)
+            categoryWithId
         } catch (e: Exception) {
-            return null
+            null
         }
     }
 
     override suspend fun updateCategory(category: Category): Boolean {
-        try {
-            categoriesDao.updateCategory(EntityMapper.fromDomainModel(category))
-            return true
+        return try {
+            if (category.id.isBlank()) return false
+
+            val entity = EntityMapper.fromDomainModel(category)
+            categoriesDao.updateCategory(entity)
+            true
         } catch (e: Exception) {
-            return false
+            false
         }
     }
 
     override suspend fun deleteCategory(category: Category): Boolean {
-        try {
-            categoriesDao.deleteCategoryCascade(EntityMapper.fromDomainModel(category))
-            return true
+        return try {
+            if (category.id.isBlank()) return false
+
+            val entity = EntityMapper.fromDomainModel(category)
+            categoriesDao.deleteCategoryCascade(entity)
+            true
         } catch (e: Exception) {
-            return false
+            false
         }
     }
 
-    override suspend fun getCategoryById(id: Int): Category? {
+    override suspend fun getCategoryById(id: String): Category? {
         return categoriesDao.getCategoryById(id)?.let { EntityMapper.toDomainModel(it) }
     }
 
-    override suspend fun getWordById(id: Long): Word? {
-        TODO("Not yet implemented")
-    }
-
     override suspend fun saveLastSelectedCategory(key: String, category: Category) {
-        preferencesDataSource.setValue(
-            key = key,
-            value = category.id
-        )
+        try {
+            preferencesDataSource.setValue(key, category.id)
+        } catch (_: Exception) {
+        }
     }
 
-    override suspend fun loadLastSelectedCategory(key: String): Int? {
-        val str = preferencesDataSource.getValue<Int?>(
-            key = key,
-            defaultValue = 1
-        )
-        return str
+    override suspend fun loadLastSelectedCategory(key: String): String? {
+        return try {
+            preferencesDataSource.getValue<String?>(
+                key = key,
+                defaultValue = null
+            )
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    override suspend fun getCategoriesWithWordCount(offset: Int, limit: Int): List<CategoryWithWordCount> {
+        return try {
+            val models = categoriesDao.getCategoriesWithWordCount(offset, limit)
+            models.map { model -> EntityMapper.toDomainModel(model) }
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
+
+    override suspend fun getCategoriesCount(): Int {
+        return try {
+            categoriesDao.getCategoriesCount()
+        } catch (e: Exception) {
+            0
+        }
     }
 
 }

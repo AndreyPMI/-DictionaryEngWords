@@ -59,6 +59,7 @@ dependencies {
     implementation(project(":core:navigation"))
     implementation(project(":feature:word_list"))
     implementation(project(":feature:cards"))
+    implementation(project(":feature:user_feature"))
     implementation(project(":core_domain"))
 
     implementation(libs.core.ktx)
@@ -77,7 +78,7 @@ dependencies {
     implementation(libs.ui.tooling.preview)
     implementation(libs.material3)
 
-    // room?
+    // room
     implementation(libs.androidx.room.runtime)
     //dagger
     implementation(libs.dagger)

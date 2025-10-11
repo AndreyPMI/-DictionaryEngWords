@@ -6,13 +6,14 @@ import com.andreypmi.core_domain.repository.WordRepository
 import com.andreypmi.dictionaryforwords.word_list.di.WordListDeps
 import com.andreypmi.learning.di.LearningDeps
 import com.andreypmi.logger.Logger
+import com.andreypmi.user_feature.di.UserDeps
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
 
 @Singleton
 @Component(modules = [AppModule::class, DataModule::class,])
-interface AppComponent: WordListDeps,DomainDeps, LearningDeps {
+interface AppComponent: WordListDeps,DomainDeps, LearningDeps, UserDeps {
     override val repository: WordRepository
     override val logger: Logger
 

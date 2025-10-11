@@ -6,15 +6,15 @@ import androidx.room.PrimaryKey
 
     @Entity(tableName = CategoriesEntity.TABLE_NAME)
     data class CategoriesEntity(
-        @PrimaryKey(autoGenerate = true)
-        val id_category: Int,
+        @PrimaryKey
+        val id: String,
         @NonNull
-        val category_name: String
+        val categoryName: String
     ){
         companion object {
             const val TABLE_NAME = "categories"
-            const val ID = "id_category"
-            const val CATEGORY_NAME = "category_name"
+            const val ID = "id"
+            const val CATEGORY_NAME = "categoryName"
         }
     }
 
