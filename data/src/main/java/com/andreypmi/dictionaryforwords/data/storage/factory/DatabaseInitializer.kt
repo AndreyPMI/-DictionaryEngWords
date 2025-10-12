@@ -21,6 +21,7 @@ class DatabaseInitializer @Inject constructor() {
             database?.let { appDatabase ->
                 CoroutineScope(Dispatchers.IO).launch {
                     try {
+                        Log.d("AAAcallback","callback")
                         appDatabase.categoriesDao().insertCategory(
                             CategoriesEntity(
                                 id = UUID.randomUUID().toString(),

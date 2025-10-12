@@ -1,5 +1,6 @@
 package com.andreypmi.dictionaryforwords.data.repository
 
+import android.util.Log
 import com.andreypmi.core_domain.models.Category
 import com.andreypmi.core_domain.models.CategoryWithWordCount
 import com.andreypmi.core_domain.models.Word
@@ -21,7 +22,9 @@ class WordRepositoryImpl @Inject constructor(
 
     override fun getWordsByCategoryId(categoryId: String): Flow<List<Word>> {
         return wordDao.getWordsByCategoryId(categoryId).map { entities ->
-            entities.map { entity -> EntityMapper.toDomainModel(entity) }
+            entities.map { entity ->
+                Log.d("AAAgetWordsByCategoryId","$entity")
+                EntityMapper.toDomainModel(entity) }
         }
     }
 
@@ -64,8 +67,9 @@ class WordRepositoryImpl @Inject constructor(
     }
 
     override fun getAllCategories(): Flow<List<Category>> =
-        categoriesDao.getAllCategories().map { categoriesEntitys ->
-            categoriesEntitys.map {
+        categoriesDao.getAllCategories().map { categoriesEntities ->
+            categoriesEntities.map {
+                Log.d("AAAgetAllCategories","$it")
                 EntityMapper.toDomainModel(it)
             }
         }

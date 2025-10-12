@@ -26,11 +26,11 @@ interface DataModule {
 
     @Binds
     @Singleton
-    fun bindPreferencesDataSource(PreferencesDataSourceImpl: PreferencesDataSourceImpl): PreferencesDataSource
+    fun bindPreferencesDataSource(preferencesDataSourceImpl: PreferencesDataSourceImpl): PreferencesDataSource
 
     companion object {
 
-        private const val DATABASE_NAME = "dictionary_word"
+        private const val DATABASE_NAME = "dictionaryWord"
 
         @Provides
         @Singleton

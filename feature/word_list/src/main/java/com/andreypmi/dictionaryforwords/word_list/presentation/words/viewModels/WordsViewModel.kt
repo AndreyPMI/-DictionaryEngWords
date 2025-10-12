@@ -74,10 +74,11 @@ class WordsViewModel(
     private fun loadWords(categoryId: String) {
         viewModelScope.launch {
             try {
+                Log.d("AAAloadWords",categoryId)
                 val selectedCategory =
                     categoryUseCases.getCategoryById(categoryId)?: return@launch
 
-                wordUseCase.getAllWords(selectedCategory.category)
+                wordUseCase.getAllWords(selectedCategory.id)
                     .catch { e ->
                         _wordsState.value = WordsUiState(
                             error = "Ошибка загрузки слов: ${e.message}",
