@@ -49,15 +49,18 @@ dependencies {
 
     implementation(libs.core.ktx)
     implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.kotlinx.serialization)
 
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.datastore.preferences)
 
-    implementation(libs.retrofit)
-    implementation(libs.retrofit.converter.json)
-    implementation(libs.okhttp3.interceptor)
-
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.okhttp)
+    implementation(libs.ktor.client.logging)
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.client.serialization.kotlinx)
 
     implementation(libs.androidx.datastore.core)
     implementation(libs.androidx.room.runtime)

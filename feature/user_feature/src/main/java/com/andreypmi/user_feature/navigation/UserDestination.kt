@@ -1,14 +1,11 @@
 package com.andreypmi.user_feature.navigation
 
-import androidx.navigation.NavGraphBuilder
-import androidx.navigation.compose.composable
 import com.andreypmi.dictionaryforwords.core.ui.R
 import com.andreypmi.navigation_api.DictionaryNavBarDestination
 import com.andreypmi.navigation_api.DictionaryNavDestination
 
 
-
-data object  UserTopLevelDestination : DictionaryNavBarDestination {
+data object UserTopLevelDestination : DictionaryNavBarDestination {
     override val iconId = R.drawable.ic_person
     override val titleId = R.string.profile
     override val route = UserDestination.route
@@ -17,6 +14,7 @@ data object  UserTopLevelDestination : DictionaryNavBarDestination {
 object UserDestination : DictionaryNavDestination {
     override val route = "user"
 }
+
 object UserMainDestination : DictionaryNavDestination {
     override val route = "user_main"
 }
@@ -31,9 +29,10 @@ object LoadGroupDestination : DictionaryNavDestination {
 
 object QRCodeDestination : DictionaryNavDestination {
     override val route = "qr_code"
-    const val groupIdArg = "group_id"
-    val routeWithArgs = "$route/{$groupIdArg}"
-    fun createRoute(groupId: Int) = "$route/$groupId"
+    const val categoryIdArg = "category_id"
+    val routeWithArgs = "$route/{$categoryIdArg}"
+
+    fun createRoute(categoryId: String): String = "$route/$categoryId"
 }
 
 object NotificationsDestination : DictionaryNavDestination {

@@ -1,10 +1,8 @@
 package com.andreypmi.core_domain.usecase.wordsUseCases
 
-import com.andreypmi.core_domain.models.Category
 import com.andreypmi.core_domain.models.Word
 import com.andreypmi.core_domain.repository.WordRepository
 import com.andreypmi.core_domain.usecase.UseCaseWithParam
-import com.andreypmi.core_domain.usecase.UseCaseWithoutParam
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 

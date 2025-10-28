@@ -57,6 +57,7 @@ dependencies {
     implementation(project(":core:ui"))
     implementation(project(":core:logger"))
     implementation(project(":core:navigation"))
+    implementation(project(":core:qr_generator"))
     implementation(project(":feature:word_list"))
     implementation(project(":feature:cards"))
     implementation(project(":feature:user_feature"))
@@ -64,9 +65,6 @@ dependencies {
 
     implementation(libs.core.ktx)
     implementation(libs.lifecycle.runtime.ktx)
-    implementation(libs.retrofit)
-    implementation(libs.retrofit.converter.json)
-    implementation(libs.okhttp3.interceptor)
     implementation(libs.androidx.datastore.core)
     implementation(libs.androidx.datastore.preferences)
 

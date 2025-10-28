@@ -1,0 +1,220 @@
+package com.andreypmi.user_feature.userScreen.nested_screens.qrCodeScreen
+
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Build
+import androidx.compose.material.icons.filled.Share
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.graphics.Canvas
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.Paint
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import com.andreypmi.core_domain.models.QrCodeData
+import com.andreypmi.user_feature.userScreen.nested_screens.qrCodeScreen.models.QRCodeState
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun QRCodeScreen(
+    qrState: QRCodeState,
+    onBack: () -> Unit,
+    onShare: () -> Unit
+) {
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        qrState.categoryName ?: "QR код"
+                    )
+                },
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Назад")
+                    }
+                }
+            )
+        },
+        floatingActionButton = {
+            if (qrState.qrImage != null) {
+                ExtendedFloatingActionButton(
+                    onClick = onShare,
+                    icon = { Icon(Icons.Default.Share, contentDescription = null) },
+                    text = { Text("Поделиться") }
+                )
+            }
+        }
+    ) { padding ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding),
+            contentAlignment = Alignment.Center
+        ) {
+            when {
+                qrState.isLoading -> {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.padding(16.dp)
+                    ) {
+                        CircularProgressIndicator()
+                        Spacer(Modifier.height(16.dp))
+                        Text("Генерируем QR код...")
+                    }
+                }
+
+                qrState.error != null -> {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.padding(16.dp)
+                    ) {
+                        Icon(
+                            Icons.Default.Build,
+                            contentDescription = "Ошибка",
+                            modifier = Modifier.size(64.dp),
+                            tint = MaterialTheme.colorScheme.error
+                        )
+                        Spacer(Modifier.height(16.dp))
+                        Text(
+                            text = "Ошибка",
+                            style = MaterialTheme.typography.headlineSmall,
+                            color = MaterialTheme.colorScheme.error
+                        )
+                        Spacer(Modifier.height(8.dp))
+                        Text(
+                            text = qrState.error,
+                            style = MaterialTheme.typography.bodyMedium,
+                            textAlign = TextAlign.Center
+                        )
+                        Spacer(Modifier.height(24.dp))
+                        Button(onClick = { /* retry */ }) {
+                            Text("Попробовать снова")
+                        }
+                    }
+                }
+
+                qrState.qrImage != null -> {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(24.dp)
+                    ) {
+                        QrCodeImage(
+                            qrData = qrState.qrImage,
+                            modifier = Modifier
+                                .weight(1f)
+                                .fillMaxWidth()
+                                .aspectRatio(1f)
+                                .padding(32.dp)
+                        )
+
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier.padding(16.dp)
+                        ) {
+                            qrState.categoryName?.let { name ->
+                                Text(
+                                    text = "Категория: $name",
+                                    style = MaterialTheme.typography.titleMedium,
+                                    textAlign = TextAlign.Center
+                                )
+                                Spacer(Modifier.height(8.dp))
+                            }
+                            Text(
+                                text = "Отсканируйте QR-код чтобы получить слова",
+                                style = MaterialTheme.typography.bodyMedium,
+                                textAlign = TextAlign.Center,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+                }
+
+                else -> {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.padding(16.dp)
+                    ) {
+                        Text(
+                            text = "Данные не загружены",
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                        Spacer(Modifier.height(16.dp))
+                        Button(onClick = { /* retry */ }) {
+                            Text("Загрузить")
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun QrCodeImage(
+    qrData: QrCodeData,
+    modifier: Modifier = Modifier
+) {
+    val bitmap = remember(qrData) {
+        createQrBitmap(qrData)
+    }
+
+    Image(
+        bitmap = bitmap,
+        contentDescription = "QR код",
+        modifier = modifier,
+        contentScale = ContentScale.Fit
+    )
+}
+
+private fun createQrBitmap(qrData: QrCodeData): ImageBitmap {
+    val bitmap = ImageBitmap(qrData.width, qrData.height)
+    val canvas = Canvas(bitmap)
+
+    canvas.drawRect(
+        Rect(0f, 0f, qrData.width.toFloat(), qrData.height.toFloat()),
+        Paint().apply { color = Color.White }
+    )
+
+    val paint = Paint().apply { color = Color.Black }
+
+    for (y in 0 until qrData.height) {
+        for (x in 0 until qrData.width) {
+            if (qrData.pixels[y * qrData.width + x]) {
+                canvas.drawRect(
+                    Rect(x.toFloat(), y.toFloat(), (x + 1).toFloat(), (y + 1).toFloat()),
+                    paint
+                )
+            }
+        }
+    }
+
+    return bitmap
+}

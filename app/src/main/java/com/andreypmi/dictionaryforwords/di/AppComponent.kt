@@ -2,7 +2,9 @@ package com.andreypmi.dictionaryforwords.di
 
 import android.content.Context
 import com.andreypmi.core_domain.di.DomainDeps
+import com.andreypmi.core_domain.repository.ShareStorageRepository
 import com.andreypmi.core_domain.repository.WordRepository
+import com.andreypmi.core_domain.service.QrCodeService
 import com.andreypmi.dictionaryforwords.word_list.di.WordListDeps
 import com.andreypmi.learning.di.LearningDeps
 import com.andreypmi.logger.Logger
@@ -14,7 +16,9 @@ import javax.inject.Singleton
 @Singleton
 @Component(modules = [AppModule::class, DataModule::class,])
 interface AppComponent: WordListDeps,DomainDeps, LearningDeps, UserDeps {
-    override val repository: WordRepository
+    override val wordRepository: WordRepository
+    override val shareStorageRepository: ShareStorageRepository
+    override val qrCodeService: QrCodeService
     override val logger: Logger
 
     @Component.Factory

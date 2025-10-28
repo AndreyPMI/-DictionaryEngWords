@@ -7,29 +7,30 @@ targetSdk = "35"
 
 # plugins
 agp = "8.11.2"
-org-jetbrains-kotlin-android = "2.0.0"
-org-jetbrains-kotlin-jvm = "2.0.0"
-devtools-ksp = "2.0.0-1.0.24"
+org-jetbrains-kotlin-android = "2.2.21"
+org-jetbrains-kotlin-jvm = "2.2.21"
+devtools-ksp = "2.2.20-2.0.4"
 
 # core
 core-ktx = "1.16.0"
 kotlinx_immutable = "0.3.5"
-kotlinx-coroutines = "1.9.0"
+kotlinx-coroutines = "1.10.2"
+kotlinx-serialization = "1.9.0"
+serialization = "2.0.0"
 
 # presentation
 lifecycle-runtime-ktx = "2.9.1"
 coil-compose = "2.6.0"
 
 # compose
-composecompiler = "2.0.0"
+composecompiler = "2.2.21"
 activity-compose = "1.10.1"
 compose-bom = "2025.06.00"
 navigation = "2.9.0"
 
+
 # data
 androidx-room = "2.7.1"
-retrofit2 = "2.11.0"
-okhttp3 = "4.12.0"
 androidx-datastore-preferences = "1.1.7"
 datastore = "1.1.7"
 
@@ -44,12 +45,18 @@ material = "1.12.0"
 
 # dagger
 dagger = "2.51.1"
+
+#ktor
+ktor = "3.3.1"
+
 workRuntimeKtx = "2.10.3"
 composeMaterialCore = "1.5.0"
 composeMaterial = "1.5.2"
 uiToolingPreviewAndroid = "1.9.2"
 navigationCommonAndroid = "2.9.5"
 runtimeAndroid = "1.9.3"
+
+
 
 [libraries]
 
@@ -58,7 +65,7 @@ core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx
 kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinx_immutable" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
-
+kotlinx-serialization =  { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 
 # data
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "androidx-room" }
@@ -67,10 +74,6 @@ androidx-room-compiler = { group = "androidx.room", name = "room-compiler", vers
 androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "androidx-datastore-preferences"}
 
 androidx-datastore-core = { group = "androidx.datastore", name = "datastore-core", version.ref = "datastore" }
-
-retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit2" }
-retrofit-converter-json = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit2"}
-okhttp3-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp3"}
 
 # presentation
 lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle-runtime-ktx" }
@@ -101,7 +104,12 @@ androidx-test-runner = { group = "androidx.test", name = "runner", version.ref =
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 
-
+#ktor
+ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
+ktor-client-content-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-client-serialization-kotlinx = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
+ktor-client-okhttp = { group = "io.ktor", name = "ktor-client-okhttp", version.ref = "ktor" }
+ktor-client-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktor" }
 # dagger2
 dagger = { group = "com.google.dagger", name = "dagger-android", version.ref = "dagger" }
 dagger-compiler = { group = "com.google.dagger", name = "dagger-compiler", version.ref = "dagger" }
@@ -124,4 +132,5 @@ com-android-library = { id = "com.android.library", version.ref = "agp" }
 org-jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "org-jetbrains-kotlin-jvm" }
 devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "devtools-ksp" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "composecompiler" }
+serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "serialization" }
 [bundles]

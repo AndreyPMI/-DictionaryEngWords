@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="back">Back</string>
+    <string name="share_a_group">Share a group</string>
+    <string name="repeat">Repeat</string>
+    <string name="all_categories_are_loaded">All categories are loaded</string>
+    <string name="to_share">To share</string>
+    <string name="words">Words: %1$d</string>
+    <string name="error">Error: %1$s</string>
+</resources>

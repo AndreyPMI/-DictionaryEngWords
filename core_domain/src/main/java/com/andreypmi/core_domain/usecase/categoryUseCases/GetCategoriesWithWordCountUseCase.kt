@@ -4,10 +4,10 @@ import com.andreypmi.core_domain.models.CategoryWithWordCount
 import com.andreypmi.core_domain.repository.WordRepository
 import javax.inject.Inject
 
-class GetPaginatedCategoriesUseCase @Inject constructor(
+class GetCategoriesWithWordCountUseCase @Inject constructor(
     private val repository: WordRepository
 ) {
-    suspend operator fun invoke(page: Int, limit: Int = 50): List<CategoryWithWordCount> {
+    suspend fun execute(page: Int, limit: Int = 50): List<CategoryWithWordCount> {
         val offset = page * limit
         return repository.getCategoriesWithWordCount(offset, limit)
     }

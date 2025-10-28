@@ -2,6 +2,7 @@ package com.andreypmi.user_feature.userScreen
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -19,10 +20,14 @@ import com.andreypmi.user_feature.navigation.ShareGroupDestination
 import com.andreypmi.user_feature.navigation.UserDestination
 import com.andreypmi.user_feature.navigation.UserMainDestination
 import com.andreypmi.user_feature.userScreen.nested_screens.NotificationsScreen
-import com.andreypmi.user_feature.userScreen.nested_screens.QRCodeScreen
 import com.andreypmi.user_feature.userScreen.nested_screens.SettingsScreen
-import com.andreypmi.user_feature.userScreen.nested_screens.ShareGroupScreen
 import com.andreypmi.user_feature.userScreen.nested_screens.UserMainScreen
+import com.andreypmi.user_feature.userScreen.nested_screens.qrCodeScreen.QRCodeScreen
+import com.andreypmi.user_feature.userScreen.nested_screens.qrCodeScreen.viewModels.QRCodeIntent
+import com.andreypmi.user_feature.userScreen.nested_screens.qrCodeScreen.viewModels.QRCodeViewModel
+import com.andreypmi.user_feature.userScreen.nested_screens.shared_group.ShareGroupScreen
+import com.andreypmi.user_feature.userScreen.nested_screens.shared_group.viewmodels.ShareGroupIntent
+import com.andreypmi.user_feature.userScreen.nested_screens.shared_group.viewmodels.ShareGroupViewModel
 
 @Composable
 fun UserScreen(
@@ -61,56 +66,59 @@ fun UserScreen(
             LaunchedEffect(Unit) {
                 bottomNavigationController?.hide()
             }
-//            val shareGroupViewModel: ShareGroupViewModel = viewModel(
-//                factory = userComponent.vmShareGroupFactory
-//            )
+            val shareGroupViewModel: ShareGroupViewModel = viewModel(
+                factory = userComponent.vmShareGroupFactory
+            )
 
             LaunchedEffect(Unit) {
-               // shareGroupViewModel.processIntent(ShareGroupIntent.LoadGroups)
+                shareGroupViewModel.processIntent(ShareGroupIntent.LoadFirstPage)
             }
 
-                //val shareGroupState = shareGroupViewModel.state.collectAsState().value
-//            ShareGroupScreen(
-//                groupsState = shareGroupState,
-//                onGroupSelected = { groupId ->
-//                    innerNavController.navigate(QRCodeDestination.createRoute(groupId))
-//                },
-//                onBack = {
-//                    innerNavController.popBackStack()
-//                }
-//            )
+            val shareGroupState = shareGroupViewModel.state.collectAsState().value
+            ShareGroupScreen(
+                state = shareGroupState,
+                onIntent = { intent -> shareGroupViewModel.processIntent(intent) },
+                onNavigateToQR = { categoryId ->
+                    innerNavController.navigate(
+                        QRCodeDestination.createRoute(
+                            categoryId
+                        )
+                    )
+                },
+                onBack = { innerNavController.popBackStack() }
+            )
         }
 
         composable(
             route = QRCodeDestination.routeWithArgs,
             arguments = listOf(
-                navArgument(QRCodeDestination.groupIdArg) {
-                    type = NavType.IntType
+                navArgument(QRCodeDestination.categoryIdArg) {
+                    type = NavType.StringType
                 }
             )
         ) { navBackStackEntry ->
-            val groupId = navBackStackEntry.arguments?.getInt(QRCodeDestination.groupIdArg) ?: 0
-//            val qrCodeViewModel: QRCodeViewModel = viewModel(
-//                factory = userComponent.vmQRCodeFactory
-//            )
-
-            LaunchedEffect(groupId) {
-               // qrCodeViewModel.processIntent(QRCodeIntent.GenerateQRCode(groupId))
+            LaunchedEffect(Unit) {
+                bottomNavigationController?.hide()
             }
 
-            //val qrState = qrCodeViewModel.state.collectAsState().value
-//            QRCodeScreen(
-//                qrState = qrState,
-//                onBack = {
-//                    innerNavController.popBackStack()
-//                },
-//                onShare = { qrBitmap ->
-//                    // Логика шаринга QR кода
-//                    qrCodeViewModel.processIntent(QRCodeIntent.ShareQRCode(qrBitmap))
-//                }
-//            )
-        }
+            val categoryId = navBackStackEntry.arguments?.getString(QRCodeDestination.categoryIdArg) ?: ""
+            val qrCodeViewModel: QRCodeViewModel = viewModel(
+                factory = userComponent.vmQRCodeFactory
+            )
 
+            LaunchedEffect(categoryId) {
+                qrCodeViewModel.processIntent(QRCodeIntent.GenerateQRCode(categoryId))
+            }
+
+            val qrState = qrCodeViewModel.state.collectAsState().value
+            QRCodeScreen(
+                qrState = qrState,
+                onBack = { innerNavController.popBackStack() },
+                onShare = {
+                    qrCodeViewModel.processIntent(QRCodeIntent.ShareQRCode)
+                }
+            )
+        }
         composable(LoadGroupDestination.route) {
             LaunchedEffect(Unit) {
                 bottomNavigationController?.hide()
