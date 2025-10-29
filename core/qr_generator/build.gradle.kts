@@ -18,7 +18,7 @@ sourceSets {
 }
 dependencies {
     implementation(project(":core_domain"))
-
+    implementation("io.github.g0dkar:qrcode-kotlin:4.5.0")
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(kotlin("test"))

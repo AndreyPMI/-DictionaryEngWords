@@ -1,5 +1,6 @@
 package com.andreypmi.user_feature.userScreen.nested_screens.qrCodeScreen.viewModels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.andreypmi.core_domain.usecase.sharedUseCases.PrepareCategoryShareUseCase

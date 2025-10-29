@@ -23,7 +23,6 @@ class WordRepositoryImpl @Inject constructor(
     override fun getWordsByCategoryId(categoryId: String): Flow<List<Word>> {
         return wordDao.getWordsByCategoryId(categoryId).map { entities ->
             entities.map { entity ->
-                Log.d("AAAgetWordsByCategoryId","$entity")
                 EntityMapper.toDomainModel(entity) }
         }
     }
@@ -69,7 +68,6 @@ class WordRepositoryImpl @Inject constructor(
     override fun getAllCategories(): Flow<List<Category>> =
         categoriesDao.getAllCategories().map { categoriesEntities ->
             categoriesEntities.map {
-                Log.d("AAAgetAllCategories","$it")
                 EntityMapper.toDomainModel(it)
             }
         }

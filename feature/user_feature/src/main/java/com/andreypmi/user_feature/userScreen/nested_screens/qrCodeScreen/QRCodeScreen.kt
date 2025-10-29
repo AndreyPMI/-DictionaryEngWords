@@ -1,5 +1,7 @@
 package com.andreypmi.user_feature.userScreen.nested_screens.qrCodeScreen
 
+import android.graphics.BitmapFactory
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,16 +30,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Canvas
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.Paint
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.andreypmi.core_domain.models.QrCodeData
 import com.andreypmi.user_feature.userScreen.nested_screens.qrCodeScreen.models.QRCodeState
+import java.io.ByteArrayInputStream
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -183,7 +188,7 @@ fun QrCodeImage(
     modifier: Modifier = Modifier
 ) {
     val bitmap = remember(qrData) {
-        createQrBitmap(qrData)
+        createQrBitmap(qrData.pixels)
     }
 
     Image(
@@ -194,27 +199,25 @@ fun QrCodeImage(
     )
 }
 
-private fun createQrBitmap(qrData: QrCodeData): ImageBitmap {
-    val bitmap = ImageBitmap(qrData.width, qrData.height)
-    val canvas = Canvas(bitmap)
-
-    canvas.drawRect(
-        Rect(0f, 0f, qrData.width.toFloat(), qrData.height.toFloat()),
-        Paint().apply { color = Color.White }
-    )
-
-    val paint = Paint().apply { color = Color.Black }
-
-    for (y in 0 until qrData.height) {
-        for (x in 0 until qrData.width) {
-            if (qrData.pixels[y * qrData.width + x]) {
-                canvas.drawRect(
-                    Rect(x.toFloat(), y.toFloat(), (x + 1).toFloat(), (y + 1).toFloat()),
-                    paint
-                )
-            }
-        }
+private fun createQrBitmap(pngBytes: ByteArray): ImageBitmap {
+    return try {
+        BitmapFactory.decodeByteArray(pngBytes, 0, pngBytes.size).asImageBitmap()
+    } catch (e: Exception) {
+        createFallbackBitmap()
     }
+}
+private fun createFallbackBitmap(): ImageBitmap {
+    val size = 100
+    val bitmap = ImageBitmap(size, size)
+    val canvas = Canvas(bitmap)
+    val paint = Paint()
+
+    paint.color = Color.Gray
+    canvas.drawRect(0f, 0f, size.toFloat(), size.toFloat(), paint)
+
+    paint.color = Color.Red
+    canvas.drawLine(Offset(0f, 0f), Offset(size.toFloat(), size.toFloat()), paint)
+    canvas.drawLine(Offset(size.toFloat(), 0f), Offset(0f, size.toFloat()), paint)
 
     return bitmap
 }

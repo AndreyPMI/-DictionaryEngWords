@@ -1,6 +1,7 @@
 package com.andreypmi.core_domain.usecase.sharedUseCases
 
 import com.andreypmi.core_domain.exception.ShareStorageException
+import com.andreypmi.core_domain.models.QrCodeData
 import com.andreypmi.core_domain.models.ShareResult
 import com.andreypmi.core_domain.models.SharedCategory
 import com.andreypmi.core_domain.repository.ShareStorageRepository
@@ -36,15 +37,17 @@ class PrepareCategoryShareUseCase @Inject constructor(
             val shareLink = shareStorageRepository.getShareLink(sharedCategory.id)
 
             val qrCodeData = qrCodeRepository.generateQrCode(shareLink)
-
             ShareResult(
                 shareId = sharedCategory.id,
                 shareLink = shareLink,
-                qrCodeData = qrCodeData
+                qrCodeData = QrCodeData(qrCodeData)
             )
         }.fold(
             onSuccess = { Result.success(it) },
-            onFailure = { Result.failure(it) }
+            onFailure = {
+                println(it.message)
+                Result.failure(it)
+            }
         )
     }
 }

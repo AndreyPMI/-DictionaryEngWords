@@ -1,9 +1,7 @@
 package com.andreypmi.core_domain.models
 
 data class QrCodeData(
-    val width: Int,
-    val height: Int,
-    val pixels: BooleanArray
+    val pixels: ByteArray
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -11,17 +9,12 @@ data class QrCodeData(
 
         other as QrCodeData
 
-        if (width != other.width) return false
-        if (height != other.height) return false
         if (!pixels.contentEquals(other.pixels)) return false
 
         return true
     }
 
     override fun hashCode(): Int {
-        var result = width
-        result = 31 * result + height
-        result = 31 * result + pixels.contentHashCode()
-        return result
+        return pixels.contentHashCode()
     }
 }

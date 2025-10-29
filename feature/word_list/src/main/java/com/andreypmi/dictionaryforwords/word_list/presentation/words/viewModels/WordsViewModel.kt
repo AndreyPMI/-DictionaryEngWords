@@ -74,7 +74,6 @@ class WordsViewModel(
     private fun loadWords(categoryId: String) {
         viewModelScope.launch {
             try {
-                Log.d("AAAloadWords",categoryId)
                 val selectedCategory =
                     categoryUseCases.getCategoryById(categoryId)?: return@launch
 

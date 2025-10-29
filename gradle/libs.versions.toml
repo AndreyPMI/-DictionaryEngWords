@@ -55,6 +55,7 @@ composeMaterial = "1.5.2"
 uiToolingPreviewAndroid = "1.9.2"
 navigationCommonAndroid = "2.9.5"
 runtimeAndroid = "1.9.3"
+uiDesktop = "1.7.0"
 
 
 
@@ -124,6 +125,7 @@ androidx-compose-material = { group = "androidx.wear.compose", name = "compose-m
 androidx-ui-tooling-preview-android = { group = "androidx.compose.ui", name = "ui-tooling-preview-android", version.ref = "uiToolingPreviewAndroid" }
 androidx-navigation-common-android = { group = "androidx.navigation", name = "navigation-common-android", version.ref = "navigationCommonAndroid" }
 androidx-runtime-android = { group = "androidx.compose.runtime", name = "runtime-android", version.ref = "runtimeAndroid" }
+androidx-ui-desktop = { group = "androidx.compose.ui", name = "ui-desktop", version.ref = "uiDesktop" }
 
 [plugins]
 com-android-application = { id = "com.android.application", version.ref = "agp" }

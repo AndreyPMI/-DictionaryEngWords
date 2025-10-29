@@ -29,11 +29,9 @@ class FirebaseRealtimeRepository @Inject constructor(
             httpClientApi.put(url, networkCategory)
         }.fold(
             onSuccess = {
-                Log.d("AAA", "Upload SUCCESS")
                 Result.success(Unit)
             },
             onFailure = {
-                Log.d("AAA", "Upload FAILED: ${it.message}")
                 Result.failure(ShareStorageException("Upload failed: ${it.message}"))
             }
         )
