@@ -1,10 +1,12 @@
 [versions]
 
 # app config
-cameraCamera2 = "1.5.1"
+# suppress("UnusedVersion")
 compileSdk = "36"
 core = "3.5.3"
+# suppress("UnusedVersion")
 minSdk = "26"
+# suppress("UnusedVersion")
 targetSdk = "36"
 
 # plugins
@@ -20,6 +22,7 @@ kotlinx-coroutines = "1.10.2"
 kotlinx-serialization = "1.9.0"
 serialization = "2.2.21"
 
+cameraCamera2 = "1.5.1"
 # presentation
 lifecycle-runtime-ktx = "2.9.4"
 coil-compose = "2.7.0"
