@@ -32,8 +32,8 @@ android {
     buildFeatures {
         compose = true
     }
-    kotlinOptions {
-        jvmTarget = "11"
+    kotlin {
+        jvmToolchain(17)
     }
 }
 
@@ -56,6 +56,14 @@ dependencies {
     //dagger
     implementation(libs.dagger)
     ksp(libs.dagger.compiler)
+    // CameraX
+    implementation(libs.androidx.camera.camera2)
+    implementation(libs.androidx.camera.lifecycle)
+    implementation(libs.androidx.camera.view)
+    // ZXing
+    implementation(libs.zxing.core)
+    // Разрешения
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)

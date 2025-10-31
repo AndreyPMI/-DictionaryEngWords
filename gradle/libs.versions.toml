@@ -1,7 +1,9 @@
 [versions]
 
 # app config
+cameraCamera2 = "1.5.1"
 compileSdk = "36"
+core = "3.5.3"
 minSdk = "26"
 targetSdk = "35"
 
@@ -62,6 +64,7 @@ uiDesktop = "1.7.0"
 [libraries]
 
 # core
+zxing-core = { module = "com.google.zxing:core", version.ref = "core" }
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
 kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinx_immutable" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
@@ -114,6 +117,12 @@ ktor-client-logging = { group = "io.ktor", name = "ktor-client-logging", version
 # dagger2
 dagger = { group = "com.google.dagger", name = "dagger-android", version.ref = "dagger" }
 dagger-compiler = { group = "com.google.dagger", name = "dagger-compiler", version.ref = "dagger" }
+#camera
+androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "cameraCamera2" }
+androidx-camera-lifecycle = { module = "androidx.camera:camera-lifecycle", version.ref = "cameraCamera2" }
+androidx-camera-view = { module = "androidx.camera:camera-view", version.ref = "cameraCamera2" }
+
+
 
 # navigatiom
 navigation-compose = {group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation"}
