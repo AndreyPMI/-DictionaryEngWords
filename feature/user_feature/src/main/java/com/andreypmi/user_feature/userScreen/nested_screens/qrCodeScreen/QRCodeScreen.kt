@@ -1,8 +1,8 @@
 package com.andreypmi.user_feature.userScreen.nested_screens.qrCodeScreen
 
 import android.graphics.BitmapFactory
-import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -17,9 +17,12 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -31,7 +34,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Canvas
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
@@ -42,7 +44,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.andreypmi.core_domain.models.QrCodeData
 import com.andreypmi.user_feature.userScreen.nested_screens.qrCodeScreen.models.QRCodeState
-import java.io.ByteArrayInputStream
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -56,24 +57,15 @@ fun QRCodeScreen(
             TopAppBar(
                 title = {
                     Text(
-                        qrState.categoryName ?: "QR код"
+                        qrState.categoryName ?: "QR Code"
                     )
                 },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Назад")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 }
             )
-        },
-        floatingActionButton = {
-            if (qrState.qrImage != null) {
-                ExtendedFloatingActionButton(
-                    onClick = onShare,
-                    icon = { Icon(Icons.Default.Share, contentDescription = null) },
-                    text = { Text("Поделиться") }
-                )
-            }
         }
     ) { padding ->
         Box(
@@ -90,7 +82,7 @@ fun QRCodeScreen(
                     ) {
                         CircularProgressIndicator()
                         Spacer(Modifier.height(16.dp))
-                        Text("Генерируем QR код...")
+                        Text("Generating QR Code...")
                     }
                 }
 
@@ -101,13 +93,13 @@ fun QRCodeScreen(
                     ) {
                         Icon(
                             Icons.Default.Build,
-                            contentDescription = "Ошибка",
+                            contentDescription = "Error",
                             modifier = Modifier.size(64.dp),
                             tint = MaterialTheme.colorScheme.error
                         )
                         Spacer(Modifier.height(16.dp))
                         Text(
-                            text = "Ошибка",
+                            text = "Error",
                             style = MaterialTheme.typography.headlineSmall,
                             color = MaterialTheme.colorScheme.error
                         )
@@ -118,8 +110,8 @@ fun QRCodeScreen(
                             textAlign = TextAlign.Center
                         )
                         Spacer(Modifier.height(24.dp))
-                        Button(onClick = { /* retry */ }) {
-                            Text("Попробовать снова")
+                        Button(onClick = { }) {
+                            Text("Try Again")
                         }
                     }
                 }
@@ -127,6 +119,7 @@ fun QRCodeScreen(
                 qrState.qrImage != null -> {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center,
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(24.dp)
@@ -134,31 +127,37 @@ fun QRCodeScreen(
                         QrCodeImage(
                             qrData = qrState.qrImage,
                             modifier = Modifier
-                                .weight(1f)
-                                .fillMaxWidth()
+                                .fillMaxWidth(0.8f)
                                 .aspectRatio(1f)
-                                .padding(32.dp)
                         )
 
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier.padding(16.dp)
-                        ) {
-                            qrState.categoryName?.let { name ->
-                                Text(
-                                    text = "Категория: $name",
-                                    style = MaterialTheme.typography.titleMedium,
-                                    textAlign = TextAlign.Center
-                                )
-                                Spacer(Modifier.height(8.dp))
-                            }
+                        Spacer(Modifier.height(32.dp))
+
+                        if (qrState.wordsCount != null) {
                             Text(
-                                text = "Отсканируйте QR-код чтобы получить слова",
+                                text = "${qrState.wordsCount} words",
                                 style = MaterialTheme.typography.bodyMedium,
-                                textAlign = TextAlign.Center,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                modifier = Modifier.padding(bottom = 8.dp)
                             )
                         }
+
+                        ExtendedFloatingActionButton(
+                            onClick = onShare,
+                            icon = { Icon(Icons.Default.Share, contentDescription = null) },
+                            text = { Text("Share") },
+                            modifier = Modifier.padding(top = 16.dp)
+                        )
+
+                        Spacer(Modifier.height(16.dp))
+
+                        Text(
+                            text = "Scan QR code to get words",
+                            style = MaterialTheme.typography.bodyMedium,
+                            textAlign = TextAlign.Center,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(horizontal = 16.dp)
+                        )
                     }
                 }
 
@@ -168,12 +167,12 @@ fun QRCodeScreen(
                         modifier = Modifier.padding(16.dp)
                     ) {
                         Text(
-                            text = "Данные не загружены",
+                            text = "No data loaded",
                             style = MaterialTheme.typography.bodyMedium
                         )
                         Spacer(Modifier.height(16.dp))
-                        Button(onClick = { /* retry */ }) {
-                            Text("Загрузить")
+                        Button(onClick = { }) {
+                            Text("Load")
                         }
                     }
                 }
@@ -181,6 +180,7 @@ fun QRCodeScreen(
         }
     }
 }
+
 
 @Composable
 fun QrCodeImage(
@@ -202,7 +202,7 @@ fun QrCodeImage(
 private fun createQrBitmap(pngBytes: ByteArray): ImageBitmap {
     return try {
         BitmapFactory.decodeByteArray(pngBytes, 0, pngBytes.size).asImageBitmap()
-    } catch (e: Exception) {
+    } catch (_: Exception) {
         createFallbackBitmap()
     }
 }

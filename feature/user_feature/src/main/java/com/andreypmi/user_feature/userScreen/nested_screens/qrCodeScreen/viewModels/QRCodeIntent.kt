@@ -2,7 +2,6 @@ package com.andreypmi.user_feature.userScreen.nested_screens.qrCodeScreen.viewMo
 
 sealed interface QRCodeIntent {
     data class GenerateQRCode(val categoryId: String) : QRCodeIntent
-    object ShareQRCode : QRCodeIntent
     object ErrorShown : QRCodeIntent
     object RetryGeneration : QRCodeIntent
 }

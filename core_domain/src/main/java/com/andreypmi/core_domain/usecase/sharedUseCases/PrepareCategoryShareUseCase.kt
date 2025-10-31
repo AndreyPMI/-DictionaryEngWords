@@ -40,6 +40,8 @@ class PrepareCategoryShareUseCase @Inject constructor(
             ShareResult(
                 shareId = sharedCategory.id,
                 shareLink = shareLink,
+                wordsCount = words.size,
+                categoryName = category.category,
                 qrCodeData = QrCodeData(qrCodeData)
             )
         }.fold(
