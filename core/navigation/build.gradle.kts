@@ -31,6 +31,7 @@ android {
     kotlin {
         jvmToolchain(17)
     }
+    @Suppress("UnstableApiUsage")
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.composecompiler.get()
     }
