@@ -2,18 +2,21 @@ package com.andreypmi.user_feature.userScreen.nested_screens.loadWords.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.andreypmi.core_domain.usecase.categoryUseCases.InsertCategoryWithWordsUseCase
 import com.andreypmi.core_domain.usecase.sharedUseCases.LoadSharedCategoryUseCase
-import com.andreypmi.core_domain.usecase.sharedUseCases.PrepareCategoryShareUseCase
-import com.andreypmi.user_feature.userScreen.nested_screens.qrCodeScreen.viewModels.QRCodeViewModel
 import javax.inject.Inject
 
 class LoadGroupViewModelFactory @Inject constructor(
-    private val loadSharedCategoryUseCase: LoadSharedCategoryUseCase
+    private val loadSharedCategoryUseCase: LoadSharedCategoryUseCase,
+    private val insertCategoryWithWordsUseCase: InsertCategoryWithWordsUseCase
 ) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(LoadGroupViewModel::class.java)) {
-            return LoadGroupViewModel(loadSharedCategoryUseCase) as T
+            return LoadGroupViewModel(
+                loadSharedCategoryUseCase,
+                insertCategoryWithWordsUseCase
+            ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

@@ -42,6 +42,23 @@ class WordRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun insertWords(words: List<Word>): List<Word> {
+        return try {
+            val wordsWithIds = words.map { word ->
+                if (word.id.isNullOrBlank()) {
+                    word.copy(id = UUID.randomUUID().toString())
+                } else {
+                    word
+                }
+            }
+            val entities = wordsWithIds.map { EntityMapper.fromDomainModel(it) }
+            wordDao.insertWords(entities)
+            wordsWithIds
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
+
     override suspend fun updateWord(word: Word): Boolean {
         return try {
             if (word.id.isNullOrBlank()) return false

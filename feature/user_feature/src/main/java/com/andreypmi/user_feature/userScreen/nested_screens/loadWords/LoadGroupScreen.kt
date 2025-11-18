@@ -1,66 +1,53 @@
 package com.andreypmi.user_feature.userScreen.nested_screens.loadWords
 
-import android.net.Uri
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Face
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import com.andreypmi.user_feature.userScreen.nested_screens.loadWords.models.LoadGroupState
+import com.andreypmi.dictionaryforwords.core.ui.R as Rui
+import com.andreypmi.user_feature.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoadGroupScreen(
-    onQRCodeScanned: (String) -> Unit,
-    onBack: () -> Unit,
-    loadingState: LoadGroupState
+    onCameraClick : ()-> Unit,
+    onFileClick: ()-> Unit,
+    onBack: () -> Unit
 ) {
-    var showCamera by remember { mutableStateOf(false) }
-    var showFilePicker by remember { mutableStateOf(false) }
-
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Загрузить слова") },
+                title = { Text(stringResource(R.string.load_words)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Назад")
+                        Icon(
+                            painter = painterResource(Rui.drawable.arrow_back_24dp),
+                            contentDescription = stringResource(R.string.back)
+                        )
                     }
                 }
             )
@@ -70,178 +57,78 @@ fun LoadGroupScreen(
             modifier = Modifier
                 .padding(padding)
                 .fillMaxSize()
-                .padding(16.dp),
+                .padding(16.dp)
+        ) {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    SquareButton(
+                        onClick =  onCameraClick,
+                        modifier = Modifier.weight(1f),
+                        icon = painterResource(Rui.drawable.mobile_camera_24dp),
+                        text = stringResource(R.string.camera)
+                    )
+
+                    SquareButton(
+                        onClick = onFileClick,
+                        modifier = Modifier.weight(1f),
+                        icon = painterResource(Rui.drawable.file_open_24dp),
+                        text = stringResource(R.string.file)
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                Text(
+                    text = stringResource(R.string.select_words_import_method),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+        }
+    }
+}
+
+
+@Composable
+private fun SquareButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    icon: Painter,
+    text: String
+) {
+    Card(
+        onClick = onClick,
+        modifier = modifier.aspectRatio(1f),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            if (loadingState.isLoading) {
-                CircularProgressIndicator()
-                Spacer(modifier = Modifier.height(16.dp))
-                Text("Загрузка слов...")
-            }
-
-            loadingState.error?.let { error ->
-                Text(
-                    text = "Ошибка: $error",
-                    color = MaterialTheme.colorScheme.error,
-                    textAlign = TextAlign.Center
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-            }
-
-            loadingState.successMessage?.let { message ->
-                Text(
-                    text = message,
-                    color = MaterialTheme.colorScheme.primary,
-                    textAlign = TextAlign.Center
-                )
-
-                loadingState.loadedCategory?.let { category ->
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Card(
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceVariant
-                        )
-                    ) {
-                        Column(
-                            modifier = Modifier.padding(16.dp)
-                        ) {
-                            Text(
-                                text = "Категория: ${category.categoryName}",
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.Bold
-                            )
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Text(
-                                text = "Количество слов: ${category.words.size}",
-                                style = MaterialTheme.typography.bodyMedium
-                            )
-                            Spacer(modifier = Modifier.height(16.dp))
-                            Button(
-                                onClick = {
-                                    // TODO: Навигация к изучению этой категории
-                                },
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Text("Начать изучение")
-                            }
-                        }
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-            }
-
-            if (!loadingState.isLoading) {
-                Button(
-                    onClick = { showCamera = true },
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Icon(Icons.Default.Face, contentDescription = null)
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text("Сканировать QR код камерой")
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Button(
-                    onClick = { showFilePicker = true },
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Icon(Icons.Default.AccountCircle, contentDescription = null)
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text("Выбрать QR код из файла")
-                }
-            }
-
-            Spacer(modifier = Modifier.height(32.dp))
-
+            Icon(
+                painter = icon,
+                contentDescription = null,
+                modifier = Modifier.size(48.dp),
+                tint = MaterialTheme.colorScheme.primary
+            )
+            Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "Отсканируйте QR код, чтобы загрузить набор слов, которым поделился другой пользователь",
-                textAlign = TextAlign.Center,
+                text = text,
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        }
-
-        if (showCamera) {
-            QRCodeScannerDialog(
-                onDismiss = { showCamera = false },
-                onQRCodeScanned = { qrData ->
-                    showCamera = false
-                    onQRCodeScanned(qrData)
-                }
-            )
-        }
-
-        if (showFilePicker) {
-            FilePickerDialog(
-                onDismiss = { showFilePicker = false },
-                onFileSelected = { fileUri ->
-                    showFilePicker = false
-                    onQRCodeScanned(fileUri.toString())
-                }
+                fontWeight = FontWeight.Medium
             )
         }
     }
-}
-
-@Composable
-fun QRCodeScannerDialog(
-    onDismiss: () -> Unit,
-    onQRCodeScanned: (String) -> Unit
-) {
-    Dialog(onDismissRequest = onDismiss) {
-        Card(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Column {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(300.dp)
-                        .background(Color.Black),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text("Сканер QR кодов", color = Color.White)
-                }
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    horizontalArrangement = Arrangement.End
-                ) {
-                    TextButton(onClick = onDismiss) {
-                        Text("Отмена")
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun FilePickerDialog(
-    onDismiss: () -> Unit,
-    onFileSelected: (Uri) -> Unit
-) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text("Выбор файла") },
-        text = { Text("Здесь будет системный выбор файла для выбора изображения с QR кодом") },
-        confirmButton = {
-            TextButton(onClick = {
-                onFileSelected(Uri.parse("content://temp/qr_code.jpg"))
-            }) {
-                Text("Выбрать файл")
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("Отмена")
-            }
-        }
-    )
 }

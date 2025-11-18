@@ -13,9 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
@@ -35,6 +32,7 @@ import androidx.compose.ui.graphics.Color.Companion.Red
 import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -42,6 +40,7 @@ import androidx.compose.ui.unit.times
 import androidx.compose.ui.zIndex
 import com.andreypmi.cards.R
 import com.andreypmi.core_domain.models.Word
+import com.andreypmi.dictionaryforwords.core.ui.R as Rui
 import com.andreypmi.learning.learningScreen.viewModels.SessionState
 import kotlinx.coroutines.delay
 import kotlin.math.abs
@@ -71,7 +70,7 @@ fun CardStackContent(
                 onClick = onBack,
                 modifier = Modifier.align(Alignment.CenterStart)
             ) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                Icon(painter = painterResource(Rui.drawable.arrow_back_24dp), contentDescription = "Back")
             }
 
             val progress = if (activeState.words.isEmpty()) 0f
@@ -164,7 +163,7 @@ private fun SwipeHints(modifier: Modifier = Modifier) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Icon(
-                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                painter = painterResource(Rui.drawable.keyboard_arrow_left_24dp),
                 contentDescription = "Swipe left",
                 modifier = Modifier.size(28.dp),
                 tint = MaterialTheme.colorScheme.error
@@ -181,7 +180,7 @@ private fun SwipeHints(modifier: Modifier = Modifier) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Icon(
-                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                painter = painterResource(Rui.drawable.keyboard_arrow_right_24dp),
                 contentDescription = "Swipe right",
                 modifier = Modifier.size(28.dp),
                 tint = MaterialTheme.colorScheme.primary

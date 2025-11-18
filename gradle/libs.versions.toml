@@ -21,8 +21,8 @@ kotlinx_immutable = "0.4.0"
 kotlinx-coroutines = "1.10.2"
 kotlinx-serialization = "1.9.0"
 serialization = "2.2.21"
+ktlint = "11.6.1"
 
-cameraCamera2 = "1.5.1"
 # presentation
 lifecycle-runtime-ktx = "2.9.4"
 coil-compose = "2.7.0"
@@ -33,11 +33,14 @@ activity-compose = "1.11.0"
 compose-bom = "2025.10.01"
 navigation = "2.9.5"
 
-
+accompanistPermissions = "0.37.3"
 # data
 androidx-room = "2.8.3"
 androidx-datastore-preferences = "1.1.7"
 datastore = "1.1.7"
+
+camerax = "1.5.1"
+mlkitBarcode = "17.3.0"
 
 # tests
 junit = "4.13.2"
@@ -66,7 +69,6 @@ uiDesktop = "1.7.0"
 [libraries]
 
 # core
-zxing-core = { module = "com.google.zxing:core", version.ref = "core" }
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
 kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinx_immutable" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
@@ -80,6 +82,15 @@ androidx-room-compiler = { group = "androidx.room", name = "room-compiler", vers
 androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "androidx-datastore-preferences"}
 
 androidx-datastore-core = { group = "androidx.datastore", name = "datastore-core", version.ref = "datastore" }
+
+accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
+# CameraX
+androidx-camera-camera2 = { group = "androidx.camera", name = "camera-camera2", version.ref = "camerax" }
+androidx-camera-lifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref = "camerax" }
+androidx-camera-view = { group = "androidx.camera", name = "camera-view", version.ref = "camerax" }
+
+# ML Kit Barcode Scanning
+google-mlkit-barcode-scanning = { group = "com.google.mlkit", name = "barcode-scanning", version.ref = "mlkitBarcode" }
 
 # presentation
 lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle-runtime-ktx" }
@@ -119,11 +130,6 @@ ktor-client-logging = { group = "io.ktor", name = "ktor-client-logging", version
 # dagger2
 dagger = { group = "com.google.dagger", name = "dagger-android", version.ref = "dagger" }
 dagger-compiler = { group = "com.google.dagger", name = "dagger-compiler", version.ref = "dagger" }
-#camera
-androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "cameraCamera2" }
-androidx-camera-lifecycle = { module = "androidx.camera:camera-lifecycle", version.ref = "cameraCamera2" }
-androidx-camera-view = { module = "androidx.camera:camera-view", version.ref = "cameraCamera2" }
-
 
 
 # navigatiom
@@ -146,4 +152,5 @@ org-jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "org
 devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "devtools-ksp" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "composecompiler" }
 serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "serialization" }
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 [bundles]

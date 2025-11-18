@@ -1,10 +1,10 @@
 package com.andreypmi.dictionaryforwords.data.api.repository
 
 import android.util.Log
+import com.andreypmi.core_domain.exception.ShareStorageException
 import com.andreypmi.core_domain.models.SharedCategory
 import com.andreypmi.core_domain.repository.ShareStorageRepository
 import com.andreypmi.dictionaryforwords.data.api.FirebaseConfig
-import com.andreypmi.core_domain.exception.ShareStorageException
 import com.andreypmi.dictionaryforwords.data.api.http.HttpClientApi
 import com.andreypmi.dictionaryforwords.data.api.mapper.SharedCategoryMapper
 import com.andreypmi.dictionaryforwords.data.api.models.NetworkSharedCategory
@@ -17,7 +17,7 @@ class FirebaseRealtimeRepository @Inject constructor(
 ) : ShareStorageRepository {
 
     private val baseUrl: String
-        get() = "${firebaseConfig.databaseUrl}/shared_categories"
+        get() = "${firebaseConfig.databaseUrl}dictionaryforwords-default-rtdb.europe-west1.firebasedatabase.app/shared_categories"
 
     override suspend fun uploadCategoryForSharing(sharedCategory: SharedCategory): Result<Unit> {
         return runCatching {
@@ -40,6 +40,7 @@ class FirebaseRealtimeRepository @Inject constructor(
     override suspend fun getSharedCategory(shareId: String): Result<SharedCategory> {
         return runCatching {
             val url = "$baseUrl/$shareId.json"
+            Log.d("AAA",url)
             val jsonString = httpClientApi.getString(url)
 
             val networkCategory = Json.decodeFromString<NetworkSharedCategory>(jsonString)
@@ -59,13 +60,16 @@ class FirebaseRealtimeRepository @Inject constructor(
             }
         )
     }
+
     override fun getShareLink(shareId: String): String {
-        return "$baseUrl/$shareId.json"
+        return "https://dictionaryforwords.web.app/scanner/$shareId"
     }
+
     private suspend fun cleanupAllExpiredShares() {
         try {
             val allSharesJson = httpClientApi.getString("$baseUrl.json")
-            val allShares = Json.decodeFromString<Map<String, NetworkSharedCategory>?>(allSharesJson)
+            val allShares =
+                Json.decodeFromString<Map<String, NetworkSharedCategory>?>(allSharesJson)
 
             allShares?.forEach { (shareId, data) ->
                 if (System.currentTimeMillis() > data.expiresAt) {

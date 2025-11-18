@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.Flow
 interface WordRepository {
     fun getWordsByCategoryId(categoryId: String): Flow<List<Word>>
     suspend fun insertWord(word: Word): Word?
+    suspend fun insertWords(words: List<Word>): List<Word>
     suspend fun updateWord(word: Word): Boolean
     suspend fun deleteWord(word: Word): Boolean
 
