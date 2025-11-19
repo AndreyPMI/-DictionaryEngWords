@@ -29,12 +29,13 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
+    kotlin {
+        jvmToolchain(17)
     }
     buildFeatures {
         compose = true
     }
+    @Suppress("UnstableApiUsage")
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.composecompiler.get()
     }
@@ -45,6 +46,7 @@ dependencies {
     implementation(project(":core:ui"))
     implementation(project(":core:navigation_api"))
     implementation(project(":core_domain"))
+    implementation(project(":core:logger"))
 
     implementation(libs.core.ktx)
     implementation(libs.lifecycle.runtime.ktx)
@@ -61,6 +63,7 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.lifecycle.viewmodel.ktx)
     implementation(libs.coil.compose)
+    implementation(libs.androidx.compose.material.core)
     //navigation
     implementation(libs.navigation.ui)
     implementation(libs.navigation.compose)

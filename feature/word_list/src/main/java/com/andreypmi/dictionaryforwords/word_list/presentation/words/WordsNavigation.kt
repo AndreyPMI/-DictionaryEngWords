@@ -1,12 +1,13 @@
 package com.andreypmi.dictionaryforwords.word_list.presentation.words
 
-import android.util.Log
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.andreypmi.dictionaryforwords.core.ui.R
 import com.andreypmi.dictionaryforwords.word_list.di.DaggerWordListComponent
 import com.andreypmi.dictionaryforwords.word_list.di.WordListDepsProvider
+import com.andreypmi.dictionaryforwords.word_list.presentation.category.CategoryPanel
+import com.andreypmi.dictionaryforwords.word_list.presentation.category.viewModels.CategoryViewModel
 import com.andreypmi.dictionaryforwords.word_list.presentation.words.viewModels.WordsViewModel
 import com.andreypmi.navigation_api.DictionaryNavBarDestination
 import com.andreypmi.navigation_api.DictionaryNavDestination
@@ -14,11 +15,11 @@ import com.andreypmi.navigation_api.DictionaryNavDestination
 fun NavGraphBuilder.words(
 ) {
     composable(route = WordsDestination.route) {
-        Log.d("AAA", WordListDepsProvider.toString())
         val wordsComponent =
             DaggerWordListComponent.builder().addDeps(WordListDepsProvider.deps).build()
-        val viewModel = viewModel<WordsViewModel>(factory = wordsComponent.vmFactory)
-        MainScreen(viewModel)
+        val wordsViewModel = viewModel<WordsViewModel>(factory = wordsComponent.vmWordsFactory)
+        val categoryViewModel = viewModel<CategoryViewModel>(factory = wordsComponent.vmCategoryFactory)
+        CategoryPanel(wordsViewModel,categoryViewModel)
     }
 }
 

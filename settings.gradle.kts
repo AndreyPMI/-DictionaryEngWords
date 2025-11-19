@@ -16,10 +16,14 @@ dependencyResolutionManagement {
 rootProject.name = "DictionaryForWords"
 include(":app")
 include(":data")
-include(":core:ui")
 
 include(":core:navigation")
-include(":feature:cards")
-include(":feature:word_list")
+include(":core:ui")
 include(":core_domain")
 include(":core:navigation_api")
+include(":core:logger")
+
+include(":feature:cards")
+include(":feature:word_list")
+include(":feature:user_feature")
+include(":core:qr_generator")

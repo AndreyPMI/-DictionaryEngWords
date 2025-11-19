@@ -1,7 +1,7 @@
 package com.andreypmi.dictionaryforwords.di
 
-import com.andreypmi.core_domain.repository.WordRepository
-import com.andreypmi.dictionaryforwords.data.repository.WordRepositoryImpl
+import com.andreypmi.dictionaryforwords.LoggerImpl
+import com.andreypmi.logger.Logger
 import dagger.Binds
 import dagger.Module
 
@@ -9,6 +9,6 @@ import dagger.Module
 @Module
 interface AppModule {
     @Binds
-    fun bindNewsRepository(repository: WordRepositoryImpl): WordRepository
+    fun bindLogger(logger: LoggerImpl):Logger
 
 }

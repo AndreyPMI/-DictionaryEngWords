@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.com.android.library)
     alias(libs.plugins.org.jetbrains.kotlin.android)
     alias(libs.plugins.devtools.ksp)
+    alias(libs.plugins.serialization)
 }
 
 
@@ -38,8 +39,8 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
+    kotlin {
+        jvmToolchain(17)
     }
 }
 
@@ -49,19 +50,23 @@ dependencies {
 
     implementation(libs.core.ktx)
     implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.kotlinx.serialization)
 
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.datastore.preferences)
 
-    implementation(libs.retrofit)
-    implementation(libs.retrofit.converter.json)
-    implementation(libs.okhttp3.interceptor)
-
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.okhttp)
+    implementation(libs.ktor.client.logging)
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.client.serialization.kotlinx)
 
     implementation(libs.androidx.datastore.core)
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.work.runtime.ktx)
     ksp(libs.androidx.room.compiler)
     //dagger
     implementation(libs.dagger)
