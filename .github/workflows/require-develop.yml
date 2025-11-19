@@ -1,0 +1,20 @@
+name: Require Develop for Master
+
+on:
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  check-source-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if merging from develop
+        run: |
+          if [ "${{ github.head_ref }}" != "develop" ]; then
+            echo "ОШИБКА: В master можно мержить ТОЛЬКО из develop!"
+            echo "Текущая ветка: ${{ github.head_ref }}"
+            echo "Пожалуйста, создайте PR из develop в master"
+            exit 1
+          else
+            echo "ОДОБРЕНО: Мерж из develop в master разрешен"
+          fi
