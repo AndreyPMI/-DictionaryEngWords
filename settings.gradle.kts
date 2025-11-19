@@ -25,3 +25,5 @@ include(":core:logger")
 
 include(":feature:cards")
 include(":feature:word_list")
+include(":feature:user_feature")
+include(":core:qr_generator")

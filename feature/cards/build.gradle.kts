@@ -26,14 +26,14 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     buildFeatures {
         compose = true
     }
-    kotlinOptions {
-        jvmTarget = "11"
+    kotlin {
+        jvmToolchain(17)
     }
 }
 
@@ -48,13 +48,13 @@ dependencies {
     implementation(libs.material)
     implementation(libs.material3)
     implementation(libs.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.compose.material)
+    implementation(libs.androidx.ui.tooling.preview.android)
     //navigation
     implementation(libs.navigation.ui)
     implementation(libs.navigation.compose)
     //dagger
     implementation(libs.dagger)
-    implementation(libs.androidx.compose.material)
-    implementation(libs.androidx.ui.tooling.preview.android)
     ksp(libs.dagger.compiler)
 
     testImplementation(libs.junit)

@@ -14,9 +14,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Create
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -27,12 +24,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.andreypmi.core_domain.models.Category
 import com.andreypmi.dictionaryforwords.core.ui.theme.DictionaryTheme
 import com.andreypmi.dictionaryforwords.core.ui.theme.dimension
 import com.andreypmi.dictionaryforwords.word_list.presentation.models.CategoryState
+import com.andreypmi.dictionaryforwords.core.ui.R
 
 @Composable
 fun CategoryListContent(
@@ -151,14 +150,14 @@ fun CategoryItem(
             )
             Icon(
                 modifier = Modifier.clickable { onChangeClick(category) },
-                imageVector = Icons.Default.Create,
+                painter = painterResource(R.drawable.compare_arrows_24dp),
                 contentDescription = "Изменить",
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Spacer(Modifier.width(MaterialTheme.dimension.size16))
             Icon(
                 modifier = Modifier.clickable { onDeleteClick(category) },
-                imageVector = Icons.Default.Delete,
+                painter = painterResource(R.drawable.delete_forever_24dp),
                 contentDescription = "Удалить",
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -172,7 +171,7 @@ private fun Preview() {
     DictionaryTheme {
         CategoryListContent(
             state = CategoryState.Success(
-                categories = listOf(Category(1, "def"))
+                categories = listOf(Category("1", "def"))
             ),
             onCategoryClick = { },
             onAddCategory = {},

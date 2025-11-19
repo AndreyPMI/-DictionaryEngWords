@@ -8,18 +8,17 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowLeft
-import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.andreypmi.dictionaryforwords.core.ui.theme.dimension
+import com.andreypmi.dictionaryforwords.core.ui.R
 
 @Composable
 fun CategoryBookmark(
@@ -43,7 +42,7 @@ fun CategoryBookmark(
         contentAlignment = Alignment.Center
     ) {
         Icon(
-            imageVector = if (isExpanded) Icons.Default.KeyboardArrowRight else Icons.Default.KeyboardArrowLeft,
+            painter = if (isExpanded) painterResource(R.drawable.keyboard_arrow_right_24dp) else painterResource(R.drawable.keyboard_arrow_left_24dp),
             contentDescription = "Категории",
             tint = MaterialTheme.colorScheme.onPrimaryContainer,
             modifier = Modifier.size(MaterialTheme.dimension.size24)

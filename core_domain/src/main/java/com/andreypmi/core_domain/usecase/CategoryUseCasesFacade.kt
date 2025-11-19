@@ -17,8 +17,8 @@ class CategoryUseCasesFacade @Inject constructor(
     logger: Logger
 ) {
     private val getLastSelectedCategoryUseCase = GetLastSelectedCategoryUseCase(repository,logger)
-    private val saveLastSelectedCategoryUseCase = SaveLastSelectedCategoryUseCase(repository,logger)
-    private val getAllCategoryUseCase = GetAllCategoryUseCase(repository)
+    private val saveLastSelectedCategoryUseCase = SaveLastSelectedCategoryUseCase(repository)
+    private val getAllCategoriesUseCase = GetAllCategoryUseCase(repository)
     private val deleteCategoryUseCase = DeleteCategoryUseCase(repository)
     private val insertCategoryUseCase = InsertCategoryUseCase(repository)
     private val updateCategoryUseCase = UpdateCategoryUseCase(repository)
@@ -28,9 +28,9 @@ class CategoryUseCasesFacade @Inject constructor(
     suspend fun saveLastSelectedCategory(category: Category) =
         saveLastSelectedCategoryUseCase.execute(category)
 
-    suspend fun getAllCategory() = getAllCategoryUseCase.execute()
+    suspend fun getAllCategories() = getAllCategoriesUseCase.execute()
     suspend fun deleteCategory(category: Category) = deleteCategoryUseCase.execute(category)
     suspend fun insertCategory(category: Category) = insertCategoryUseCase.execute(category)
     suspend fun updateCategory(category: Category) = updateCategoryUseCase.execute(category)
-    suspend fun getCategoryById(id: Int) = getCategoryByIdUseCase.execute(id)
+    suspend fun getCategoryById(id: String) = getCategoryByIdUseCase.execute(id)
 }

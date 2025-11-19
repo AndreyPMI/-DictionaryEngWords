@@ -40,12 +40,13 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
+    kotlin {
+        jvmToolchain(17)
     }
     buildFeatures {
         compose = true
     }
+    @Suppress("UnstableApiUsage")
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.composecompiler.get()
     }
@@ -57,15 +58,14 @@ dependencies {
     implementation(project(":core:ui"))
     implementation(project(":core:logger"))
     implementation(project(":core:navigation"))
+    implementation(project(":core:qr_generator"))
     implementation(project(":feature:word_list"))
     implementation(project(":feature:cards"))
+    implementation(project(":feature:user_feature"))
     implementation(project(":core_domain"))
 
     implementation(libs.core.ktx)
     implementation(libs.lifecycle.runtime.ktx)
-    implementation(libs.retrofit)
-    implementation(libs.retrofit.converter.json)
-    implementation(libs.okhttp3.interceptor)
     implementation(libs.androidx.datastore.core)
     implementation(libs.androidx.datastore.preferences)
 
@@ -77,7 +77,7 @@ dependencies {
     implementation(libs.ui.tooling.preview)
     implementation(libs.material3)
 
-    // room?
+    // room
     implementation(libs.androidx.room.runtime)
     //dagger
     implementation(libs.dagger)

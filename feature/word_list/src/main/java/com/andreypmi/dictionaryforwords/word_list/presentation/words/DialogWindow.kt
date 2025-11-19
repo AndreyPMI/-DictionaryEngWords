@@ -26,8 +26,8 @@ const val EMPTY_STRING = ""
 @Composable
 internal fun DialogWindow(
     title:String,
-    idCategory: Int,
-    id: Int? = null,
+    idCategory: String,
+    id: String? = null,
     word:String? = EMPTY_STRING,
     translate:String? = EMPTY_STRING,
     description:String? = EMPTY_STRING,

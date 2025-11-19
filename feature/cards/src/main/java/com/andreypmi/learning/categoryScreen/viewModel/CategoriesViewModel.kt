@@ -48,6 +48,6 @@ class CategoriesViewModel(
         }
     }
 
-    private fun onCategoryClicked(categoryId: Int) {
+    private fun onCategoryClicked(categoryId: String) {
     }
 }

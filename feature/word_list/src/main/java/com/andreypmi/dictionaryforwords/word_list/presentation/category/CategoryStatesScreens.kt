@@ -9,10 +9,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -22,8 +18,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.andreypmi.dictionaryforwords.core.ui.R
 
 @Composable
 fun LoadingState() {
@@ -47,7 +45,7 @@ fun ErrorState(error: String) {
         verticalArrangement = Arrangement.Center
     ) {
         Icon(
-            imageVector = Icons.Default.Close,
+            painter = painterResource(R.drawable.close_24dp),
             contentDescription = "Ошибка",
             tint = MaterialTheme.colorScheme.error,
             modifier = Modifier.size(48.dp)
@@ -78,7 +76,7 @@ fun EmptyCategoriesState(onAddCategory: () -> Unit) {
         verticalArrangement = Arrangement.Center
     ) {
         Icon(
-            imageVector = Icons.Default.Share,
+            painter = painterResource(R.drawable.tab_close_24dp),
             contentDescription = "Нет категорий",
             tint = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.size(64.dp)
@@ -103,7 +101,8 @@ fun EmptyCategoriesState(onAddCategory: () -> Unit) {
                 containerColor = MaterialTheme.colorScheme.primary
             )
         ) {
-            Icon(Icons.Default.Add, contentDescription = "Добавить")
+            Icon(
+                painter = painterResource(R.drawable.add_24dp), contentDescription = "Добавить")
             Spacer(modifier = Modifier.width(8.dp))
             Text("Создать категорию")
         }

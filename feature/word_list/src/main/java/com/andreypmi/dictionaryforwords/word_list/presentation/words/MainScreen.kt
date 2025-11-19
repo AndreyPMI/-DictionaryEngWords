@@ -5,8 +5,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -16,11 +14,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.andreypmi.core_domain.models.Category
-import com.andreypmi.dictionaryforwords.core.ui.R
 import com.andreypmi.dictionaryforwords.core.ui.theme.DictionaryTheme
 import com.andreypmi.dictionaryforwords.word_list.presentation.CardField
 import com.andreypmi.dictionaryforwords.word_list.presentation.models.WordDialogState
@@ -28,6 +26,7 @@ import com.andreypmi.dictionaryforwords.word_list.presentation.models.WordState
 import com.andreypmi.dictionaryforwords.word_list.presentation.models.WordsUiState
 import com.andreypmi.dictionaryforwords.word_list.presentation.words.viewModels.IWordsViewModel
 import com.andreypmi.dictionaryforwords.word_list.presentation.words.viewModels.IWordsViewModel.WordsIntent
+import com.andreypmi.dictionaryforwords.core.ui.R
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -38,7 +37,7 @@ internal fun MainScreen(
 ) {
     val uiState = wordsViewModel.wordsState.collectAsStateWithLifecycle(
         initialValue = WordsUiState(
-            category = Category(0, ""),
+            category = Category("0", ""),
             words = emptyList()
         )
     )
@@ -51,7 +50,7 @@ internal fun MainScreen(
                     wordsViewModel.handleIntent(WordsIntent.OpenAddWordDialog)
                 }) {
                 Icon(
-                    imageVector = Icons.Default.Add,
+                    painter = painterResource(R.drawable.add_24dp),
                     contentDescription = stringResource(R.string.ic_description_word_plus)
                 )
             }
@@ -155,8 +154,8 @@ private fun Preview() {
 
             override val wordsState: StateFlow<WordsUiState> = MutableStateFlow(
                 WordsUiState(
-                    Category(1, "def"),
-                    listOf(WordState(1, 1, "d", "d", "des"))
+                    Category("1", "def"),
+                    listOf(WordState("1", "1", "d", "d", "des"))
                 )
             ).asStateFlow()
             override val wordDialogState: StateFlow<WordDialogState>

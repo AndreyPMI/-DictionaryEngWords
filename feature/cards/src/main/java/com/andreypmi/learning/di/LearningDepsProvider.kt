@@ -8,6 +8,6 @@ object LearningDepsProvider {
     }
 
     val deps: LearningDeps by lazy {
-        learningDeps?: throw IllegalArgumentException("no Deps component in word_list")
+        learningDeps?: throw IllegalArgumentException("no Deps component in learning")
     }
 }

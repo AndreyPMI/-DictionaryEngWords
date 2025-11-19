@@ -31,7 +31,7 @@ fun CardStackScreen(
     sessionState: SessionState,
     onSwipeLeft: (Word) -> Unit,
     onSwipeRight: (Word) -> Unit,
-    onCardFlip: (Int) -> Unit,
+    onCardFlip: (String) -> Unit,
     onSessionCompleted: () -> Unit,
     onBack: () -> Unit
 ) {
