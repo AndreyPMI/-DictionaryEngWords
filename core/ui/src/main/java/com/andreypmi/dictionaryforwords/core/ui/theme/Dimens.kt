@@ -4,7 +4,7 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
- val LocalDictionaryDimension = staticCompositionLocalOf<Dimensions> {
+internal val LocalNewsAggregatorDimension = staticCompositionLocalOf<Dimensions> {
     error("No dimension provided")
 }
 
@@ -17,8 +17,4 @@ data class Dimensions(
     val size48: Dp = 48.dp,
     val size64: Dp = 64.dp,
     val size72: Dp = 72.dp,
-    val size112: Dp = 112.dp,
-    val size128: Dp = 128.dp,
-    val size144: Dp = 144.dp,
-    val size288: Dp = 288.dp,
 )

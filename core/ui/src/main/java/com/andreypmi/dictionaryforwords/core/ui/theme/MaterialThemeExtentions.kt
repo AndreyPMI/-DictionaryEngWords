@@ -5,4 +5,4 @@ import androidx.compose.runtime.Composable
 
 val MaterialTheme.dimension: Dimensions
     @Composable
-    get() = LocalDictionaryDimension.current
+    get() = LocalNewsAggregatorDimension.current

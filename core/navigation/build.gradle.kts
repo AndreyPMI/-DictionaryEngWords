@@ -25,13 +25,12 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
-    kotlin {
-        jvmToolchain(17)
+    kotlinOptions {
+        jvmTarget = "11"
     }
-    @Suppress("UnstableApiUsage")
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.composecompiler.get()
     }
@@ -40,8 +39,6 @@ android {
 dependencies {
 
     implementation(project(":feature:word_list"))
-    implementation(project(":feature:cards"))
-    implementation(project(":feature:user_feature"))
     implementation(project(":core:ui"))
     implementation(project(":core:navigation_api"))
 

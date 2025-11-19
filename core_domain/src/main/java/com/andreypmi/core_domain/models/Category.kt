@@ -1,6 +1,6 @@
 package com.andreypmi.core_domain.models
 
 data class Category (
-    val id: String,
+    val id: Int,
     val category: String
 )

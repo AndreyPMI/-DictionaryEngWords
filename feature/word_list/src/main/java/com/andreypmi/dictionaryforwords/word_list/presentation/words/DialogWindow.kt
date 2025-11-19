@@ -18,29 +18,29 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.Dialog
+import com.andreypmi.core_domain.models.Word
 import com.andreypmi.dictionaryforwords.core.ui.R
 import com.andreypmi.dictionaryforwords.core.ui.theme.dimension
-import com.andreypmi.dictionaryforwords.word_list.presentation.models.WordState
 
 const val EMPTY_STRING = ""
 @Composable
 internal fun DialogWindow(
     title:String,
-    idCategory: String,
-    id: String? = null,
+    idCategory: Int,
+    id: Int? = null,
     word:String? = EMPTY_STRING,
     translate:String? = EMPTY_STRING,
     description:String? = EMPTY_STRING,
     onClose: () -> Unit,
-    onSubmit: (WordState) -> Unit
+    onSubmit: (Word) -> Unit
 ) {
     val (wordState, setWordState) = remember {
         mutableStateOf(
-            WordState(
+            Word(
                 id = id,
                 idCategory = idCategory,
                 word = word ?: EMPTY_STRING,
-                translation = translate ?: EMPTY_STRING,
+                translate = translate ?: EMPTY_STRING,
                 description = description ?: EMPTY_STRING
             )
         )
@@ -60,9 +60,9 @@ internal fun DialogWindow(
                     label = { Text(stringResource(id = R.string.dialog_word)) }
                 )
                 OutlinedTextField(
-                    value = wordState.translation,
+                    value = wordState.translate,
                     onValueChange = { newTranslate ->
-                        setWordState(wordState.copy(translation = newTranslate))
+                        setWordState(wordState.copy(translate = newTranslate))
                     },
                     label = { Text(stringResource(id = R.string.dialog_translation)) }
                 )
