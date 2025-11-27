@@ -1,6 +1,7 @@
 package com.andreypmi.user_feature.di
 
 import com.andreypmi.user_feature.userScreen.nested_screens.loadWords.viewModels.LoadGroupViewModelFactory
+import com.andreypmi.user_feature.userScreen.nested_screens.notifications.viewmodel.NotificationsViewModelFactory
 import com.andreypmi.user_feature.userScreen.nested_screens.qrCodeScreen.viewModels.QRCodeViewModelFactory
 import com.andreypmi.user_feature.userScreen.nested_screens.shared_group.viewmodels.ShareGroupViewModelFactory
 import dagger.Component
@@ -10,6 +11,7 @@ interface UserComponent {
     val vmShareGroupFactory: ShareGroupViewModelFactory
     val vmQRCodeFactory : QRCodeViewModelFactory
     val vmLoadGroupFactory : LoadGroupViewModelFactory
+    val vmNotificationsFactory : NotificationsViewModelFactory
     @Component.Factory
     interface Factory {
         fun create(deps: UserDeps): UserComponent

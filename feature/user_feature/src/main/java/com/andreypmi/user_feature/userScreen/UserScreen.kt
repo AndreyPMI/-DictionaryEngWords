@@ -38,7 +38,7 @@ import com.andreypmi.user_feature.navigation.SettingsDestination
 import com.andreypmi.user_feature.navigation.ShareGroupDestination
 import com.andreypmi.user_feature.navigation.UserDestination
 import com.andreypmi.user_feature.navigation.UserMainDestination
-import com.andreypmi.user_feature.userScreen.nested_screens.NotificationsScreen
+import com.andreypmi.user_feature.userScreen.nested_screens.notifications.NotificationsScreen
 import com.andreypmi.user_feature.userScreen.nested_screens.SettingsScreen
 import com.andreypmi.user_feature.userScreen.nested_screens.UserMainScreen
 import com.andreypmi.user_feature.userScreen.nested_screens.loadWords.CameraPermissionScreen
@@ -57,6 +57,7 @@ import com.andreypmi.user_feature.userScreen.nested_screens.shared_group.viewmod
 import java.io.File
 import java.io.FileOutputStream
 import androidx.core.graphics.createBitmap
+import com.andreypmi.user_feature.userScreen.nested_screens.notifications.viewmodel.NotificationsViewModel
 
 @Composable
 fun UserScreen(
@@ -221,8 +222,16 @@ fun UserScreen(
         }
 
         composable(NotificationsDestination.route) {
+
+            val notificationsViewModel: NotificationsViewModel = viewModel(
+                factory = userComponent.vmNotificationsFactory
+            )
+            val state = notificationsViewModel.state.collectAsStateWithLifecycle()
+
             NotificationsScreen(
-                onBack = { innerNavController.popBackStack() })
+                state = state.value,
+                onEvent = notificationsViewModel::onEvent,
+            )
         }
 
         composable(SettingsDestination.route) {

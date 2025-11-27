@@ -1,6 +1,5 @@
 package com.andreypmi.dictionaryforwords.data.bd.repository
 
-import android.util.Log
 import com.andreypmi.core_domain.models.Category
 import com.andreypmi.core_domain.models.CategoryWithWordCount
 import com.andreypmi.core_domain.models.Word
@@ -37,7 +36,7 @@ class WordRepositoryImpl @Inject constructor(
             val entity = EntityMapper.fromDomainModel(wordWithId)
             wordDao.insert(entity)
             wordWithId
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             null
         }
     }
@@ -54,7 +53,7 @@ class WordRepositoryImpl @Inject constructor(
             val entities = wordsWithIds.map { EntityMapper.fromDomainModel(it) }
             wordDao.insertWords(entities)
             wordsWithIds
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             emptyList()
         }
     }
@@ -65,7 +64,7 @@ class WordRepositoryImpl @Inject constructor(
             val entity = EntityMapper.fromDomainModel(word)
             wordDao.update(entity)
             true
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             false
         }
     }
@@ -77,7 +76,7 @@ class WordRepositoryImpl @Inject constructor(
             val entity = EntityMapper.fromDomainModel(word)
             wordDao.delete(entity)
             true
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             false
         }
     }
@@ -100,7 +99,7 @@ class WordRepositoryImpl @Inject constructor(
             val entity = EntityMapper.fromDomainModel(categoryWithId)
             categoriesDao.insertCategory(entity)
             categoryWithId
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             null
         }
     }
@@ -112,7 +111,7 @@ class WordRepositoryImpl @Inject constructor(
             val entity = EntityMapper.fromDomainModel(category)
             categoriesDao.updateCategory(entity)
             true
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             false
         }
     }
@@ -124,7 +123,7 @@ class WordRepositoryImpl @Inject constructor(
             val entity = EntityMapper.fromDomainModel(category)
             categoriesDao.deleteCategoryCascade(entity)
             true
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             false
         }
     }
@@ -146,7 +145,7 @@ class WordRepositoryImpl @Inject constructor(
                 key = key,
                 defaultValue = null
             )
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             null
         }
     }
@@ -155,7 +154,7 @@ class WordRepositoryImpl @Inject constructor(
         return try {
             val models = categoriesDao.getCategoriesWithWordCount(offset, limit)
             models.map { model -> EntityMapper.toDomainModel(model) }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             emptyList()
         }
     }
@@ -163,7 +162,7 @@ class WordRepositoryImpl @Inject constructor(
     override suspend fun getCategoriesCount(): Int {
         return try {
             categoriesDao.getCategoriesCount()
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             0
         }
     }

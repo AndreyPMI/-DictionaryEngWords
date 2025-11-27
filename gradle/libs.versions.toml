@@ -5,6 +5,7 @@
 compileSdk = "36"
 core = "3.5.3"
 # suppress("UnusedVersion")
+datastorePreferences = "1.0.0"
 minSdk = "26"
 # suppress("UnusedVersion")
 targetSdk = "36"
