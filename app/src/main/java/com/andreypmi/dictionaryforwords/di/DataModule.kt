@@ -2,7 +2,13 @@ package com.andreypmi.dictionaryforwords.di
 
 
 import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.PreferenceDataStoreFactory
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.room.Room
+import com.andreypmi.core_domain.repository.NotificationScheduleRepository
+import com.andreypmi.core_domain.repository.NotificationSettingsRepository
 import com.andreypmi.core_domain.repository.PreferencesDataSource
 import com.andreypmi.core_domain.repository.ShareStorageRepository
 import com.andreypmi.core_domain.repository.WordRepository
@@ -11,6 +17,7 @@ import com.andreypmi.dictionaryforwords.data.api.FirebaseConfig
 import com.andreypmi.dictionaryforwords.data.api.http.HttpClientApi
 import com.andreypmi.dictionaryforwords.data.api.http.KtorHttpClient
 import com.andreypmi.dictionaryforwords.data.api.repository.FirebaseRealtimeRepository
+import com.andreypmi.dictionaryforwords.data.bd.repository.NotificationSettingsRepositoryImpl
 import com.andreypmi.dictionaryforwords.data.bd.repository.PreferencesDataSourceImpl
 import com.andreypmi.dictionaryforwords.data.bd.repository.WordRepositoryImpl
 import com.andreypmi.dictionaryforwords.data.bd.storage.dao.CategoriesDao
@@ -18,9 +25,11 @@ import com.andreypmi.dictionaryforwords.data.bd.storage.dao.WordDao
 import com.andreypmi.dictionaryforwords.data.bd.storage.factory.AppDatabase
 import com.andreypmi.dictionaryforwords.data.bd.storage.factory.DatabaseInitializer
 import com.andreypmi.qr_generator.QrCodeServiceImpl
+import com.andreypmi.workmanager.repository.NotificationScheduleRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
+import dagger.assisted.AssistedInject
 import javax.inject.Singleton
 
 
@@ -33,7 +42,25 @@ interface DataModule {
 
     @Binds
     @Singleton
+    fun bindNotificationScheduleRepository(notificationScheduleRepositoryImpl: NotificationScheduleRepositoryImpl): NotificationScheduleRepository
+
+    @Binds
+    @Singleton
+    fun bindNotificationSettingsRepository(notificationSettingsRepositoryImpl: NotificationSettingsRepositoryImpl): NotificationSettingsRepository
+
+    @Binds
+    @Singleton
     fun bindPreferencesDataSource(preferencesDataSourceImpl: PreferencesDataSourceImpl): PreferencesDataSource
+
+    @Provides
+    @Singleton
+    fun providePreferencesDataStore(
+        context: Context
+    ): DataStore<Preferences> {
+        return PreferenceDataStoreFactory.create(
+            produceFile = { context.preferencesDataStoreFile("notifications_settings") }
+        )
+    }
 
     @Binds
     @Singleton

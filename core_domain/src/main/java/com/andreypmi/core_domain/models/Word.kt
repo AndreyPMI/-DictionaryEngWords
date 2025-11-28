@@ -5,5 +5,5 @@ data class Word(
     val idCategory : String,
     val word: String,
     val translate : String,
-    val description: String
+    val description: String?
 )

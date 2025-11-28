@@ -211,7 +211,7 @@ fun WordItem(word: Word) {
                 color = MaterialTheme.colorScheme.primary
             )
 
-            word.description.let { description ->
+            word.description?.let { description ->
                 if (description.isNotEmpty()) {
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(

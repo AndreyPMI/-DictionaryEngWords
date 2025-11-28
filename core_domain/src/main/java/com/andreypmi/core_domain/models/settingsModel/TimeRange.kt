@@ -16,7 +16,14 @@ data class TimeRange(
             endMinute = 0
         )
     }
-
+    fun contains(time: LocalTime): Boolean {
+        if (!startTime.isAfter(endTime)) {
+            return !time.isBefore(startTime) && !time.isAfter(endTime)
+        }
+        else {
+            return !time.isBefore(startTime) || !time.isAfter(endTime)
+        }
+    }
     val startTime: LocalTime get() = LocalTime.of(startHour, startMinute)
     val endTime: LocalTime get() = LocalTime.of(endHour, endMinute)
 }

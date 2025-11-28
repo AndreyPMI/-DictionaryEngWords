@@ -2,6 +2,8 @@ package com.andreypmi.dictionaryforwords.di
 
 import android.content.Context
 import com.andreypmi.core_domain.di.DomainDeps
+import com.andreypmi.core_domain.repository.NotificationScheduleRepository
+import com.andreypmi.core_domain.repository.NotificationSettingsRepository
 import com.andreypmi.core_domain.repository.ShareStorageRepository
 import com.andreypmi.core_domain.repository.WordRepository
 import com.andreypmi.core_domain.service.QrCodeService
@@ -17,6 +19,8 @@ import javax.inject.Singleton
 @Component(modules = [AppModule::class, DataModule::class,])
 interface AppComponent: WordListDeps,DomainDeps, LearningDeps, UserDeps {
     override val wordRepository: WordRepository
+    override val notificationScheduleRepository: NotificationScheduleRepository
+    override val notificationSettingsRepository: NotificationSettingsRepository
     override val shareStorageRepository: ShareStorageRepository
     override val qrCodeService: QrCodeService
     override val logger: Logger

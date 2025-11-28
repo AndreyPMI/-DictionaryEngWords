@@ -13,7 +13,6 @@ import javax.inject.Inject
 
 class NotificationScheduleRepositoryImpl @Inject constructor(
     private val workManager: WorkManager,
-    private val context: Context
 ) : NotificationScheduleRepository {
 
     override suspend fun scheduleNotifications(settings: NotificationSettings) {

@@ -9,7 +9,7 @@ object Mapper {
             idCategory = word.idCategory,
             word = word.word,
             translation = word.translate,
-            description = word.description,
+            description = word.description?:"",
         )
     }
     fun toDomainModel(wordState: WordState): Word {

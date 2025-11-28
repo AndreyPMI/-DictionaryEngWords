@@ -5,4 +5,9 @@ import com.andreypmi.core_domain.models.settingsModel.NotificationSettings
 interface NotificationSettingsRepository {
     suspend fun getSettings(): NotificationSettings
     suspend fun saveSettings(settings: NotificationSettings)
+
+    suspend fun getLastShownWordIndex(categoryId: String?): Int?
+    suspend fun saveLastShownWordIndex(categoryId: String?, index: Int)
+
+    suspend fun clearAllSettings()
 }

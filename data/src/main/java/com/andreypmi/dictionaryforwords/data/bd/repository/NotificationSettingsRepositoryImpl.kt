@@ -12,6 +12,7 @@ import com.andreypmi.core_domain.models.settingsModel.NotificationSettings
 import com.andreypmi.core_domain.models.settingsModel.TimeRange
 import com.andreypmi.core_domain.repository.NotificationSettingsRepository
 import kotlinx.coroutines.flow.first
+import org.json.JSONObject
 import java.time.DayOfWeek
 import javax.inject.Inject
 
@@ -32,17 +33,17 @@ class NotificationSettingsRepositoryImpl @Inject constructor(
             interval = NotificationInterval.fromMinutes(
                 preferences[PreferencesKeys.INTERVAL_MINUTES] ?: 120
             ),
-            contentType = when (preferences[PreferencesKeys.CONTENT_TYPE]) {
-                "WORD_EXAMPLE" -> NotificationContentType.WORD_EXAMPLE
-                "PHRASE_OF_DAY" -> NotificationContentType.PHRASE_OF_DAY
-                "MINI_QUIZ" -> NotificationContentType.MINI_QUIZ
-                else -> NotificationContentType.WORD_TRANSLATION
-            },
-            daysOfWeek = parseDaysOfWeek(preferences[PreferencesKeys.DAYS_OF_WEEK])
+            contentType = NotificationContentType.fromName(
+                preferences[PreferencesKeys.CONTENT_TYPE] ?: "WORD_TRANSLATION"
+            ),
+            daysOfWeek = parseDaysOfWeek(preferences[PreferencesKeys.DAYS_OF_WEEK]),
+            selectedCategoryId = preferences[PreferencesKeys.SELECTED_CATEGORY_ID],
+            lastShownWordIndex = parseLastShownIndex(preferences[PreferencesKeys.LAST_SHOWN_WORD_INDEX])
         )
     }
 
     override suspend fun saveSettings(settings: NotificationSettings) {
+        if (settings.selectedCategoryId == null) return
         dataStore.edit { preferences ->
             preferences[PreferencesKeys.IS_ENABLED] = settings.isEnabled
             preferences[PreferencesKeys.START_HOUR] = settings.timeRange.startHour
@@ -50,40 +51,89 @@ class NotificationSettingsRepositoryImpl @Inject constructor(
             preferences[PreferencesKeys.END_HOUR] = settings.timeRange.endHour
             preferences[PreferencesKeys.END_MINUTE] = settings.timeRange.endMinute
             preferences[PreferencesKeys.INTERVAL_MINUTES] = settings.interval.minutes
-            preferences[PreferencesKeys.CONTENT_TYPE] = when (settings.contentType) {
-                NotificationContentType.WORD_EXAMPLE -> "WORD_EXAMPLE"
-                NotificationContentType.PHRASE_OF_DAY -> "PHRASE_OF_DAY"
-                NotificationContentType.MINI_QUIZ -> "MINI_QUIZ"
-                else -> "WORD_TRANSLATION"
-            }
+            preferences[PreferencesKeys.CONTENT_TYPE] = settings.contentType.name
             preferences[PreferencesKeys.DAYS_OF_WEEK] = serializeDaysOfWeek(settings.daysOfWeek)
+            preferences[PreferencesKeys.SELECTED_CATEGORY_ID] = settings.selectedCategoryId!!
+            preferences[PreferencesKeys.LAST_SHOWN_WORD_INDEX] =
+                serializeLastShownIndex(settings.lastShownWordIndex)
         }
     }
 
-    private fun parseDaysOfWeek(daysString: String?): Set<DayOfWeek> {
-        if (daysString.isNullOrEmpty()) return DayOfWeek.entries.toSet()
+    override suspend fun getLastShownWordIndex(categoryId: String?): Int? {
+        val key = categoryId ?: "all"
+        val indexMap =
+            parseLastShownIndex(dataStore.data.first()[PreferencesKeys.LAST_SHOWN_WORD_INDEX])
+        return indexMap[key]
+    }
 
-        val days = mutableSetOf<DayOfWeek>()
-        val daysMap = mapOf(
-            "MONDAY" to DayOfWeek.MONDAY,
-            "TUESDAY" to DayOfWeek.TUESDAY,
-            "WEDNESDAY" to DayOfWeek.WEDNESDAY,
-            "THURSDAY" to DayOfWeek.THURSDAY,
-            "FRIDAY" to DayOfWeek.FRIDAY,
-            "SATURDAY" to DayOfWeek.SATURDAY,
-            "SUNDAY" to DayOfWeek.SUNDAY
-        )
-
-        daysString.split(",").forEach { dayName ->
-            daysMap[dayName.trim()]?.let { days.add(it) }
+    override suspend fun saveLastShownWordIndex(categoryId: String?, index: Int) {
+        val key = categoryId ?: "all"
+        dataStore.edit { preferences ->
+            val currentJson = preferences[PreferencesKeys.LAST_SHOWN_WORD_INDEX] ?: "{}"
+            val indexMap = parseLastShownIndex(currentJson).toMutableMap()
+            indexMap[key] = index
+            preferences[PreferencesKeys.LAST_SHOWN_WORD_INDEX] = serializeLastShownIndex(indexMap)
         }
+    }
 
-        return if (days.isEmpty()) DayOfWeek.entries.toSet() else days
+    override suspend fun clearAllSettings() {
+        dataStore.edit { preferences ->
+            preferences.clear()
+        }
+    }
+    private fun parseDaysOfWeek(daysString: String?): Set<DayOfWeek> {
+        if (daysString.isNullOrEmpty()) return DayOfWeek.values().toSet()
+
+        return try {
+            daysString.split(",")
+                .mapNotNull { dayName ->
+                    try {
+                        DayOfWeek.valueOf(dayName.trim())
+                    } catch (e: IllegalArgumentException) {
+                        null
+                    }
+                }
+                .toSet()
+                .takeIf { it.isNotEmpty() }
+                ?: DayOfWeek.values().toSet()
+        } catch (e: Exception) {
+            DayOfWeek.values().toSet()
+        }
     }
 
     private fun serializeDaysOfWeek(days: Set<DayOfWeek>): String {
         return days.joinToString(",") { it.name }
     }
+
+    private fun parseLastShownIndex(jsonString: String?): Map<String, Int> {
+        if (jsonString.isNullOrEmpty()) return emptyMap()
+
+        return try {
+            val jsonObject = JSONObject(jsonString)
+            val result = mutableMapOf<String, Int>()
+            val keys = jsonObject.keys()
+            while (keys.hasNext()) {
+                val key = keys.next()
+                result[key] = jsonObject.getInt(key)
+            }
+            result
+        } catch (e: Exception) {
+            emptyMap()
+        }
+    }
+
+    private fun serializeLastShownIndex(indexMap: Map<String, Int>): String {
+        return try {
+            val jsonObject = JSONObject()
+            indexMap.forEach { (key, value) ->
+                jsonObject.put(key, value)
+            }
+            jsonObject.toString()
+        } catch (e: Exception) {
+            "{}"
+        }
+    }
+
 }
 
 private object PreferencesKeys {
@@ -95,4 +145,6 @@ private object PreferencesKeys {
     val INTERVAL_MINUTES = intPreferencesKey("notifications_interval_minutes")
     val CONTENT_TYPE = stringPreferencesKey("notifications_content_type")
     val DAYS_OF_WEEK = stringPreferencesKey("notifications_days_of_week")
+    val SELECTED_CATEGORY_ID = stringPreferencesKey("notifications_selected_category_id")
+    val LAST_SHOWN_WORD_INDEX = stringPreferencesKey("notifications_last_shown_word_index")
 }

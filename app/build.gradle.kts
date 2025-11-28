@@ -63,6 +63,7 @@ dependencies {
     implementation(project(":feature:cards"))
     implementation(project(":feature:user_feature"))
     implementation(project(":core_domain"))
+    implementation(project(":infrastructure:workmanager"))
 
     implementation(libs.core.ktx)
     implementation(libs.lifecycle.runtime.ktx)
