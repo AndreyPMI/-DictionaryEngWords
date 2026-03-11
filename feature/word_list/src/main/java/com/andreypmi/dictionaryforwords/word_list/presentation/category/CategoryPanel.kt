@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,26 +26,28 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.andreypmi.core_domain.models.Category
 import com.andreypmi.dictionaryforwords.core.ui.theme.DictionaryTheme
 import com.andreypmi.dictionaryforwords.core.ui.theme.LocalIsPreview
 import com.andreypmi.dictionaryforwords.core.ui.theme.dimension
 import com.andreypmi.dictionaryforwords.word_list.presentation.category.viewModels.ICategoryViewModel
+import com.andreypmi.dictionaryforwords.word_list.presentation.models.CategoryState
 import com.andreypmi.dictionaryforwords.word_list.presentation.models.WordDialogState
-import com.andreypmi.dictionaryforwords.word_list.presentation.models.WordState
 import com.andreypmi.dictionaryforwords.word_list.presentation.models.WordsUiState
 import com.andreypmi.dictionaryforwords.word_list.presentation.words.MainScreen
-import com.andreypmi.dictionaryforwords.word_list.presentation.words.viewModels.IWordsViewModel
 import com.andreypmi.dictionaryforwords.word_list.presentation.words.viewModels.IWordsViewModel.WordsIntent
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 
 
 @SuppressLint("ConfigurationScreenWidthHeight")
 @Composable
-fun CategoryPanel(wordsViewModel: IWordsViewModel, categoryViewModel: ICategoryViewModel) {
+fun CategoryPanel(
+    wordsState: WordsUiState,
+    wordDialogState: WordDialogState,
+    onWordIntent: (WordsIntent) -> Unit,
+    categoryState: CategoryState,
+    categoryDialogState: CategoryDialogState,
+    onCategoryIntent: (ICategoryViewModel.CategoryIntent) -> Unit
+) {
     val isPreview = LocalIsPreview.current
     var isExpanded by remember { mutableStateOf(!isPreview) }
     val size32 = MaterialTheme.dimension.size32
@@ -54,15 +55,16 @@ fun CategoryPanel(wordsViewModel: IWordsViewModel, categoryViewModel: ICategoryV
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp.dp
     val screenHeight = configuration.screenHeightDp.dp
-    val categoryState by categoryViewModel.categoryState.collectAsStateWithLifecycle()
     val panelOffsetX by animateDpAsState(
         targetValue = if (isExpanded) screenWidth - size32 else 0.dp,
         label = "panelSlide"
     )
-    val dialogState by categoryViewModel.categoryDialogState.collectAsState()
-
     Box(Modifier.fillMaxSize()) {
-        MainScreen(wordsViewModel)
+        MainScreen(
+            wordsUiState = wordsState,
+            dialogState = wordDialogState,
+            action = onWordIntent
+        )
         if (!isExpanded) {
             Box(
                 Modifier
@@ -94,40 +96,52 @@ fun CategoryPanel(wordsViewModel: IWordsViewModel, categoryViewModel: ICategoryV
                 CategoryListContent(
                     state = categoryState,
                     onCategoryClick = { category ->
-                        categoryViewModel.handleIntent(
+                        onCategoryIntent(
                             ICategoryViewModel.CategoryIntent.SelectCategory(
                                 category
                             )
                         )
                     },
                     onAddCategory = {
-                        categoryViewModel.handleIntent(ICategoryViewModel.CategoryIntent.ShowAddCategoryDialog)
+                        onCategoryIntent(ICategoryViewModel.CategoryIntent.ShowAddCategoryDialog)
                     },
-                    dialogState = dialogState,
+                    dialogState = categoryDialogState,
                     onEditCategory = {
-                        categoryViewModel.handleIntent(
+                        onCategoryIntent(
                             ICategoryViewModel.CategoryIntent.ShowEditCategoryDialog(
                                 it
                             )
                         )
                     },
                     onDeleteCategory = {
-                        categoryViewModel.handleIntent(
+                        onCategoryIntent(
                             ICategoryViewModel.CategoryIntent.ShowDeleteCategoryDialog(
                                 it
                             )
                         )
                     },
-                    onDismissDialog = { categoryViewModel.handleIntent(ICategoryViewModel.CategoryIntent.HideCategoryDialog) },
+                    onDismissDialog = { onCategoryIntent(ICategoryViewModel.CategoryIntent.HideCategoryDialog) },
                     onConfirmAddCategory = {
-                        categoryViewModel.handleIntent(
+                        onCategoryIntent(
                             ICategoryViewModel.CategoryIntent.AddCategory(
                                 it
                             )
                         )
                     },
-                    onConfirmEditCategory = {categoryViewModel.handleIntent(ICategoryViewModel.CategoryIntent.UpdateCategory(it))},
-                    onConfirmDeleteCategory = {categoryViewModel.handleIntent(ICategoryViewModel.CategoryIntent.DeleteCategory(it))},
+                    onConfirmEditCategory = {
+                        onCategoryIntent(
+                            ICategoryViewModel.CategoryIntent.UpdateCategory(
+                                it
+                            )
+                        )
+                    },
+                    onConfirmDeleteCategory = {
+                        onCategoryIntent(
+                            ICategoryViewModel.CategoryIntent.DeleteCategory(
+                                it
+                            )
+                        )
+                    },
                 )
             }
         }
@@ -139,24 +153,23 @@ fun CategoryPanel(wordsViewModel: IWordsViewModel, categoryViewModel: ICategoryV
 private fun Preview() {
     DictionaryTheme(isPreview = true) {
         CategoryPanel(
-            object : IWordsViewModel {
-
-                override fun handleIntent(intent: WordsIntent) {
-                    return
-                }
-
-                override val wordsState: StateFlow<WordsUiState> = MutableStateFlow(
-                    WordsUiState(
-                        Category("1", "def"),
-                        listOf(WordState("1", "1", "d", "d", "des"))
-                    )
-                ).asStateFlow()
-                override val wordDialogState: StateFlow<WordDialogState>
-                    get() = mutableStateOf(
-                        WordDialogState.Add
-                    ) as StateFlow<WordDialogState>
-            },
-            categoryViewModel = TODO()
+            wordsState = WordsUiState(
+                category = Category(
+                    id = "1",
+                    category = "Default"
+                ),
+                words = emptyList()
+            ),
+            wordDialogState = WordDialogState.Hidden,
+            onWordIntent = {},
+            categoryState = CategoryState.Success(listOf(
+                Category(
+                    id = "1",
+                    category = "Default"
+                )
+            )),
+            categoryDialogState = CategoryDialogState.Hidden,
+            onCategoryIntent = {}
         )
     }
 }

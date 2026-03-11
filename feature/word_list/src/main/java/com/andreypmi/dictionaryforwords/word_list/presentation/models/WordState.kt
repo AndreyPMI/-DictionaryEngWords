@@ -1,8 +1,8 @@
 package com.andreypmi.dictionaryforwords.word_list.presentation.models
 
-import androidx.compose.runtime.Stable
+import androidx.compose.runtime.Immutable
 
-@Stable
+@Immutable
 data class WordState(
     val id : String?,
     val idCategory : String,

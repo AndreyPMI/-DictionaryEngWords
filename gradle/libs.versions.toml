@@ -63,7 +63,7 @@ uiToolingPreviewAndroid = "1.9.4"
 navigationCommonAndroid = "2.9.5"
 runtimeAndroid = "1.9.4"
 uiDesktop = "1.7.0"
-
+toolchains = "0.8.0"
 
 
 [libraries]

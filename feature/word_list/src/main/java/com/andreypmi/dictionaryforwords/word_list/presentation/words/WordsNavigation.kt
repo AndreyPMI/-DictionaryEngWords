@@ -1,5 +1,7 @@
 package com.andreypmi.dictionaryforwords.word_list.presentation.words
 
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -18,8 +20,22 @@ fun NavGraphBuilder.words(
         val wordsComponent =
             DaggerWordListComponent.builder().addDeps(WordListDepsProvider.deps).build()
         val wordsViewModel = viewModel<WordsViewModel>(factory = wordsComponent.vmWordsFactory)
-        val categoryViewModel = viewModel<CategoryViewModel>(factory = wordsComponent.vmCategoryFactory)
-        CategoryPanel(wordsViewModel,categoryViewModel)
+        val categoryViewModel =
+            viewModel<CategoryViewModel>(factory = wordsComponent.vmCategoryFactory)
+        val wordsState by wordsViewModel.wordsState.collectAsStateWithLifecycle()
+        val wordDialogState by wordsViewModel.wordDialogState.collectAsStateWithLifecycle()
+        val categoryState by categoryViewModel.categoryState.collectAsStateWithLifecycle()
+        val categoryDialogState by categoryViewModel.categoryDialogState.collectAsStateWithLifecycle()
+        wordsState?.let {
+            CategoryPanel(
+                wordsState = it,
+                wordDialogState = wordDialogState,
+                onWordIntent = wordsViewModel::handleIntent,
+                categoryState = categoryState,
+                categoryDialogState = categoryDialogState,
+                onCategoryIntent = categoryViewModel::handleIntent
+            )
+        }
     }
 }
 

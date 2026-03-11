@@ -1,9 +1,5 @@
 package com.andreypmi.dictionaryforwords.word_list.presentation.words.viewModels
 
-import com.andreypmi.core_domain.models.Category
-import com.andreypmi.core_domain.models.Word
-import com.andreypmi.dictionaryforwords.word_list.presentation.category.CategoryDialogState
-import com.andreypmi.dictionaryforwords.word_list.presentation.models.CategoryState
 import com.andreypmi.dictionaryforwords.word_list.presentation.models.WordDialogState
 import com.andreypmi.dictionaryforwords.word_list.presentation.models.WordState
 import com.andreypmi.dictionaryforwords.word_list.presentation.models.WordsUiState
